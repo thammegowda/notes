@@ -5,18 +5,21 @@ from util.arrays import format_2d_array
 import sys
 
 
+def align_strings(s1, s2):
+    pass
 
-def min_lavenshtein_distance(s1, s2):
+def lavenshtein_matrix(s1, s2):
     '''
-    Computes Minimum Lavenshtein Distance between two strings
+    Computes Minimum Lavenshtein Distance matrixtwo strings. This implementation
+    uses dynamic programming approach.
     :param s1: string 1
     :param s2: string 2
-    :return: minimum edit distance
+    :return: minimum edit distance matrix.
+     The cell present in the last row and last last column contains the min edit distance
     '''
 
-
-    s1 = '#' + s1  # An empty space is added to make space for base case
-    s2 = '#' + s2  # An empty space is added to make space for base case
+    s1 = ' ' + s1  #  making space for base case
+    s2 = ' ' + s2  #  making space for base case
     n = len(s1)
     m = len(s2)
 
@@ -25,7 +28,6 @@ def min_lavenshtein_distance(s1, s2):
 
     for i in range(n):
         for j in range(m):
-
             if i == 0:          # base case 1
                 distance = j
             elif j == 0:        # base case 2
@@ -44,13 +46,21 @@ def min_lavenshtein_distance(s1, s2):
                 if diagonal_dist < distance:
                     distance = diagonal_dist
             matrix[i][j] = distance
+    return matrix
 
-    print format_2d_array(matrix, s1, s2)
-
-    return matrix[n-1][m-1]
+def min_edit_distance(s1, s2):
+    '''
+    Computes Minimum edit distance for the two strings
+    :param s1: first string
+    :param s2: second string
+    :return: minimum edit distance (lavenshtein value)
+    '''
+    matrix = lavenshtein_matrix(s1, s2)
+    print format_2d_array(matrix, '#' + s1, '#' + s2)
+    return matrix[-1][-1] # the last cell has the value for two complete strings
 
 if __name__ == '__main__':
     s1 = 'intention'
     s2 = 'execution'
-    min_edit_distance = min_lavenshtein_distance(s1, s2)
-    print min_edit_distance
+    distance = min_edit_distance(s1, s2)
+    print distance
