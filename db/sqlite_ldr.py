@@ -19,6 +19,8 @@ def load_table(csv_file, db_file, table_name, header=True):
                                 ", ".join(["?" for i in range(len(field_names))]))
     print query
     cur.executemany(query, r)
+    db_con.commit()
+    db_con.close()
 
 
 if __name__ == "__main__":
@@ -27,7 +29,5 @@ if __name__ == "__main__":
     parser.add_argument('-i','--in', help='Input Csv File; Example: user.csv', required=True)
     parser.add_argument('-t','--table', help='Table Name; Example: user', required=True)
     args = vars(parser.parse_args())
-    print args['db']
-    print args['in']
     load_table(args['in'], args['db'], args['table'])
     
