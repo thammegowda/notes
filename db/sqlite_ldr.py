@@ -5,8 +5,18 @@ __date__ = "September 30, 2015"
 import csv
 import sqlite3
 import argparse
+import itertools
 
-def load_table(csv_file, db_file, table_name, header=True):
+def clean_rec(rec):
+    """
+    replaces empty strings with 'None' so that a NULL will be inserted instead of ''
+    """
+    for i in range(len(rec)):
+        if rec[i] == '':
+            rec[i] = None
+    return rec
+
+def load_table(csv_file, db_file, table_name):
     """
     Loads CSV file into SQLite table
     """
@@ -18,10 +28,11 @@ def load_table(csv_file, db_file, table_name, header=True):
     query = "INSERT INTO %s(%s) VALUES (%s)" % (table_name, ", ".join(field_names),\
                                 ", ".join(["?" for i in range(len(field_names))]))
     print query
-    cur.executemany(query, r)
+    r = itertools.imap(clean_rec, r)
+    res = cur.executemany(query, r)
     db_con.commit()
     db_con.close()
-
+    
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='SQLite Loader')
