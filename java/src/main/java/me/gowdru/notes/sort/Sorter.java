@@ -14,4 +14,15 @@ public interface Sorter<T> {
      */
     public void sort(T[] items, Comparator<T> comparator);
 
+    /**
+     * swaps a pair of elements in array
+     * @param array - array of items
+     * @param pos1 position of an item to be swapped to/with
+     * @param pos2 position of another item to be swapped to/with
+     */
+    public default void swap(T[] array, int pos1, int pos2){
+        T tmp = array[pos1];
+        array[pos1] = array[pos2];
+        array[pos2] = tmp;
+    }
 }
