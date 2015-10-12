@@ -18,5 +18,6 @@ public class LinearSearcherTest {
         assertEquals(6, searcher.search(items, 7));
         assertEquals(0, searcher.search(items, 1));
         assertEquals(-1, searcher.search(items, 10));
+        assertEquals(-1, searcher.search(items, -1));
     }
 }

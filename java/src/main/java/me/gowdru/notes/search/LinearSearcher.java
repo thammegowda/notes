@@ -6,6 +6,12 @@ package me.gowdru.notes.search;
  */
 public class LinearSearcher<T> implements Searcher<T> {
 
+    /**
+     * performs linear search
+     * @param items - array of items
+     * @param key - a key item whose position is to be determined
+     * @return value > 0 if position found; -1 if not found
+     */
     public int search(T[] items, T key) {
         //for all the elements in array,
         // scanning from one end to another linearly
