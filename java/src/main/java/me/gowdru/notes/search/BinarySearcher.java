@@ -17,15 +17,15 @@ public class BinarySearcher<T extends Comparable> implements Searcher<T> {
     private int search(T[] items, int low, int high, T key){
         System.out.println(">>" + low + ":" + high);
         int mid = (low + high) / 2;
-        int comparision = key.compareTo(items[mid]);
-        if (comparision == 0) {
+        int comparison = key.compareTo(items[mid]);
+        if (comparison == 0) {
             //base case
             return mid;
         } else if (low > high){
             //no more recursion possible
             //item not found
             return -1;
-        } else if (comparision < 0) {
+        } else if (comparison < 0) {
             //key is less than middle
             return search(items, low, mid - 1, key);
         } else {
