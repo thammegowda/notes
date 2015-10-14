@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-# this scipt keeps checking for internet and speeks out when the state changes
+# this scirpt monitors network connection state and speeks out when it changes
+# Requires : espeak
+# How to use:
+# start  it in a terminal : ./probenet.sh
+# to exit : press CTRL+C
 
 espeak --version > /dev/null
 if [ $? -ne 0 ]; then
