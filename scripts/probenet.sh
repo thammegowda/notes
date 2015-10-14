@@ -9,12 +9,13 @@ if [ $? -ne 0 ]; then
 fi
 
 inet_host="google.com"
-probe_delay=1 #seconds
+probe_delay=2 #seconds
 speak=true
-timeout=2 #sec
+timeout=3 #sec
 
 state_now='true'
 state_old='true'
+
 
 function probe_connection {
     state_old="$state_now"
@@ -28,6 +29,8 @@ function message {
     echo "`date` :: $msg"
     espeak "$msg"
 }
+
+message "Started monitoring network connection state."
 
 while :
 do
