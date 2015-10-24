@@ -35,8 +35,19 @@ public class VectorTest {
         v2.scales = new double[] {2.0, 3.0};
         assertEquals(2.0, v1.dotProduct(v2), 0.0000);
 
+    }
 
+    @Test
+    public void testMagnitude() throws Exception {
+        Vector v1 = new Vector("v1");
+        v1.dimensions = new long[]{1, 2, 3};
+        v1.scales = new double[] {1.0, 2.0, 3.0};
+        assertEquals(Math.sqrt(14), v1.getMagnitude(), 0.000000);
 
+        Vector v2 = new Vector("v2");
+        v2.dimensions = new long[]{1, 2, 3};
+        v2.scales = new double[] {2.0, 1.0, 1.0};
+        assertEquals(Math.sqrt(6), v2.getMagnitude(), 0.000000);
 
     }
 }

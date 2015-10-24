@@ -114,7 +114,7 @@ public class VectorSpaceModel {
      * @return Vector
      */
     public Vector vectorize(List<String> tokens, String vectorId, Map<String, Long> dict) {
-        TreeMap<Long, Long> features = new TreeMap<>();
+        TreeMap<Long, Double> features = new TreeMap<>();
         for (String token : tokens) {
             //map token to feature
             Long featureDimension = dict.get(token);
@@ -123,11 +123,58 @@ public class VectorSpaceModel {
                 continue;
             }
             //if featureDimension is already present, increment the magnitude
-            features.put(featureDimension, features.getOrDefault(featureDimension, 0l) + 1);
+            features.put(featureDimension, features.getOrDefault(featureDimension, 0.0) + 1.0);
         }
         return new Vector(vectorId, features);
     }
 
+    /**
+     * Launches a console to accept input from console and performs search on vectors using cosine angle measure
+     * @param vectors
+     * @param dictionary
+     * @throws IOException
+     */
+    public void searchConsole(Vector[] vectors, Map<String, Long> dictionary) throws IOException {
+        Scanner prompt = new Scanner(System.in);
+        System.out.println("Entering the search console. Total Vectors = " + vectors.length
+                + " \nType 'exit' to halt the program.");
+        while (true){
+            System.out.print(">");
+            String query = prompt.nextLine();
+            if (query.isEmpty()) {
+                System.out.println("Enter search query or type 'exit' to halt");
+                continue;
+            } else if (query.toLowerCase().equals("exit")) {
+                break;
+            }
+
+            //convert the query to vector
+            List<String> tokens = tokenize(new ByteArrayInputStream(query.getBytes()));
+            Vector queryVector = vectorize(tokens, System.currentTimeMillis() + "query", dictionary);
+            Map<Double, List<String>> cosθs = new TreeMap<>();
+            for (int i = 0; i < vectors.length; i++) {
+                double cosθ = queryVector.cosθ(vectors[i]);
+                if (Double.isNaN(cosθ)) {
+                    continue;
+                }
+                List<String> ids = cosθs.get(cosθ);
+                if (ids == null) {
+                    ids = new ArrayList<>();
+                    cosθs.put(cosθ, ids);
+                }
+                ids.add(vectors[i].vectorId);
+            }
+
+            //print
+            for (Map.Entry<Double, List<String>> i : cosθs.entrySet()) {
+                System.out.println(i);
+            }
+            if (cosθs.isEmpty()) {
+                System.out.println("No results found. NaN");
+            }
+
+        }
+    }
 
     public static void main(String[] args) throws IOException {
         args = "-d ../data/20newsgroups/20news-bydate-train/sci.crypt/".split(" ");
@@ -146,7 +193,6 @@ public class VectorSpaceModel {
 
         Vector[] vectors = new Vector[files.length];
 
-
         for (int i = 0; i < files.length; i++) {
             List<String> tokens = vsm.tokenize(new FileInputStream(files[i]));
             Vector vector = vsm.vectorize(tokens, files[i].getPath(), dict);
@@ -162,15 +208,6 @@ public class VectorSpaceModel {
             out.close();
         }
 
-        LOG.info("Prepared {} vectors", vectors.length);
-        Scanner prompt = new Scanner(System.in);
-        System.out.println("Type 'exit' to halt the program");
-        while (true){
-            System.out.print(">");
-            String line = prompt.nextLine();
-            if (line.toLowerCase().equals("exit")) {
-                break;
-            }
-        }
+       vsm.searchConsole(vectors, dict);
     }
 }
