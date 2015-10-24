@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.gowdru.notes</groupId>
-    <artifactId>cs-algos</artifactId>
+    <artifactId>cs-notes</artifactId>
     <version>0.1</version>
     <developers>
         <developer>
