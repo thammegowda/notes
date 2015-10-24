@@ -114,7 +114,7 @@ public class VectorSpaceModel {
      * @return Vector
      */
     public Vector vectorize(List<String> tokens, String vectorId, Map<String, Long> dict) {
-        Map<Long, Long> features = new TreeMap<>();
+        TreeMap<Long, Long> features = new TreeMap<>();
         for (String token : tokens) {
             //map token to feature
             Long featureDimension = dict.get(token);
@@ -128,41 +128,6 @@ public class VectorSpaceModel {
         return new Vector(vectorId, features);
     }
 
-    public static class Vector {
-
-        private final String vectorId;
-        public long dimensions[];
-        public long scales[];
-
-        public Vector(String vectorId) {
-            this.vectorId = vectorId;
-        }
-
-        public Vector(String vectorId, Map<Long, Long> features) {
-            this(vectorId);
-            this.dimensions = new long[features.size()];
-            this.scales = new long[features.size()];
-            int idx = 0;
-            for (Long dimension : features.keySet()) {
-                this.dimensions[idx] = dimension;
-                this.scales[idx] = features.get(dimension);
-                idx++;
-            }
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder builder = new StringBuilder();
-            builder.append("(").append(vectorId).append("):{");
-            if (dimensions != null && scales != null) {
-                for (int i = 0; i < dimensions.length; i++) {
-                    builder.append(dimensions[i]).append(":").append(scales[i]).append(' ');
-                }
-            }
-            builder.append("}");
-            return builder.toString();
-        }
-    }
 
     public static void main(String[] args) throws IOException {
         args = "-d ../data/20newsgroups/20news-bydate-train/sci.crypt/".split(" ");
@@ -195,7 +160,17 @@ public class VectorSpaceModel {
                 out.write("\n");
             }
             out.close();
+        }
 
+        LOG.info("Prepared {} vectors", vectors.length);
+        Scanner prompt = new Scanner(System.in);
+        System.out.println("Type 'exit' to halt the program");
+        while (true){
+            System.out.print(">");
+            String line = prompt.nextLine();
+            if (line.toLowerCase().equals("exit")) {
+                break;
+            }
         }
     }
 }
