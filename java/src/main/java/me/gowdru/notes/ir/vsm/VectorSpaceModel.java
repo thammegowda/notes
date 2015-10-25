@@ -20,6 +20,46 @@ public class VectorSpaceModel {
     @Option(name = "-d", aliases = {"--docs"}, usage = "Directory containing *.txt files", required = true)
     private String corpus;
 
+    @Option(name = "-wt", aliases = {"--weight"}, usage = "Weight Scheme Name", required = true)
+    private WtSchemeName schemeName;
+
+    private enum WtSchemeName {
+        BS ("Binary Scheme"),
+        TFR ("Term Frequency (Raw)"),
+        TFN ("Term Frequency (Normalized)"),
+        TFIDF ("Term Frequency Inverse Document Frequency");
+
+        private String description;
+        private WeightScheme scheme;
+
+        WtSchemeName(String description) {
+            this.description = description;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public synchronized WeightScheme getScheme(){
+            if (scheme == null) {
+                switch (this) {
+                    case BS:
+                        this.scheme = BinaryScheme.getInstance();
+                        break;
+                    case TFR:
+                        this.scheme = new TermFrequencyScheme(false);
+                        break;
+                    case TFN:
+                        this.scheme = new TermFrequencyScheme(true);
+                        break;
+                    default:
+                        throw new RuntimeException("Not implemented");
+                }
+            }
+            return scheme;
+        }
+    }
+
     private boolean ignoreCase = true;
     private boolean ignorePunctuations = true;
     private boolean removeStopwords = true;
@@ -30,6 +70,20 @@ public class VectorSpaceModel {
             "for", "if", "in", "into", "is", "it",
             "no", "not", "of", "on", "or", "such",
             "that", "the", "their", "then", "there", "the"));
+
+    /**
+     * Tokenizes input stream content and maps the tokens to features using the given dictionary
+     * @param stream text content stream
+     * @param dict dictionary for mapping tokens to features
+     * @return List of features representing the content
+     * @throws IOException when an error occurs
+     */
+    private List<Long> tokenize(InputStream stream, Map<String, Long> dict) throws IOException {
+        List<String> tokens = tokenize(stream);
+        List<Long> features = new ArrayList<>(tokens.size());
+        tokens.stream().filter(dict::containsKey).forEach(s -> features.add(dict.get(s)));
+        return features;
+    }
 
     /**
      * Tokenizes the text stream content into tokens.
@@ -114,17 +168,7 @@ public class VectorSpaceModel {
      * @return Vector
      */
     public Vector vectorize(List<String> tokens, String vectorId, Map<String, Long> dict) {
-        TreeMap<Long, Double> features = new TreeMap<>();
-        for (String token : tokens) {
-            //map token to feature
-            Long featureDimension = dict.get(token);
-            if (featureDimension == null) {
-                LOG.debug("Not found in dictionary {}", token);
-                continue;
-            }
-            //if featureDimension is already present, increment the magnitude
-            features.put(featureDimension, features.getOrDefault(featureDimension, 0.0) + 1.0);
-        }
+        TreeMap<Long, Double> features = schemeName.getScheme().apply(tokens, dict);
         return new Vector(vectorId, features);
     }
 
@@ -149,12 +193,12 @@ public class VectorSpaceModel {
             }
 
             //convert the query to vector
-            List<String> tokens = tokenize(new ByteArrayInputStream(query.getBytes()));
-            Vector queryVector = vectorize(tokens, System.currentTimeMillis() + "query", dictionary);
+            List<String> features = tokenize(new ByteArrayInputStream(query.getBytes()));
+            Vector queryVector = vectorize(features, System.currentTimeMillis() + "-query", dictionary);
             Map<Double, List<String>> cosθs = new TreeMap<>();
             for (int i = 0; i < vectors.length; i++) {
                 double cosθ = queryVector.cosθ(vectors[i]);
-                if (Double.isNaN(cosθ)) {
+                if (Double.isNaN(cosθ) || Math.abs(cosθ - 0.0) < 0.000000) {
                     continue;
                 }
                 List<String> ids = cosθs.get(cosθ);
@@ -166,9 +210,7 @@ public class VectorSpaceModel {
             }
 
             //print
-            for (Map.Entry<Double, List<String>> i : cosθs.entrySet()) {
-                System.out.println(i);
-            }
+            cosθs.entrySet().forEach(System.out::println);
             if (cosθs.isEmpty()) {
                 System.out.println("No results found. NaN");
             }
@@ -177,7 +219,7 @@ public class VectorSpaceModel {
     }
 
     public static void main(String[] args) throws IOException {
-        args = "-d ../data/20newsgroups/20news-bydate-train/sci.crypt/".split(" ");
+        args = "-wt TFN -d ../data/20newsgroups/20news-bydate-train/sci.crypt/".split(" ");
         VectorSpaceModel vsm = new VectorSpaceModel();
         CmdLineParser parser = new CmdLineParser(vsm);
         try {
@@ -186,6 +228,8 @@ public class VectorSpaceModel {
             parser.printUsage(System.out);
             return;
         }
+
+        System.out.println("Wight Scheme : " + vsm.schemeName.description);
         File[] files = vsm.getCorpusFiles();
         LOG.info("Found {} files in {}", files.length, vsm.corpus);
         Map<String, Long> dict = vsm.buildDictionary(files);
@@ -197,8 +241,8 @@ public class VectorSpaceModel {
             List<String> tokens = vsm.tokenize(new FileInputStream(files[i]));
             Vector vector = vsm.vectorize(tokens, files[i].getPath(), dict);
             vectors[i] = vector;
-
         }
+
         if (vsm.debug) {
             FileWriter out = new FileWriter("vect2.txt");
             for (Vector vector : vectors) {
@@ -207,7 +251,6 @@ public class VectorSpaceModel {
             }
             out.close();
         }
-
        vsm.searchConsole(vectors, dict);
     }
 }
