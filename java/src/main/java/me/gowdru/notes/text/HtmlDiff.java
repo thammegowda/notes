@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class HtmlDiff {
     public static void main(String[] args) throws IOException {
+        //FIXME : this fails for large files
         args = "data/html/iphone6sgold.html data/html/iphone6silver.html".split(" ");
         if (args.length != 2) {
             System.err.println("Invalid args");
