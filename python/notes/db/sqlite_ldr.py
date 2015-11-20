@@ -27,7 +27,7 @@ def load_table(csv_file, db_file, table_name):
     field_names = r.next()    
     query = "INSERT INTO %s(%s) VALUES (%s)" % (table_name, ", ".join(field_names),\
                                 ", ".join(["?" for i in range(len(field_names))]))
-    print query
+    print(query)
     r = itertools.imap(clean_rec, r)
     res = cur.executemany(query, r)
     db_con.commit()

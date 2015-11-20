@@ -1,7 +1,7 @@
 __author__ = 'Thamme Gowda tgowdan@gmail.com'
 __date__ = "September 20, 2015"
 
-from util.arrays import format_2d_array
+from notes.util.arrays import format_2d_array
 import sys
 import numpy as np
 
@@ -148,9 +148,9 @@ if __name__ == '__main__':
     #print distance
     alignment, min_dist, matrix = align_strings(s1, s2, pad_char="-")
 
-    print format_2d_array(matrix, '\0' + s1, '\0' + s2)
-    print alignment[0]
-    print alignment[1]
-    print "\nMin Edit Distance = %d " % min_dist
+    print(format_2d_array(matrix, '\0' + s1, '\0' + s2))
+    print(alignment[0])
+    print(alignment[1])
+    print("\nMin Edit Distance = %d " % min_dist)
 
 
