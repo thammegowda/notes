@@ -12,6 +12,20 @@ import java.util.Arrays;
  */
 public class ThreePointsCircle {
 
+
+    /**
+     * Computes distance between two points
+     * @param x1 x coordinate of first point
+     * @param y1 y coordinate of first point
+     * @param x2 x coordinate of second point
+     * @param y2 y coordinate of second point
+     * @return distance between the points
+     */
+    public static double distance(double x1, double y1, double x2, double y2){
+        // sqrt((y2-y1)^2 /  (x2-x1)^)
+        return Math.sqrt( (Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2)) );
+    }
+
     /**
      * Finds center of circle given three points on circumference.
      * @param x1 x coordinate of first point on circumference
@@ -20,6 +34,7 @@ public class ThreePointsCircle {
      * @param y2 y coordinate of second point on circumference
      * @param x3 x coordinate of third point on circumference
      * @param y3 y coordinate of second point on circumference
+     * @return an array of three values. First two being the x,y coordinates of center. Third one is radius
      */
     public static double[] centerOfCircle(double x1, double y1,
                                           double x2, double y2,
@@ -55,7 +70,13 @@ public class ThreePointsCircle {
 
         //with this x, solve y
         double y = mid1[1]  -(1/m1) * (x - mid1[0]);
-        return new double[]{x, y};
+
+        double radius1 = distance(x1, y1, x, y);
+        double radius2 = distance(x2, y2, x, y);
+        double radius3 = distance(x3, y3, x , y);
+        assert radius1 == radius2;
+        assert radius1 == radius3;
+        return new double[]{x, y, radius1};
     }
 
     public static void main(String[] args) {
