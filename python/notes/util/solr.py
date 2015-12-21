@@ -69,7 +69,7 @@ class Solr(object):
                     # going good, clear them all
                     del buffer[:]
                 else:
-                    print('Solr posting failed. batch number=' + count)
+                    print('Solr posting failed. batch number=%d' % count)
                     return (num_docs, False)
 
             if (current_milli_time() - tt) > progress_delay:
