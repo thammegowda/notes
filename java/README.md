@@ -22,6 +22,8 @@
     + [Term Frequency (TF) Scheme(raw and normalised)](./src/main/java/me/gowdru/notes/ir/vsm/TermFrequencyScheme.java)
 + Math
   + [GCD](./src/main/java/me/gowdru/notes/math/GCD.java)
++ [Puzzles and Solutions](./src/main/java/me/gowdru/notes/problems/):
+  + [N-Queens](./src/main/java/me/gowdru/notes/problems/NQueensSolver.java)
 
 ---
 
