@@ -1,6 +1,8 @@
 # Algorithms and DataStructure Notes writen in Java language
 
 ## Chapters
++ Data Structures:
+  + [Min Heap](./src/main/java/me/gowdru/notes/ds/MinHeap.java)
 + Search
   + [Linear Search](./src/main/java/me/gowdru/notes/search/LinearSearcher.java)
   + [Binary Search](./src/main/java/me/gowdru/notes/search/BinarySearcher.java)
