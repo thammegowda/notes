@@ -11,6 +11,7 @@
   + [Bubble Sort](./src/main/java/me/gowdru/notes/sort/BubbleSorter.java)
   + [Insertion Sort](./src/main/java/me/gowdru/notes/sort/InsertionSorter.java)
   + [Merge Sort](./src/main/java/me/gowdru/notes/sort/MergeSorter.java)
+  + [Quick Sort (Lamuto Partition Scheme)](./src/main/java/me/gowdru/notes/sort/QuickSorter.java)
 + Trees
   + [Binary Search Tree](./src/main/java/me/gowdru/notes/tree/BinarySearchTree.java)
   + [Prefix Counter Trie](./src/main/java/me/gowdru/notes/tree/PrefixTrie.java)
@@ -30,7 +31,8 @@
 ---
 
 ## Changelog
-
++ 03/12/2016 : Quick Sort
++ 03/11/2016 : Min Heap using Complete-Trees on Arrays
 + 12/20/2015 : Tree edit distance
 + 11/29/2015 : Revising B-Tree
 
