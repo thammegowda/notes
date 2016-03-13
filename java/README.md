@@ -3,6 +3,7 @@
 ## Chapters
 + Data Structures:
   + [Min Heap](./src/main/java/me/gowdru/notes/ds/MinHeap.java)
+  + [Priority Queue](./src/main/java/me/gowdru/notes/ds/PriorityQueue.java)
 + Search
   + [Linear Search](./src/main/java/me/gowdru/notes/search/LinearSearcher.java)
   + [Binary Search](./src/main/java/me/gowdru/notes/search/BinarySearcher.java)
@@ -31,7 +32,7 @@
 ---
 
 ## Changelog
-+ 03/12/2016 : Quick Sort
++ 03/12/2016 : Quick Sort, Priority Queue
 + 03/11/2016 : Min Heap using Complete-Trees on Arrays
 + 12/20/2015 : Tree edit distance
 + 11/29/2015 : Revising B-Tree
