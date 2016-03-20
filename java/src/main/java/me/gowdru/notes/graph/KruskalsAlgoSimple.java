@@ -9,7 +9,11 @@ import java.util.Scanner;
 import java.util.Set;
 
 /**
- * Created by tg on 3/20/16.
+ * Implementation of kruskals algorithm
+ *
+ * Assumptions :
+ * Weighted undirected graph
+ * vertex names from 1 to N inclusive
  */
 public class KruskalsAlgoSimple {
     public static class Edge {
