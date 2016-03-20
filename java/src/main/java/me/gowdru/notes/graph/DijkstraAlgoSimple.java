@@ -27,16 +27,9 @@ import java.util.TreeMap;
 public class DijkstraAlgoSimple {
 
     public static class Link {
-        int toNode;
-        int cost;
+        int toNode;  int cost;
         public Link(int toNode, int cost){
-            this.toNode = toNode;
-            this.cost = cost;
-        }
-
-        @Override
-        public String toString() {
-            return "->" + toNode + ":" + cost;
+            this.toNode = toNode; this.cost = cost;
         }
     }
 
