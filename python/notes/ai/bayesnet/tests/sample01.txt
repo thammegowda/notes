@@ -1,0 +1,18 @@
+P(NightDefense = +, Infiltration = -)
+P(Demoralize = + | LeakIdea = +, Infiltration = +)
+******
+LeakIdea
+0.4
+***
+NightDefense | LeakIdea
+0.8 +
+0.3 -
+***
+Infiltration
+0.5
+***
+Demoralize | NightDefense Infiltration
+0.3 + +
+0.6 + -
+0.95 - +
+0.05 - -

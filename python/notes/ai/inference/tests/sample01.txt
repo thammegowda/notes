@@ -1,0 +1,10 @@
+Traitor(Anakin)
+8
+ViterbiSquirrel(x) && Secret(y) && Tells(x, y, z) && Hostile(z) => Traitor(x)
+Knows(Sidious, Pine)
+Resource(Pine)
+Resource(x) && Knows(Sidious, x) => Tells(Anakin, x, Sidious)
+Resource(x) => Secret(x)
+Enemy(x, USC) => Hostile(x)
+ViterbiSquirrel(Anakin)
+Enemy(Sidious, USC)

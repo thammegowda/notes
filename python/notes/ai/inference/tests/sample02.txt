@@ -1,0 +1,9 @@
+Bully(x)
+7
+BeatUp(x, y) && ViterbiSquirrel(x) && ViterbiSquirrel(y) => Bully(x)
+EESquirrel(x) => ViterbiSquirrel(x)
+CSSquirrel(x) => ViterbiSquirrel(x)
+CSSquirrel(Yoda)
+CSSquirrel(Anakin)
+EESquirrel(Luke)
+BeatUp(Anakin, Luke)
