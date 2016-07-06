@@ -250,10 +250,10 @@ def get_image_path(image_lists, label_name, index, image_dir, category):
     tf.logging.fatal('Label does not exist %s.', label_name)
   label_lists = image_lists[label_name]
   if category not in label_lists:
-    tf.logging.fatal('Category does not exist %s.', category)
+    tf.logging.fatal('Category "%s" of label "%s" doesnt exists.', category, label_name)
   category_list = label_lists[category]
   if not category_list:
-    tf.logging.fatal('Category has no images - %s.', category)
+    tf.logging.fatal('Category "%s" of label "%s" has no images.', category, label_name)
   mod_index = index % len(category_list)
   base_name = category_list[mod_index]
   sub_dir = label_lists['dir']
