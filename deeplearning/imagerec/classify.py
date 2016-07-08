@@ -14,7 +14,6 @@ def create_graph(model_file):
 
 
 def run_inference(images, out_file, labels, model_file, k=5):
-    answer = None
 
     # Creates graph from saved GraphDef.
     create_graph(model_file)
