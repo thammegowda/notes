@@ -8,17 +8,23 @@ log.basicConfig(level=log.DEBUG)
 ENCODING = 'latin-1'
 
 class NaiveBayesModel(object):
+    __VERSION__ = 1
 
     def __init__(self, paths):
+        self.__version__ = NaiveBayesModel.__VERSION__
         self.labels = sorted(paths.keys())
         self.label_ct = {}
         self.token_ct = {}
         self.totaltoken_ct = {}
+        self.vocabulary = set()
         for label, pths in paths.items():
             self.label_ct[label] = len(pths)
-            self.token_ct[label] = self.token_stats(pths)
-            self.totaltoken_ct[label] = sum(self.token_ct[label].values())
+            stats = self.token_stats(pths)
+            self.token_ct[label] = stats
+            self.totaltoken_ct[label] = sum(stats.values())
+            self.vocabulary.update(stats.keys())
         self.label_pb = {}
+
         total_examples = sum(self.label_ct.values())
         if total_examples == 0:
             raise Exception('No records found')
@@ -36,9 +42,17 @@ class NaiveBayesModel(object):
                     res[tok] = res.get(tok, 0) + 1
         return res
 
+    def additive_smoothing_predict(self, tok, label, alpha=1):
+        return float(self.token_ct[label].get(tok, 0) + alpha) / \
+               (self.totaltoken_ct[label] + alpha * len(self.vocabulary))
+
     def predict(self, doc):
         #log.debug("Predict ::%s" % doc)
         tokens = self.tokenize(doc)
+        # filter : ignore tokens that arent seen
+        tokens = list(filter(lambda tok: tok in self.vocabulary, tokens))
+        if not tokens:
+            raise Exception("Completely New text: %s" % doc)
         preds = {}
         for label in self.labels:
             '''
@@ -55,11 +69,12 @@ class NaiveBayesModel(object):
             P_label = self.label_pb[label]
             P_doc_given_label_log = 0
             for tok in tokens:
-                if not tok in self.token_ct[label]:
-                    print("Ignoring: %s - %s" %(label, tok))
+                try:
+                    #P_tok_given_label =  float (self.token_ct[label][tok]) / self.totaltoken_ct[label]
+                    P_tok_given_label = self.additive_smoothing_predict(tok, label, alpha=1)
+                    P_doc_given_label_log += math.log(P_tok_given_label)
+                except:
                     continue
-                P_tok_given_label =  float (self.token_ct[label][tok]) / self.totaltoken_ct[label]
-                P_doc_given_label_log += math.log(P_tok_given_label)
             res = math.log(P_label) + P_doc_given_label_log
             preds[label] = res
         return preds
@@ -77,4 +92,9 @@ class NaiveBayesModel(object):
     def load_from_path(model_path):
         print('Loading the model from %s' % model_path)
         with open(model_path, 'rb') as f:
-            return pickle.load(f)
+            model = pickle.load(f)
+            if model.__version__ != NaiveBayesModel.__VERSION__:
+                log.warn("Model may not be compatible, class version %d, serialized model version:%d" % (NaiveBayesModel.__VERSION__, model.__version__))
+            else:
+                log.info("Model version %d" % model.__version__)
+            return model
