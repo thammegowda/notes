@@ -58,9 +58,8 @@ class NaiveBayesModel(object):
                 if not tok in self.token_ct[label]:
                     print("Ignoring: %s - %s" %(label, tok))
                     continue
-                P_tok_given_label =  float(self.token_ct[label][tok]) / self.totaltoken_ct[label]
+                P_tok_given_label =  float (self.token_ct[label][tok]) / self.totaltoken_ct[label]
                 P_doc_given_label_log += math.log(P_tok_given_label)
-
             res = math.log(P_label) + P_doc_given_label_log
             preds[label] = res
         return preds
