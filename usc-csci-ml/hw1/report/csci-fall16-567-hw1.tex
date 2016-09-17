@@ -57,16 +57,108 @@
 
 \section{1. Density Estimation }
 \subsection{a. } 
+\begin{description}
+	\item[$\bullet \beta$ Distribution:]
+	Given that the i.i.d samples follow $\beta$ distribution.
+	The general form of PDF of $\beta$ distribution is
+	 $B(\alpha, \beta) = C \cdot x^{\alpha-1} (1-x)^{\beta-1} $, Where $C$ is a constant
+	 \newline Given that, $\beta=1$ and we $\alpha$ is unkown (thus we need to estimate using MLE).
+	 $\implies B(\alpha, 1) = C \cdot x^{\alpha-1} (1-x)^{0} = C x^{\alpha-1}$
+	\newline We know that, the likelihood for parameter $\theta$ is maximum when the first order derivative of the distribution function is $0$
+	\begin{align*}
+		\dfrac{d B}{d\alpha} &= 0 \\
+		C \dfrac{d}{d\alpha}[x^{\alpha-1}] &= 0 \\
+		C \cdot (\alpha-1) \cdot x^{\alpha-2} \cdot 1 &= 0	
+	\end{align*}
+	We know C $\ne$ 0, and $x^{\alpha-2} = 0$ is undefined.
+	$\newline \implies \alpha = 1$
+	\item[$\bullet$ Normal Distribution:]
+	Given that i.i.d samples follow normal distribution with parameters $N(\theta, \theta)$. 
+	\newline The general form of PDF of the normal distribution is 
+		$ N(\mu, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}} $
+	\newline Thus, $ N(\theta, \theta) = \frac{1}{\sqrt{2\pi\theta}} e^{-\frac{(x-\theta)^2}{2\theta}}$ 
+	\newline We know that, the likelihood for parameter $\theta$ is maximum when the first order derivative of the distribution function is $0$.
+	\newline Thus, the $\theta_{MLE}$ can be estimated using
+$\dfrac{d N(\theta,\theta)}{d\theta} = 0$
+
+For the sake of simplifying the calculations, using logarithm on function $N(\theta, \theta)$
+\begin{align*}
+	\dfrac{d \log{N(\theta,\theta)}}{d\theta} &= 0 \\
+	\dfrac{d}{d\theta}[\log{\{\frac{1}{\sqrt{2\pi\theta}} e^{-\frac{(x-\theta)^2}{2\theta}}\}} ] &= 0 \\
+	\dfrac{d}{d\theta}[-\log\sqrt{2\pi\theta} -\frac{(x-\theta)^2}{2\theta}] &= 0 \\
+	-\dfrac{d}{d\theta}[\log\sqrt{2\pi\theta}] - \frac{1}{2} \dfrac{d}{d\theta}[\frac{1}{\theta} (x-\theta)^2] &= 0 \\
+	- \frac{1}{\sqrt{2\pi\theta}} \dfrac{d}{d\theta}[(2\pi\theta)^\frac{1}{2}] - \frac{1}{2}( \frac{-1}{\theta^2} (x-\theta)^2 + \frac{1}{\theta} \cdot 2 \cdot (x-\theta) \cdot -1 ) &= 0 \\
+	- \frac{1}{\sqrt{2\pi\theta}} \cdot \frac{1}{2} \cdot \frac{1}{\sqrt{2\pi\theta}} \cdot 2\pi + \frac{(x-\theta)^2}{2\theta^2}  + \frac{(x-\theta)}{\theta} &= 0 \\
+	-\frac{1}{2 \theta} + \frac{(x-\theta)^2}{2\theta^2}  + \frac{(x-\theta)}{\theta} &= 0 \\
+	\frac{-\theta + (x-\theta)^2 + (x-\theta)\theta}{2\theta^2} &= 0 \\
+	-\theta + x^2 - 2x\theta + \theta^2 +x\theta -\theta^2 &= 0 \\
+	x^2  -\theta - x\theta &= 0 \\
+	\theta + x\theta &= x^2 \\
+	\implies \theta &= \frac{x^2}{1+x}
+\end{align*}
+
+
+	
+\end{description}
 
 \subsection{b.}
 
 \section{2. Naive Bayes}
 \subsection{(a)}
+
 \subsection{(b)}
 
 \section{3. Nearest Neighbor}
 
 \subsection{(a)}
+
+For any two points, $(x_1, y_1)$ and $(x_2, y_2)$,
+
+The $L_1$ distance between these two points is given by:
+$L_1 = |x_1 - x_2| + |y_1 - y_2|)$
+
+And, the $L_2$ distance between these two points is:
+$L_2 = \sqrt{(x_1 - x_2)^2 + (y_1 - y_2)^2}$
+
+Given that the new students location is $ (20, 7)$. 
+
+Using the above formulae, the distances are computed and the data are tabulated below:
+
+\begin{tabular}{| c | c | c || r || r |}
+	\hline			
+	USCID  & Point & Major & $L_1$ with $(20, 7)$ & $L_2$ with $(20, 7)$\\
+	\hline
+	S1  &  (0, 49)  & Mat & 20 + 42 = 62 & $\sqrt{400 + 1764}$ = 46.52 \\
+	S2  &  (-7, 32) & Mat & 27 + 25 = 52 & $\sqrt{729 + 625}$ = 36.80  \\
+	S3  &  (-9, 47) & Mat & 29 + 40 = 69 & $\sqrt{841 + 1600}$ = 49.41 \\
+	S4  &  (29, 12) & Ele &   9 + 5 = 14 & $\sqrt{81 + 25}$ = 10.30    \\
+	S5  &  (49, 31) & Ele & 29 + 24 = 53 & $\sqrt{841 + 576}$ = 37.64 \\
+	S6  &  (37, 38) & Ele & 17 + 31 = 48 & $\sqrt{289 + 961}$ = 35.55 \\
+	S7  &  (8, 9)   & CSc &  12 + 2 = 14 & $\sqrt{144 + 4}$ = 12.16 \\
+	S8  &  (13, -1) & CSc &   7 + 8 = 15 & $\sqrt{49 + 64}$ = 10.63 \\
+	S9  &  (-6, -3) & CSc & 26 + 10 = 36 & $\sqrt{676 + 100}$ = 27.86 \\
+	S10  & (-21, 12) & CSc &  41 + 5 = 46 & $\sqrt{1681 + 25}$ = 41.30\\
+	S11  & (27, -32) & Eco &  7 + 39 = 46 & $\sqrt{49 + 1521}$ = 39.62\\
+	S12  &  (19,-14) & Eco &  1 + 21 = 22 & $\sqrt{1+ 441}$ =  21.02\\
+	S13  &  (27,-20) & Eco &  7 + 27 = 34 & $\sqrt{49 + 729}$ = 27.89\\
+	\hline
+\end{tabular}
+
+
+Our predictions of Major of student at $(20, 7)$ for $K= 1, 5$ are computed and tabulated below
+
+
+\begin{tabular}{| c || c | c |}
+	\hline
+	Metric 			& K nearest students & Predicted major Class \\
+	\hline
+	K=1 using $L_1$ & S4 (29, 12) and S7 (8, 9) at equal distance & \\
+	K=1 using $L_2$ & S4 (29, 12) & \\
+	K=5 using $L_1$ & S4 (29, 12), S7 (8, 9), S8 (13, -1), S12 (19, -14) and S13(27, -20) & \\
+	K=5 using $L_2$ & S4 (29, 12), S7 (8, 9), S8 (13, -1), S12 (19, -14) and S13(27, -20) & \\
+	\hline
+\end{tabular}
+
 \subsection{(b)}
 
 
@@ -77,6 +169,51 @@
 
 \section{4. Programming}
 \subsection{(a) Data Inspection}
+\begin{description}
+	\item[1] How many attributes are there
+	\newline There are 10 attributes in each record (including the id).
+	
+	\item[2] Do you think that all attributes are meaningful for the classification? If not, explain why.
+	The \textit{id} attribute is definitely not useful for classification. The reason is obvious since \textit{id} of a record is meant for identification and it does not explain the nature of glass (in other words, \textit{id} is not a function of its behavior).
+	 Since I do not have expertise in the domain of glass manufacturing, I would not try to decide the usefulness or uselessness of other attributes in the dataset at this point of time, instead I would let my statistical learning model to learn it. Hence I will supply all the attributes to my learning machine.
+	 
+	 \item[3] How many classes are? Class is a type of glass.
+		 There are \textbf{6} classes of glasses in the dataset provided on blackboard. Originally, in UCI repository there were \textbf{7} classes, but the class with label \textbf{4} is missing in the dataset provided in blackboard.
+	
+	\item[4] Please explain the class distribution. Which class is majority? Do you think that it can be considered as a uniform distribution?
+	The distribution of classes are as follows:
+	\textbf{Training Data}:\newline
+	The training data has 196 examples. The distribution is: \newline
+	\begin{tabular}{| c | c | c| }
+		\hline
+		Class & Count & Probability \\
+		\hline \hline
+		1     &  67   &  0.3418 \\ \hline
+		2     &  72   &  0.3673 \\ \hline
+		3     &  14   &  0.0714 \\ \hline
+		5     &  10   &  0.0510 \\ \hline
+		6     &   6   &  0.0306 \\ \hline
+		7     &  26   &  0.1326 \\ \hline
+	\end{tabular} \newline
+	As we can infer from the probability column, the classes in training dataset are not distributed uniformly.
+
+	\textbf{Testing Data}: \newline
+	The testing data has 18 examples. The distribution is: \newline
+	\begin{tabular}{| c | c | c| }
+		\hline
+		Class & Count & Probability \\
+		\hline \hline
+		1     &  3   &  $\frac{1}{6}$ \\ \hline
+		2     &  3   &  $\frac{1}{6}$ \\ \hline
+		3     &  3   &  $\frac{1}{6}$ \\ \hline
+		5     &  3   &  $\frac{1}{6}$ \\ \hline
+		6     &  3   &  $\frac{1}{6}$ \\ \hline
+		7     &  3   &  $\frac{1}{6}$ \\ \hline
+	\end{tabular} \newline
+	As we can infer from the probability column, the classes in testing dataset are distributed uniformly with probability of $\frac{1}{6}$.
+		
+	
+\end{description}
 \subsection{(b) Performance Comparison}
 
 
