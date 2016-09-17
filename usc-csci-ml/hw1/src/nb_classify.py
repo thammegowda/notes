@@ -1,7 +1,8 @@
 # Author     : ThammeGowda Narayanaswamy
 # Email      : tnarayan@usc.edu
 # Student ID : 2074669439
-# Subject    : K Nearest Neighbor implementation for CSCI 577 Fall 16 Homework 1
+# Subject    : Naive Bayes Classifier (continuous features) implementation
+#              for CSCI 577 Fall 16 Homework 1
 # Date       : September 17, 2016
 
 from __future__ import print_function
