@@ -1,3 +1,9 @@
+# Author     : ThammeGowda Narayanaswamy
+# Email      : tnarayan@usc.edu
+# Student ID : 2074669439
+# Subject    : K Nearest Neighbor implementation for CSCI 577 Fall 16 Homework 1
+# Date       : September 17, 2016
+
 from __future__ import print_function
 import sys
 import os
@@ -6,7 +12,7 @@ import math
 
 class NBModel(object):
 
-    def populate(self, train_X, train_Y):
+    def __init__(self, train_X, train_Y):
         assert len(train_X) == len(train_Y)
         self.labels = set(train_Y)
         self.n_attrs = train_X.shape[1] # number of columns
@@ -28,7 +34,6 @@ class NBModel(object):
                 variance = np.sum((lXi - mean)**2) / (len(lXi) - 1)
                 self.kb[l]['mean'].append(mean)
                 self.kb[l]['var'].append(variance)
-        return self
 
     def predict(self, new_X):
         assert self.n_attrs == len(new_X)
@@ -61,33 +66,28 @@ class NBModel(object):
         return max(preds, key=preds.get)
 
 def read_dataset(path):
-    return np.loadtxt(path, delimiter=',')
+    data = np.loadtxt(path, delimiter=',')
+    X = data[:, 1:-1]
+    Y = data[:, -1].astype(int)
+    return X, Y
 
-def train(csv_db_path):
-    train_data = read_dataset(csv_db_path)
-    # Skip the id column (0th column), label column (last column)
-    train_X = train_data[:, 1:-1]
-    train_Y = train_data[:, -1].astype(int)
-    return NBModel().populate(train_X, train_Y)
 
 def test(model, csv_db_path):
-    test_data = read_dataset(csv_db_path)
-    test_X = test_data[:, 1:-1]
-    test_Y = test_data[:, -1].astype(int)
+    test_X, test_Y = read_dataset(csv_db_path)
     pred_Y = np.array([model.predict(test_X[i]) for i in range(len(test_X))])
     res = np.sum(test_Y == pred_Y)
     return (res * 1.0 / len(test_X))
 
-if __name__ == '__main__':
-    if len(sys.argv) != 3:
-      print("Error: Invalid args")
-      print("Usage: %s <data/train.txt> <data/test.txt>" % sys.argv[0])
-      sys.exit(1)
-    train_data_path = sys.argv[1]
-    test_data_path = sys.argv[2]
-    model = train(train_data_path)
-
+def main(train_data_path, test_data_path):
+    train_X, train_Y = read_dataset(train_data_path)
+    model = NBModel(train_X, train_Y)
+    print("#Training data")
     train_acc = test(model, train_data_path)
+    print("  Accuracy = %f" % train_acc)
+
+    print("#Testing data")
     test_acc = test(model, test_data_path)
-    print(train_acc, test_acc)
-    #print("Done")
+    print("  Accuracy = %f" % test_acc)
+
+if __name__ == '__main__':
+    print(sys.argv[1], sys.argv[2])
