@@ -112,35 +112,57 @@ For the sake of simplifying the calculations, using logarithm on function $N(\th
 
 \subsection{(a)}
 
+Data Preprocessing:
+	The input data are normalized and standardized. The mean of the coordinates, denoted by $(\mu_x, \mu_y)$ and the standard deviations of co-ordinates, denoted by $(\sigma_x, \sigma_y)$, are computed for the given data points as follows 
+	\begin{align*}
+		\mu_x & = \frac{1}{n}\sum_{1}^{n} x_i   &  \sigma_x &= \sqrt{ \frac{1}{n-1} \sum_{1}^{n} (x_i - \mu_x)^2 } \\
+		\mu_y & = \frac{1}{n}\sum_{1}^{n} y_i   &  \sigma_y &= \sqrt{\frac{1}{n-1} \sum_{1}^{n} (y_i - \mu_y)^2 }\\
+	\end{align*}
+
+For the given data points, values of these variables are:
+	\begin{align*}
+		n &= 13  \\
+		(\mu_x, \mu_y )& = (12.7692, 12.3077)  \\
+		(\sigma_x, \sigma_y) &= (20.7169, 25.9306)
+	\end{align*}
+
+The position of each students, $(x_i, y_i)$ is transformed to a new normalized co-ordinate system by shifting the origin to $(\mu_x, \mu_y)$ and scaling the magnitudes by $(\frac{1}{\sigma_x},   \frac{1}{\sigma_y})$ as follows:
+\begin{equation*}
+	(x_{i'}, y_{i'}) =  (\frac{x_i - \mu_x}{\sigma_x}, \frac{y_i - \mu_y}{\sigma_y})
+\end{equation*}
+
+
 For any two points, $(x_1, y_1)$ and $(x_2, y_2)$,
 
-The $L_1$ distance between these two points is given by:
-$L_1 = |x_1 - x_2| + |y_1 - y_2|)$
 
-And, the $L_2$ distance between these two points is:
+The $L_1$ distance between these two points is given by:
+$L_1 = |x_1 - x_2| + |y_1 - y_2|)$ 
+
+The $L_2$ distance between these two points is:
 $L_2 = \sqrt{(x_1 - x_2)^2 + (y_1 - y_2)^2}$
 
 Given that the new students location is $ (20, 7)$. 
+In the normalized-standardized coordinate system, it is transformed to position (0.3490, -0.2047).
 
-Using the above formulae, the distances are computed and the data are tabulated below:
+Using the above formula, the distances are computed and the data are tabulated below:
 
-\begin{tabular}{| c | c | c || r || r |}
+\begin{tabular}{| c | c | c| c || r || r |}
 	\hline			
-	USCID  & Point & Major & $L_1$ with $(20, 7)$ & $L_2$ with $(20, 7)$\\
+	USCID  & $(x_i, y_i)$ & Major & $(x_{i'}, y_{i'})$ & $L_1$ $(0.3490, -0.2047)$ & $L_2$  $(0.3490, -0.2047)$\\
 	\hline
-	S1  &  (0, 49)  & Mat & 20 + 42 = 62 & $\sqrt{400 + 1764}$ = 46.52 \\
-	S2  &  (-7, 32) & Mat & 27 + 25 = 52 & $\sqrt{729 + 625}$ = 36.80  \\
-	S3  &  (-9, 47) & Mat & 29 + 40 = 69 & $\sqrt{841 + 1600}$ = 49.41 \\
-	S4  &  (29, 12) & Ele &   9 + 5 = 14 & $\sqrt{81 + 25}$ = 10.30    \\
-	S5  &  (49, 31) & Ele & 29 + 24 = 53 & $\sqrt{841 + 576}$ = 37.64 \\
-	S6  &  (37, 38) & Ele & 17 + 31 = 48 & $\sqrt{289 + 961}$ = 35.55 \\
-	S7  &  (8, 9)   & CSc &  12 + 2 = 14 & $\sqrt{144 + 4}$ = 12.16 \\
-	S8  &  (13, -1) & CSc &   7 + 8 = 15 & $\sqrt{49 + 64}$ = 10.63 \\
-	S9  &  (-6, -3) & CSc & 26 + 10 = 36 & $\sqrt{676 + 100}$ = 27.86 \\
-	S10  & (-21, 12) & CSc &  41 + 5 = 46 & $\sqrt{1681 + 25}$ = 41.30\\
-	S11  & (27, -32) & Eco &  7 + 39 = 46 & $\sqrt{49 + 1521}$ = 39.62\\
-	S12  &  (19,-14) & Eco &  1 + 21 = 22 & $\sqrt{1+ 441}$ =  21.02\\
-	S13  &  (27,-20) & Eco &  7 + 27 = 34 & $\sqrt{49 + 729}$ = 27.89\\
+	S1  &  (0, 49)  &  Mat & (-0.6164, 1.4150) & 0.965 + 1.620 = 2.585 & $\sqrt{0.932 + 2.623}$ = 1.886 \\
+	S2  &  (-7, 32) &  Mat & (-0.9543, 0.7594) & 1.303 + 0.964 = 2.267 & $\sqrt{1.698 + 0.930}$ = 1.621 \\
+	S3  &  (-9, 47) &  Mat & (-1.0508, 1.3379) & 1.400 + 1.543 = 2.942 & $\sqrt{1.959 + 2.380}$ = 2.083 \\
+	S4  &  (29, 12) &  Ele & (0.7835, -0.0119)& 0.434 + 0.193 = 0.627 & $\sqrt{0.189 + 0.037}$ = 0.475  \\
+	S5  &  (49, 31) &  Ele & (1.7488, 0.7209) & 1.400 + 0.926 = 2.325 & $\sqrt{1.960 + 0.857}$ = 1.678 \\
+	S6  &  (37, 38) &  Ele & (1.1696, 0.9908) & 0.821 + 1.196 = 2.016 & $\sqrt{0.673 + 1.429}$ = 1.450 \\
+	S7  &  (8, 9)   &  CSc & (-0.2302, -0.1276) & 0.579 + 0.077 = 0.656 & $\sqrt{0.335 + 0.006}$ = 0.584 \\
+	S8  &  (13, -1) &  CSc & (0.0111, -0.5132) &  0.338 + 0.309 = 0.646 &$\sqrt{0.114 + 0.095}$ = 0.458\\
+	S9  &  (-6, -3) &  CSc & (-0.9060, -0.5903) & 1.255 + 0.386 = 1.641 &$\sqrt{1.575 + 0.149}$ = 1.313 \\
+	S10  & (-21, 12) & CSc & (-1.6300, -0.0119) & 1.979 + 0.193 = 2.172 & $\sqrt{3.917 + 0.037}$ = 1.988\\
+	S11  & (27, -32) & Eco & (0.6869, -1.7087) & 0.338 + 1.504 = 1.842 & $\sqrt{0.114 + 2.262}$ = 1.541\\
+	S12  &  (19,-14) &  Eco & (0.3008, -1.0145) & 0.048 + 0.810 = 0.858 & $\sqrt{0.002 + 0.656}$ = 0.811\\
+	S13  &  (27,-20) &  Eco & (0.6869, -1.2459) & 0.338 + 1.041 = 1.379 & $\sqrt{0.114 + 1.084}$ = 1.095\\
 	\hline
 \end{tabular}
 
@@ -152,18 +174,72 @@ Our predictions of Major of student at $(20, 7)$ for $K= 1, 5$ are computed and 
 	\hline
 	Metric 			& K nearest students & Predicted major Class \\
 	\hline
-	K=1 using $L_1$ & S4 (29, 12) and S7 (8, 9) at equal distance & \\
-	K=1 using $L_2$ & S4 (29, 12) & \\
-	K=5 using $L_1$ & S4 (29, 12), S7 (8, 9), S8 (13, -1), S12 (19, -14) and S13(27, -20) & \\
-	K=5 using $L_2$ & S4 (29, 12), S7 (8, 9), S8 (13, -1), S12 (19, -14) and S13(27, -20) & \\
+	K=1 using $L_1$ & S4 &  Electrical Engineering \\
+	K=1 using $L_2$ & S8 & Computer Science \\
+	K=5 using $L_1$ & S4, S7, S8, S12 and S13 & Computer Science \\
+	K=5 using $L_2$ &  S8, S4, S7, S12 and S13 & Computer Science\\
 	\hline
 \end{tabular}
 
 \subsection{(b)}
+Given/Known facts from problem statement:
+\\ There are D dimensions in the vector space
+\\ $x$ is a data point, and there is a D-sphere centered at $x$
+\\  $V$ is the volume of the sphere.
+\\ $N$ is the total number of points in the vector space
+\\ $N_c$ is the total number of points in the vector space which have label $c$
+\\ $K$ is the total number of points inside the D-sphere
+\\ $K_c$ is the total number of points inside the D-sphere which have label $c$
+\\ $p(x | Y = c) = \frac{K_c}{N_c V}$
+\\ $p(Y = c) = \frac{N_c}{N}$
+
+
+\begin{description}
+	\item[$\bullet$ Unconditional probability density $p(x)$] 
+	Using the marginal probability distribution, the $p(x)$ can be rewritten as summation of all marginals.
+	\begin{align*}
+		p(x) & = \sum_{c=1}^{c=C} P(x, Y=c) \\
+			 & = \sum_{c=1}^{c=C} P(x | Y=c) \times P(Y=c) \\
+			 & = \sum_{c=1}^{c=C} \frac{K_c}{N_c V} \times \frac{N_c}{N} \\
+			 & = \frac{1}{N V}\sum_{c=1}^{c=C} K_c \\
+		p(x) & = \frac{1}{N} \times \frac{K}{V}
+	\end{align*}
+
+	\item[$\bullet$ Posterior probability of class membership]
+	
+	Using Bayes' rule, 
+	\begin{align*}
+		p(Y=c|x) & = \frac{p(x | Y=c) p(Y=c) }{p(x)}\\
+	 		& = p(x | Y=c) \times p(Y=c) \times \frac{1}{p(x)} \\
+			& = \frac{K_c}{N_c V} \times \frac{N_c}{N} \times \frac{NV}{K} \\
+			& = \frac{K_c}{K}
+	\end{align*}
+\end{description}
 
 
 \section{4. Decision Tree}
 \subsection{(a)}
+
+The entropy at the root node of decision tree is,\\
+	\begin{align*}
+	 E(root) = & E (H=2, L=2) \\	
+	         = & -\frac{2}{4} \log_2\frac{2}{4} -\frac{2}{4} \log_2\frac{2}{4} \\
+	         = & 1
+	\end{align*}
+
+Information Gain with attribute $Weather$ and $Traffic$ is
+	\begin{align*}
+		 Gain(Weather) = & E(root) - \frac{2}{4} E_{W=Sunny}(H=1, L=1)  \\ 
+				 & - \frac{2}{4} E_{W=Rainy}(H=1, L=1) \\
+				 = & 1 - \frac{1}{2} (-1) - \frac{1}{2} (-1) \\
+		 Gain(Weather)	= & 0 \\
+		 Gain(Traffic) = & E(root) - \frac{2}{4} E_{T=Heavy}(H=2, L=0) \\ & - \frac{2}{4} E_{T=Light}(H=0, L=2) \\
+ 		  = & 1 - 0 - 0 \\
+		 Gain(Traffic) = & 1
+	\end{align*}
+
+Since Information Gain of $Traffic$ is higher than $Weather$, I will split based on $Traffic$ at first.
+
 \subsection{(b)}
 \subsection{(c)}
 
