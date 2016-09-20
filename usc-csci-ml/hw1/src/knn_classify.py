@@ -24,7 +24,9 @@ Ks = [1, 3, 5, 7]
 class KNNModel(object):
 
     def __init__(self, train_X, train_Y):
-        self.X = train_X
+        self.means =  np.mean(train_X, axis=0)
+        self.stds = np.std(train_X, axis=0)
+        self.X = (train_X - self.means) / self.stds     # normalize
         self.Y = train_Y
         self.means = np.mean(train_X, axis=0)
         self.vars = np.var(train_X, axis=0)
@@ -33,12 +35,13 @@ class KNNModel(object):
         assert k > 0
         assert dist_measure in dist_measures
         heap = []
+        new_X = (new_X - self.means) / self.stds
         for i in range(len(self.X)):
             dist = dist_measures[dist_measure](self.X[i], new_X)
             push(heap, (dist, i))
-
         labels = list(map(lambda i: self.Y[pop(heap)[1]], range(k)))
         return np.bincount(labels).argmax()
+
 def read_dataset(path):
     data = np.loadtxt(path, delimiter=',')
     X = data[:, 1:-1]
@@ -48,8 +51,8 @@ def read_dataset(path):
 def test_loo(csv_db_path):
     X, Y  = read_dataset(csv_db_path)
     n = len(X)
-    for k in Ks:
-        for dist_measure in dist_measures.keys():
+    for dist_measure in dist_measures.keys():
+        for k in Ks:
             errors = 0
             for i in range(n):
                 # Leave one out
@@ -65,8 +68,8 @@ def test_loo(csv_db_path):
 
 def test(model, csv_db_path):
     test_X, test_Y  = read_dataset(csv_db_path)
-    for k in Ks:
-        for dist_measure in dist_measures.keys():
+    for dist_measure in dist_measures.keys():
+        for k in Ks:
             pred_Y = np.array([model.predict(test_X[i], k, dist_measure) \
                 for i in range(len(test_X))])
             res = np.sum(test_Y == pred_Y)
