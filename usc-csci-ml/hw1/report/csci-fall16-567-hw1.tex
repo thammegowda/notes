@@ -5,6 +5,8 @@
 %%%%%%%%%%%%%%
 
 \documentclass[letterpaper,doc,notimes]{apa6}
+%%\documentclass[tikz]{standalone}
+\usepackage{tikz}
 %Required by APA6 package
 \usepackage[normalem]{ulem}
 \usepackage[english]{babel}
@@ -33,6 +35,7 @@
 \usepackage{tabularx}
 \usepackage[colorinlistoftodos]{todonotes}
 \usepackage{xcolor}
+\usepackage{mathtools}
 
 
 \setenumerate[1]{label=\Roman*.}
@@ -61,53 +64,83 @@
 	\item[$\bullet \beta$ Distribution:]
 	Given that the i.i.d samples follow $\beta$ distribution.
 	The general form of PDF of $\beta$ distribution is
-	 $B(\alpha, \beta) = C \cdot x^{\alpha-1} (1-x)^{\beta-1} $, Where $C$ is a constant
-	 \newline Given that, $\beta=1$ and we $\alpha$ is unkown (thus we need to estimate using MLE).
-	 $\implies B(\alpha, 1) = C \cdot x^{\alpha-1} (1-x)^{0} = C x^{\alpha-1}$
-	\newline We know that, the likelihood for parameter $\theta$ is maximum when the first order derivative of the distribution function is $0$
-	\begin{align*}
-		\dfrac{d B}{d\alpha} &= 0 \\
-		C \dfrac{d}{d\alpha}[x^{\alpha-1}] &= 0 \\
-		C \cdot (\alpha-1) \cdot x^{\alpha-2} \cdot 1 &= 0	
-	\end{align*}
-	We know C $\ne$ 0, and $x^{\alpha-2} = 0$ is undefined.
-	$\newline \implies \alpha = 1$
+\begin{align*}
+ B(\alpha, \beta) = \frac{x^{\alpha-1} (1-x)^{\beta-1} }{ \frac{\Gamma(\alpha) \Gamma(\beta)}{\Gamma(\alpha +\beta)}} \\
+		 \text{Given that, $\beta=1$ and $\alpha$ is unkown (thus we need to estimate using MLE).} \\
+	   \implies B(\alpha, 1) = \frac{x^{\alpha-1}}{\frac{\Gamma(\alpha) \Gamma(1)}{\Gamma(\alpha +1)}} \\
+				= \frac{x^{\alpha-1}}{\frac{1}{\alpha}} \\	 
+				= \alpha x^{\alpha-1} \\	 
+	   \text{Likelihood of this distribution is } 
+	   L(\alpha) = \prod_{1}^{n} \alpha x_i^{\alpha-1}\\
+	   \text{log-likelihood of this distribution is } 
+		l(\alpha) = \log \prod_{1}^{n} \alpha x_i^{\alpha-1}\\ 
+		          = \sum_{1}^{n} [\log \alpha + (\alpha-1) \log x_i] \\
+		          = n \log \alpha + (\alpha-1) \sum_{1}^{n} \log x_i \\
+		 \text{Max log-likelihood of this distribution is when first order derivative is 0 } \\
+		 \dfrac{d}{d\alpha} [ n \log \alpha + (\alpha-1) \sum_{1}^{n} \log x_i ] = 0 \\
+		\frac{n}{\alpha} + \sum_{1}^{n} \log x_i = 0 \\
+		\implies \hat{\alpha} = \frac{-n}{\sum_{1}^{n} \log x_i}
+	 \end{align*}
+
 	\item[$\bullet$ Normal Distribution:]
 	Given that i.i.d samples follow normal distribution with parameters $N(\theta, \theta)$. 
 	\newline The general form of PDF of the normal distribution is 
 		$ N(\mu, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}} $
 	\newline Thus, $ N(\theta, \theta) = \frac{1}{\sqrt{2\pi\theta}} e^{-\frac{(x-\theta)^2}{2\theta}}$ 
+	\newline The likelihood of this distribution is 
+	$L(\theta) = \prod_{i}^{n} \frac{1}{\sqrt{2\pi\theta}} e^{-\frac{(x_i-\theta)^2}{2\theta}} $
+	\newline the log-likelihood is 
+	\begin{align*}
+	l(\theta) = & \log [ \prod_{i}^{n} \frac{1}{\sqrt{2\pi\theta}} e^{-\frac{(x_i-\theta)^2}{2\theta}}] \\
+		   = & \sum_{i}^{n} \log [\frac{1}{\sqrt{2\pi\theta}} e^{-\frac{(x_i-\theta)^2}{2\theta}}] \\
+		    = & \sum_{i}^{n} [ \frac{-1}{2} \log 2\pi\theta -\frac{(x_i-\theta)^2}{2\theta}] \\
+		    = & \frac{-n}{2} \log 2\pi\theta - \frac{1}{2\theta} \sum_{i}^{n}(x_i-\theta)^2 \\
+		    = & -\frac{n}{2} \log 2\pi -\frac{-n}{2} \log \theta - \frac{1}{2\theta} [\sum_{i}^{n}x_i^2-\sum_{i}^{n}2x_i\theta + \sum_{i}^{n}\theta^2] \\
+		    = & -\frac{n}{2} \log 2\pi -\frac{n}{2} \log \theta - \frac{\sum_{i}^{n}x_i^2}{2\theta} + \sum_{i}^{n}2x_i - \frac{n\theta}{2} \\
+	\end{align*}
 	\newline We know that, the likelihood for parameter $\theta$ is maximum when the first order derivative of the distribution function is $0$.
 	\newline Thus, the $\theta_{MLE}$ can be estimated using
-$\dfrac{d N(\theta,\theta)}{d\theta} = 0$
+$\dfrac{d l(\theta)}{d\theta} = 0$
 
-For the sake of simplifying the calculations, using logarithm on function $N(\theta, \theta)$
 \begin{align*}
-	\dfrac{d \log{N(\theta,\theta)}}{d\theta} &= 0 \\
-	\dfrac{d}{d\theta}[\log{\{\frac{1}{\sqrt{2\pi\theta}} e^{-\frac{(x-\theta)^2}{2\theta}}\}} ] &= 0 \\
-	\dfrac{d}{d\theta}[-\log\sqrt{2\pi\theta} -\frac{(x-\theta)^2}{2\theta}] &= 0 \\
-	-\dfrac{d}{d\theta}[\log\sqrt{2\pi\theta}] - \frac{1}{2} \dfrac{d}{d\theta}[\frac{1}{\theta} (x-\theta)^2] &= 0 \\
-	- \frac{1}{\sqrt{2\pi\theta}} \dfrac{d}{d\theta}[(2\pi\theta)^\frac{1}{2}] - \frac{1}{2}( \frac{-1}{\theta^2} (x-\theta)^2 + \frac{1}{\theta} \cdot 2 \cdot (x-\theta) \cdot -1 ) &= 0 \\
-	- \frac{1}{\sqrt{2\pi\theta}} \cdot \frac{1}{2} \cdot \frac{1}{\sqrt{2\pi\theta}} \cdot 2\pi + \frac{(x-\theta)^2}{2\theta^2}  + \frac{(x-\theta)}{\theta} &= 0 \\
-	-\frac{1}{2 \theta} + \frac{(x-\theta)^2}{2\theta^2}  + \frac{(x-\theta)}{\theta} &= 0 \\
-	\frac{-\theta + (x-\theta)^2 + (x-\theta)\theta}{2\theta^2} &= 0 \\
-	-\theta + x^2 - 2x\theta + \theta^2 +x\theta -\theta^2 &= 0 \\
-	x^2  -\theta - x\theta &= 0 \\
-	\theta + x\theta &= x^2 \\
-	\implies \theta &= \frac{x^2}{1+x}
+	\dfrac{d}{d\theta} [-\frac{n}{2} \log 2\pi -\frac{n}{2} \log \theta - \frac{\sum_{i}^{n}x_i^2}{2\theta} + \sum_{i}^{n}2x_i - \frac{n\theta}{2}] =& 0 \\
+	\frac{-n}{2\theta} + \frac{\sum_{i}^{n}x_i^2}{2\theta^2} - \frac{n}{2} = & 0 \\
+	-n\theta + \sum_{i}^{n}x_i^2 - n\theta^2 = & 0 \\
+	n\theta^2 + n\theta - \sum_{i}^{n}x_i^2 = & 0 \\
+	\text{This is a quadratic equation of } \theta, \text{roots are} \\
+	\implies \hat{\theta} =& \frac{-n \pm \sqrt{n^2 + 4 n \sum_{i}^{n}x_i^2 }}{2n}
+\end{align*}
+	
+\end{description}
+\subsection{b.}
+Given that $\hat{f}(x) = \frac{1}{n} \sum_{i=n}^{n} \frac{1}{h} K(\frac{x-X_i}{h})$.
+\newline 
+\begin{align*}
+\textbf{E}_{X_1,X_2,..X_n}[\hat{f}(x)] =& \text{E} [\frac{1}{n} \sum_{i=n}^{n} \frac{1}{h} K(\frac{x-X_i}{h}) ] \\
+  =& \frac{1}{n} \sum_{i=1}^{n}  \textbf{E}[\frac{1}{h}K(\frac{x - X_i }{h})] \\
+  =& \textbf{E}[\frac{1}{h}K(\frac{x - X}{h})] \\
+  =& \int K(\frac{x - t}{h} ) f(t) dt \\
+   & \text{Substitute $z = \frac{x-t}{h} \implies t  = x - hz$ } \\
+  =& \int K(z) f(x-hz) dz \\
+   & \text{Using Taylors theorem, } f(x-a) = f(x) - af'(x) + \frac{a^2}{2}f''(x) + R \text{, where R is a  remainder }\\
+  =& \int K(z) \big[f(x) - hzf'(x) + \frac{h^2z^2}{2}f''(x) + R\big] dz \\
+  =& f(x) \int K(z) dz - h f'(x) \int zK(z)dz + \frac{h^2}{2} f''(x)\int [z^2 K(z) + R] dz \\
+  & \text{We known that, by definition of kernel function} \int K(z)dz = 1\\ 
+  & \text{and by Integration by parts rule,} \int z K(z) dz = 0 \\  
+\textbf{E}[\hat{f}(x)]  =& f(x) + \frac{h^2}{2} f''(x) \int K(z) z^2 dz + R \\
+\text{The bias is given by} \\
+	{E}[\hat{f}(x)] - f(x) =& \frac{h^2}{2} f''(x)\int [z^2 K(z) + R] dz 
 \end{align*}
 
 
-	
-\end{description}
 
-\subsection{b.}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{2. Naive Bayes}
 \subsection{(a)}
 
 \subsection{(b)}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{3. Nearest Neighbor}
 
 \subsection{(a)}
@@ -217,6 +250,7 @@ Given/Known facts from problem statement:
 \end{description}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{4. Decision Tree}
 \subsection{(a)}
 
@@ -240,8 +274,45 @@ Information Gain with attribute $Weather$ and $Traffic$ is
 
 Since Information Gain of $Traffic$ is higher than $Weather$, I will split based on $Traffic$ at first.
 
-\subsection{(b)}
+\subsection{(b)} $T_1$ - Tree built without normalizing the dataset. 
+$T_2$ - Tree built after normalizing the dataset \\
+Question: How are $T_1$ and $T_2$ related? \\
+Answer : \\ 
+Statement: $T_1$ and $T_2$ are similar.\\
+Argument: The key component of the decision tree algorithm is the entropy of attributes. The normalization and standardization of dataset does not alter the entropy of the attributes, thus the Trees $T_2$ and  $T_1$ are similar.
+
 \subsection{(c)}
+Question : Prove that Gini Index is a better approximation than Cross Entropy. \\
+Proof: \\
+For a random variable with PMF $p$), \\
+Gini Index is defined by $\sum_{k=1}^{K} p_k (1-p_k) $ \\
+And the cross entropy is defined by $-\sum_{k=1}^{K} p_k \log p_k $ \\
+Give that, these two functions are the approximations of misclassification error $\implies$ the function with smaller value is a better approximation.\\
+
+Since the $p_k$ is defined in between $[0, 1]$, let us plot these functions in the domain $[0, 1]$:
+\begin{tikzpicture}
+	\draw[->] (-1,0) -- (4,0) node[right] {$x$};
+	\draw[->] (0,-1) -- (0,4) node[above] {$y$};
+	\draw[scale=4,domain=0:1,smooth,variable=\x,blue] plot ({\x},{\x * (1 - \x)});
+	\draw[scale=4,domain=0.00001:1,smooth,variable=\y,red]  plot ({\y},{-\y * ln(\y)});
+	\node at (1.8,1.8) {\footnotesize $y=-x\log(x)$};
+	\node at (2.2,0.6) {\footnotesize $y=x(1-x)$};
+\end{tikzpicture}
+
+It is evident that the area under the curve $p_k (1-p_k)$ is smaller than the $p_k \log p_k $. \\
+\begin{equation*}
+	\int_{0}^{1} p_k (1-p_k) \space dp_k = \int_{0}^{1} [p_k - p_k^2] d_p \\
+				= \frac{x^2}{2} - \frac{x^3}{3} \bigg|_0^1 \\
+				= \frac{1}{6}
+\end{equation*}
+\begin{equation*}
+	- \int_{0}^{1} p_k log p_k \space dp_k 
+	= - \frac{p_k^2 \space log p_k}{2} + \frac{p_k^2}{4} \bigg|_0^1 
+	= \frac{1}{4} 
+\end{equation*}
+
+Thus $\sum_{k=1}^{K} p_k (1-p_k) <= -\sum_{k=1}^{K} p_k \log p_k \\ \implies$  Gini Index is a better approximation than Cross Entropy
+
 
 \section{4. Programming}
 \subsection{(a) Data Inspection}
