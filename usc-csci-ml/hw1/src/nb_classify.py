@@ -57,11 +57,15 @@ class NBModel(object):
             # prob of label or class
             prob += math.log(self.prob_l[l])
             for i, x in enumerate(new_X):
-                # TODO: FIXME: some variances are wrong here
                 if np.isclose(0, variances[i]):
-                    continue
-                prob -= math.log(math.sqrt(2 * math.pi * variances[i]))
-                prob -= ((x - means[i]) ** 2) / (2 * variances[i])
+                    # the probability is concentrated at the mean
+                    if np.isclose(x, means[i]):
+                        prob += 0                        # log(1) = 0
+                    else:
+                        prob += float('-inf')           # log(0) --> -inf
+                else:
+                    prob -= math.log(math.sqrt(2 * math.pi * variances[i]))
+                    prob -= ((x - means[i]) ** 2) / (2 * variances[i])
             preds[l] = prob
         #print(preds)
         return max(preds, key=preds.get)
@@ -77,6 +81,9 @@ def test(model, csv_db_path):
     test_X, test_Y = read_dataset(csv_db_path)
     pred_Y = np.array([model.predict(test_X[i]) for i in range(len(test_X))])
     res = np.sum(test_Y == pred_Y)
+    '''for i in range(len(pred_Y)):
+        print("expected : %d  predict: %d " % (test_Y[i], pred_Y[i]))
+    '''
     return (res * 1.0 / len(test_X))
 
 def main(train_data_path, test_data_path):
