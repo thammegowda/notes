@@ -50,7 +50,7 @@
 
 %\note{September 13, 2016}
 \note{\today}
-\authornote{Produced for Fall 2016 section of CSCI 567, ``Machine Learning'', taught by Dr. Yan Liu at the University of Southern California}
+\authornote{Produced for Fall 2016 session of CSCI 567, ``Machine Learning'', taught by Dr. Yan Liu at the University of Southern California}
 
 
 \begin{document}
@@ -64,7 +64,7 @@
 	\item[$\bullet \beta$ Distribution:]
 	Given that the i.i.d samples follow $\beta$ distribution.
 	The general form of PDF of $\beta$ distribution is
-\begin{align*}
+\begin{gather*}
  B(\alpha, \beta) = \frac{x^{\alpha-1} (1-x)^{\beta-1} }{ \frac{\Gamma(\alpha) \Gamma(\beta)}{\Gamma(\alpha +\beta)}} \\
 		 \text{Given that, $\beta=1$ and $\alpha$ is unkown (thus we need to estimate using MLE).} \\
 	   \implies B(\alpha, 1) = \frac{x^{\alpha-1}}{\frac{\Gamma(\alpha) \Gamma(1)}{\Gamma(\alpha +1)}} \\
@@ -74,13 +74,13 @@
 	   L(\alpha) = \prod_{1}^{n} \alpha x_i^{\alpha-1}\\
 	   \text{log-likelihood of this distribution is } 
 		l(\alpha) = \log \prod_{1}^{n} \alpha x_i^{\alpha-1}\\ 
-		          = \sum_{1}^{n} [\log \alpha + (\alpha-1) \log x_i] \\
-		          = n \log \alpha + (\alpha-1) \sum_{1}^{n} \log x_i \\
+		        = \sum_{1}^{n} [\log \alpha + (\alpha-1) \log x_i] \\
+		        = n \log \alpha + (\alpha-1) \sum_{1}^{n} \log x_i \\
 		 \text{Max log-likelihood of this distribution is when first order derivative is 0 } \\
 		 \dfrac{d}{d\alpha} [ n \log \alpha + (\alpha-1) \sum_{1}^{n} \log x_i ] = 0 \\
 		\frac{n}{\alpha} + \sum_{1}^{n} \log x_i = 0 \\
 		\implies \hat{\alpha} = \frac{-n}{\sum_{1}^{n} \log x_i}
-	 \end{align*}
+	 \end{gather*}
 
 	\item[$\bullet$ Normal Distribution:]
 	Given that i.i.d samples follow normal distribution with parameters $N(\theta, \theta)$. 
@@ -90,18 +90,16 @@
 	\newline The likelihood of this distribution is 
 	$L(\theta) = \prod_{i}^{n} \frac{1}{\sqrt{2\pi\theta}} e^{-\frac{(x_i-\theta)^2}{2\theta}} $
 	\newline the log-likelihood is 
-	\begin{align*}
-	l(\theta) = & \log [ \prod_{i}^{n} \frac{1}{\sqrt{2\pi\theta}} e^{-\frac{(x_i-\theta)^2}{2\theta}}] \\
+\begin{align*}
+l(\theta) = & \log [ \prod_{i}^{n} \frac{1}{\sqrt{2\pi\theta}} e^{-\frac{(x_i-\theta)^2}{2\theta}}] \\
 		   = & \sum_{i}^{n} \log [\frac{1}{\sqrt{2\pi\theta}} e^{-\frac{(x_i-\theta)^2}{2\theta}}] \\
 		    = & \sum_{i}^{n} [ \frac{-1}{2} \log 2\pi\theta -\frac{(x_i-\theta)^2}{2\theta}] \\
 		    = & \frac{-n}{2} \log 2\pi\theta - \frac{1}{2\theta} \sum_{i}^{n}(x_i-\theta)^2 \\
 		    = & -\frac{n}{2} \log 2\pi -\frac{-n}{2} \log \theta - \frac{1}{2\theta} [\sum_{i}^{n}x_i^2-\sum_{i}^{n}2x_i\theta + \sum_{i}^{n}\theta^2] \\
-		    = & -\frac{n}{2} \log 2\pi -\frac{n}{2} \log \theta - \frac{\sum_{i}^{n}x_i^2}{2\theta} + \sum_{i}^{n}2x_i - \frac{n\theta}{2} \\
-	\end{align*}
-	\newline We know that, the likelihood for parameter $\theta$ is maximum when the first order derivative of the distribution function is $0$.
+		    = & -\frac{n}{2} \log 2\pi -\frac{n}{2} \log \theta - \frac{\sum_{i}^{n}x_i^2}{2\theta} + \sum_{i}^{n}2x_i - \frac{n\theta}{2}
+\end{align*} We know that, the likelihood for parameter $\theta$ is maximum when the first order derivative of the distribution function is $0$.
 	\newline Thus, the $\theta_{MLE}$ can be estimated using
 $\dfrac{d l(\theta)}{d\theta} = 0$
-
 \begin{align*}
 	\dfrac{d}{d\theta} [-\frac{n}{2} \log 2\pi -\frac{n}{2} \log \theta - \frac{\sum_{i}^{n}x_i^2}{2\theta} + \sum_{i}^{n}2x_i - \frac{n\theta}{2}] =& 0 \\
 	\frac{-n}{2\theta} + \frac{\sum_{i}^{n}x_i^2}{2\theta^2} - \frac{n}{2} = & 0 \\
@@ -137,6 +135,34 @@ Given that $\hat{f}(x) = \frac{1}{n} \sum_{i=n}^{n} \frac{1}{h} K(\frac{x-X_i}{h
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{2. Naive Bayes}
 \subsection{(a)}
+
+Given: 
+\\
+  $X = {X_1, X_2, ... X_D}$ is a continuous random distribution.\\
+  The label variable, Y, assumes two values \{0, 1\} and follows Bernoulli distribution. \\
+  P (Y = 1) = $\pi \implies $ P(Y = 0) = 1 - $\pi$ \\
+  The feature variable $X_j$ follows Gaussian Distribution of form $N(\mu_{jk}, \sigma_j)$.
+ 
+ Using Bayes Rule:
+ \begin{gather*}
+ P(Y=1 | X) = \frac{P(X | Y=1)P(Y=1)}{P(X | Y=1)P(Y=1) + P(X_d | Y=0)P(Y=0)} \\
+            = \cfrac{1}{1 + \cfrac{P(X | Y=0)P(Y=0)}{P(X | Y=1)P(Y=1)}} \\
+  \text{Subsitituting \( P(Y=1) = \pi \) }\\
+            = \cfrac{1}{1 + \cfrac{P(X | Y=0)(1-\pi)}{P(X | Y=1) \pi}} \\
+  \text{By the naive assumption of conditional independence between the features}\\
+            = \cfrac{1}{1 + \frac{1-\pi}{\pi} \times \cfrac{\prod_{i_1}^{D}P(X_j | Y=0)}{\prod_{j}^{D}P(X_j | Y=1)}} \\
+            = \cfrac{1}{1 + \frac{1-\pi}{\pi} \times \prod_{j}^{D} \cfrac{P(X_j | Y=0)}{P(X_j | Y=1)}} \\
+            = \cfrac{1}{1 + \frac{1-\pi}{\pi} \times \prod_{j}^{D} P(X_j | Y=0) \times \cfrac{1}{\prod_{j}^{D}P(X_j | Y=1)}}
+ \end{gather*}
+ After plugging these terms in the values from Guassian Distribution and reducing it to expected form
+ \begin{gather*}
+ P(Y=1 | X) = \frac{1}{1 + exp(ln(\cfrac{1 - \pi}{1}) + \sum_j{\cfrac{\mu_{1j}^2 - \mu_{0j}^2}{2 \sigma_j^2}} + \sum_j{\cfrac{\mu_{0j} - \mu_{1j}}{\sigma_j^2}x_i})} \\
+ \end{gather*}
+ This can be reduced to  $ \cfrac{1}{1 + exp(-\omega_0 + \omega^T X)} $, by following substitution
+ \begin{gather*}
+ \omega_0 = -ln(\cfrac{1 - \pi}{1}) - \sum_j{\cfrac{\mu_{1j}^2 - \mu_{0j}^2}{2 \sigma_j^2}} \\
+ \mathbf{\omega} = \cfrac{\mu_{0j} - \mu_{1j}}{\sigma_j^2}
+ \end{gather*}
 
 \subsection{(b)}
 
@@ -321,11 +347,13 @@ Thus $\sum_{k=1}^{K} p_k (1-p_k) <= -\sum_{k=1}^{K} p_k \log p_k \\ \implies$  G
 	\newline There are 10 attributes in each record (including the id).
 	
 	\item[2] Do you think that all attributes are meaningful for the classification? If not, explain why.
-	The \textit{id} attribute is definitely not useful for classification. The reason is obvious since \textit{id} of a record is meant for identification and it does not explain the nature of glass (in other words, \textit{id} is not a function of its behavior).
+	\newline The \textit{id} attribute is definitely not useful for classification. The reason is obvious since \textit{id} of a record is meant for identification and it does not explain the nature of glass (in other words, \textit{id} is not a function of its behavior).
 	 Since I do not have expertise in the domain of glass manufacturing, I would not try to decide the usefulness or uselessness of other attributes in the dataset at this point of time, instead I would let my statistical learning model to learn it. Hence I will supply all the attributes to my learning machine.
 	 
+	 For the further improvements in the accuracy, we may ignore the attributes with zero variance. 
+	 
 	 \item[3] How many classes are? Class is a type of glass.
-		 There are \textbf{6} classes of glasses in the dataset provided on blackboard. Originally, in UCI repository there were \textbf{7} classes, but the class with label \textbf{4} is missing in the dataset provided in blackboard.
+		 \newline There are \textbf{6} classes of glasses in the dataset provided on blackboard. Originally, in UCI repository there were \textbf{7} classes, but the class with label \textbf{4} is missing in the dataset provided in blackboard.
 	
 	\item[4] Please explain the class distribution. Which class is majority? Do you think that it can be considered as a uniform distribution?
 	The distribution of classes are as follows:
@@ -363,6 +391,39 @@ Thus $\sum_{k=1}^{K} p_k (1-p_k) <= -\sum_{k=1}^{K} p_k \log p_k \\ \implies$  G
 \end{description}
 \subsection{(b) Performance Comparison}
 
+\subsubsection{KNN}
+	The accuracy is tabulated below \\
+	\begin{tabular}{ | r | r| r| r|} \hline
+		K  & Distance Measure & Training Accuracy & Testing Accuracy \\ \hline
+		1  & $L_1$ & 0.7500 & 0.6667 \\ \hline
+		3  & $L_1$ & 0.7397 & 0.1111 \\ \hline
+		5  & $L_1$ & 0.6836 & 0.5555 \\ \hline
+		7  & $L_1$ & 0.6887 & 0.5000 \\ \hline
+		1  & $L_2$ & 0.7091 & 0.6111 \\ \hline
+		3  & $L_2$ & 0.7193 & 0.6111 \\ \hline
+		5  & $L_2$ & 0.6683 & 0.5555 \\ \hline
+		7  & $L_2$ & 0.6734 & 0.5555 \\ \hline
+	\end{tabular}
+	\newline
 
+
+\subsubsection{Naive Bayes}
+The training accuracy of Naive Bayes classifier is $0.5510$ and the testing accuracy is $0.3333$.
+
+\subsubsection{Discussion}
+	The results from the classifier are not similar. From the above tabulated statistics, we can infer that the KNN classifier performed better than Naive Bayes. The best performing parameters of KNN classifier for the given dataset is when $K=1$ and $Distance Measure = L_1$. 
+	
+
+	My observation and statements for this exercise:
+	
+		The distribution of training examples are skewed. For instance Class with label "6" has only 6 examples but class with label "2" is dominating with 72 examples. This greatly altered the probability of the target classes. In practice, balancing the training data may be helpful when using Naive Bayes Classifier.
+	
+		The training data consists of only 196 labeled examples but 6 target classes. 196 examples may be very few training for distinguishing 6 different target classes. 
+		
+		There were 9 attributes in the dataset, few of them have zero or close to zero variance. These attributes do not provide any information for classification. Thus actual number of useful attributes are fewer than 9. 
+		
+		When the parameter K is increased, due to fewer examples of many different kinds (i.e. more types of classes and lesser training examples), the KNN classifier gets confused. This situation may get better when more examples can be added for training or the number of classes can be reduced.
+		
+		
 
 \end{document}
