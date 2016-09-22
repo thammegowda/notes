@@ -37,6 +37,9 @@
 \usepackage{xcolor}
 \usepackage{mathtools}
 
+\usepackage{sectsty}
+\sectionfont{\fontsize{16}{15}\selectfont}
+
 
 \setenumerate[1]{label=\Roman*.}
 \setenumerate[2]{label=\Alph*.}
@@ -156,15 +159,66 @@ Given:
  \end{gather*}
  After plugging these terms in the values from Guassian Distribution and reducing it to expected form
  \begin{gather*}
- P(Y=1 | X) = \frac{1}{1 + exp(ln(\cfrac{1 - \pi}{1}) + \sum_j{\cfrac{\mu_{1j}^2 - \mu_{0j}^2}{2 \sigma_j^2}} + \sum_j{\cfrac{\mu_{0j} - \mu_{1j}}{\sigma_j^2}x_i})} \\
+ P(Y=1 | X) = \frac{1}{1 + exp(ln(\cfrac{1 - \pi}{\pi}) + \sum_j{\cfrac{\mu_{1j}^2 - \mu_{0j}^2}{2 \sigma_j^2}} + \sum_j{\cfrac{\mu_{0j} - \mu_{1j}}{\sigma_j^2}x_i})} \\
  \end{gather*}
- This can be reduced to  $ \cfrac{1}{1 + exp(-\omega_0 + \omega^T X)} $, by following substitution
+ This can be expressed in the desired form of  $ \cfrac{1}{1 + exp(-\omega_0 + \omega^T X)} $, by the following substitutions
  \begin{gather*}
- \omega_0 = -ln(\cfrac{1 - \pi}{1}) - \sum_j{\cfrac{\mu_{1j}^2 - \mu_{0j}^2}{2 \sigma_j^2}} \\
+ \omega_0 = -ln(\cfrac{1 - \pi}{\pi}) - \sum_j{\cfrac{\mu_{1j}^2 - \mu_{0j}^2}{2 \sigma_j^2}} \\
  \mathbf{\omega} = \cfrac{\mu_{0j} - \mu_{1j}}{\sigma_j^2}
  \end{gather*}
 
 \subsection{(b)}
+
+	Using the definition of Joint Distribution, for k = \{0, 1\}
+	\begin{gather*}
+		P(X = x, Y = k) = P(Y = k) {P(X = x | Y =k)} \\
+		 P(X = x, Y = 1) = \pi {P(X = x | Y =1)} \\
+		 P(X = x, Y = 0) = (1 - \pi) {P(X = x | Y =0)} \\
+	\end{gather*}
+	Using the naive bayes assumption of conditional independence between the features, 
+	\begin{gather*}
+	P(X = x, Y = k) = P(Y = k) \prod_{d=1}^{D}{P(X_d = x_d | Y =k)}
+	\end{gather*}
+	Given that $\forall X_d$ follows a Gaussian distribution. Also stated that the class probability \( P(Y = k) = \pi_k \). After substituting these values, we get
+	\begin{gather*}
+	P(X = x, Y = k) = \pi_k \prod_{d=1}^{D}{\frac{1}{\sigma_d \sqrt{2 \pi}}\, exp(\cfrac{(x_d - \mu_{dk})^2}{2 \sigma_d^2})}
+	\end{gather*}
+	For a set of $N$ examples, the log-likelihood can be estimated as follows:
+	\begin{gather*}
+	\mathcal{L} = ln(P(D)) = ln \prod_{n=1}^{N}{ P(x_n, y_n) } \\
+	\mathcal{L} = ln \prod_{n=1}^{N}{ \prod_{k=1}^{K} \pi_{k} \prod_{d=1}^{D}{\frac{1}{\sigma_d \sqrt{2 \pi}}\, exp(\cfrac{(x_d - \mu_{dy_n})^2}{2 \sigma_d^2})} } \\
+	\end{gather*}
+	By simplification
+	\begin{gather*}
+	\mathcal{L} = \sum_k^K{\sum_{n}^{N}{ln \pi_{k}}} + \sum_k {\sum_{n}{\sum_d{{\bigg( ln(\cfrac{1}{\sigma_d \sqrt{2 \pi}}) - \cfrac{(x_d - \mu_{dk})^2}{2\sigma_d^2} \bigg) }}}}
+	\end{gather*}
+	The value of $\pi$ can be estimated statistically from set of $N$ as 
+	\begin{gather*}
+		\pi_k^* = \frac{\sum_n{I[y_k = c]}}{N} \\
+		\pi_1^* = \frac{\sum_n{I[y = 1]}}{N} \\
+		\pi_0^* = \frac{\sum_n{I[y = 0]}}{N}
+	\end{gather*}
+	The MLE value of $\mu_{dk}$ and $\sigma_d$ can be estimated by equating the first order derivative of the likelihood function with respect to $\mu_{dk}$ and $\sigma_d$ to $0$.
+	\begin{gather*}
+	\frac{\partial}{\partial \mu_{dk}} \mathcal{L} = 0 \\
+	\sum_{n:y_n = k}{\cfrac{x_d - \mu_{dk} }{\sigma_d^2}} = 0 \\ 
+	\sum_{n:y_n = k}{x_d - \mu_{dk}} = 0 \\ 
+	(\sum_{n:y_n = k}{x_d}) - N_k \mu_{dk} = 0 \\ 
+	\mu_{dk} = \frac{\sum_n{x_d}}{N_k}
+	\end{gather*}
+	Where $N_k = \sum_{i}^{n} I[Y = k]$ i.e. number of samples with label $k$.
+
+Similarly, for $\sigma_d$.
+	\begin{gather*}
+		\frac{\partial}{\partial \sigma_d}\mathcal{L} = 0 \\
+		\sum_{k}{\sum_{n:y_n = k}{\cfrac{(x_d - \mu_{dk})^2}{\sigma_d^2} - 1}} = 0 \\
+		\sum_{k}{\sum_{n:y_n = k}{\cfrac{(x_d - \mu_{dk})^2}{\sigma_d^2}}} = N \\ 
+		\sigma_d = \sqrt{\cfrac{\sum_{k}{\sum_{n:y_n = k}{(x_d - \mu_{dk})^2}}}{N}} \\
+		\sigma_d = \sqrt{\cfrac{{\sum_{n:y_n = 1}{(x_d - \mu_{dk})^2}} + {\sum_{n:y_n = 0}{(x_d - \mu_{dk})^2}}}{N}} 
+	\end{gather*}
+	where $N$ is the number of samples.
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{3. Nearest Neighbor}
@@ -325,7 +379,7 @@ Since the $p_k$ is defined in between $[0, 1]$, let us plot these functions in t
 	\node at (2.2,0.6) {\footnotesize $y=x(1-x)$};
 \end{tikzpicture}
 
-It is evident that the area under the curve $p_k (1-p_k)$ is smaller than the $p_k \log p_k $. \\
+It is evident that the area under the curve $p_k (1-p_k)$ is smaller than the $p_k \log p_k $. Proof from calculus as follows:\\
 \begin{equation*}
 	\int_{0}^{1} p_k (1-p_k) \space dp_k = \int_{0}^{1} [p_k - p_k^2] d_p \\
 				= \frac{x^2}{2} - \frac{x^3}{3} \bigg|_0^1 \\
@@ -416,7 +470,7 @@ The training accuracy of Naive Bayes classifier is $0.5510$ and the testing accu
 
 	My observation and statements for this exercise:
 	
-		The distribution of training examples are skewed. For instance Class with label "6" has only 6 examples but class with label "2" is dominating with 72 examples. This greatly altered the probability of the target classes. In practice, balancing the training data may be helpful when using Naive Bayes Classifier.
+		The distribution of training examples are skewed. For instance Class with label "6" has only 6 examples but class with label "2" is dominating with 72 examples. This greatly altered the prior of the target classes. In practice, balancing the training data may be helpful when using Naive Bayes Classifier.
 	
 		The training data consists of only 196 labeled examples but 6 target classes. 196 examples may be very few training for distinguishing 6 different target classes. 
 		
