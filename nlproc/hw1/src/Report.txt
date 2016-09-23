@@ -1,0 +1,104 @@
+# Topic      : USC CSCI 544 Applied NLP Fall 16 - HW1
+#             - Naive Bayes Classifier for Spam-Ham classification
+# Author     : Thamme Gowda Narayanaswamy
+# Student ID : 2074-6694-39
+# Email      : tnarayan@usc.edu
+# Date       : Sept 22, 2016
+
+
+1. 100% of Training data
+=========================
+  Performance on the development data with 100\% of the training data
+    1a. spam precision: 0.99
+    1b. spam recall: 0.98
+    1c. spam F1 score: 0.99
+    1d. ham precision: 0.95
+    1e. ham recall: 0.98
+    1f. ham F1 score: 0.96
+
+2. 10% of Training data
+=======================
+  Performance on the development data with 10\% of the training data
+    2a. spam precision: 0.99
+    2b. spam recall: 0.96
+    2c. spam F1 score: 0.98
+    2d. ham precision: 0.92
+    2e. ham recall: 0.97
+    2f. ham F1 score: 0.94
+
+
+3. Enhancements tried
+=====================
+  Description of enhancement(s) you tried (e.g., different approach(es) to smoothing,
+  treating common words differently, dealing with unknown words differently):
+
+  Baseline:
+   The naives bayes classifier with add-one smoothing and features are unigrams.
+  Since the precision and recall are around 0.99 (where the 2 digits after
+    the decimal point are not sufficient to capture the changes observed),
+    we are expressing the measures in terms of counts in the below.
+
+  The baseline is :
+  	Count(*)	   spam   ham	  Act.Total
+     	spam		   3592	    83      3675
+  	   ham		     25   1475      1500
+  	Pred.Total	  3651  1524      5175
+
+   The interpretation is: 83 spams are mislabeled as hams and
+                          25 hams are mislabeled as spams.
+
+  Bigrams
+  ---------
+  The first enhancement I tried is the addition of bigram features.
+  Overall Accuracy: is 0.991498
+
+  	Label  Precision	 Recall	  F1-Score
+  	spam   	1.00		     0.99	    & 0.99
+  	ham	  	0.98		     0.99	    & 0.99
+
+  	Count(*)			  spam	  ham	  Act.Total
+  	spam		        3641	   34	      3675
+  	ham		            10	  1490	    1500
+  	Pred.Total	    3651	  1524      5175
+
+  As we can see from the above table that 34 spams are mis classified as hams
+    and 10 $ham$s are mis classifier as spams.
+     This is a noticeable improvement from the baseline.
+
+
+ Stop words removal
+ -------------------
+  In the next attempt, I removed stop words. The list of stop words I used are
+  the common stop words of english language:
+
+   "a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "if", "in",
+   "into", "is", "it", "no", "not", "of", "on", "or", "such", "that", "the",
+   "their", "then", "there", "these", "they", "this", "to", "was", "will", "with"
+
+  And the result as follows
+
+  	Count(*)     spam	   ham	  Act.Total
+  	spam		     3636	    39	    3675
+  	ham		         16	  1484	    1500
+  	Pred.Total   3651	  1524	    5175
+
+  As we can infer from this table, the stopwords removal did not help,
+   in fact it increased misclassification by a small fraction from bigrams performance.
+
+4. Best Performance
+==================
+
+Best performance results based on enhancements.
+ Note that these could be the same or worse than the standard implementation.
+
+ The best performance observed in my experiments are with the following
+  Features          : Unigrams, bigrams
+  Stopwords removed : No
+  Smoothing         : Add one
+
+  4a. spam precision: 1.00
+  4b. spam recall: 0.99
+  4c. spam F1 score: 0.99
+  4d. ham precision: 0.98
+  4e. ham recall: 0.99
+  4f. ham F1 score: 0.99

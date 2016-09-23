@@ -1,3 +1,9 @@
+# Topic      : USC CSCI 544 Applied NLP Fall 16 - HW1
+#             - Naive Bayes Classifier for Spam-Ham classification
+# Author     : Thamme Gowda Narayanaswamy
+# Student ID : 2074-6694-39
+# Email      : tnarayan@usc.edu
+# Date       : Sept 22, 2016
 import os
 import sys
 import math
@@ -6,7 +12,11 @@ import logging as log
 log.basicConfig(level=log.DEBUG)
 
 ENCODING = 'latin-1'
-
+EN_STOPWORDS=set(["a", "an", "and", "are", "as", "at", "be", "but", "by", \
+                "for", "if", "in", "into", "is", "it", \
+                "no", "not", "of", "on", "or", "such", \
+                "that", "the", "their", "then", "there", "these", \
+                "they", "this", "to", "was", "will", "with"])
 class NaiveBayesModel(object):
     __VERSION__ = 1
 
@@ -79,8 +89,17 @@ class NaiveBayesModel(object):
             preds[label] = res
         return preds
 
-    def tokenize(self, text):
-        return text.split()
+    def tokenize(self, text, unigrams=True, bigrams=True, stopwords=False):
+        tokens = []
+        unigrams = text.split()
+        if stopwords:
+            unigrams = list(filter(lambda x: x not in EN_STOPWORDS, unigrams))
+        if unigrams:
+            tokens.extend(unigrams)
+        if bigrams:
+            for i in range(0, len(unigrams) - 1):
+                tokens.append("%s %s" % (unigrams[i], unigrams[i+1]))
+        return tokens
 
     def save_to_path(self, model_path):
         print('Storing the model at %s' % model_path)
@@ -94,7 +113,9 @@ class NaiveBayesModel(object):
         with open(model_path, 'rb') as f:
             model = pickle.load(f)
             if model.__version__ != NaiveBayesModel.__VERSION__:
-                log.warn("Model may not be compatible, class version %d, serialized model version:%d" % (NaiveBayesModel.__VERSION__, model.__version__))
+                log.warn("Model may not be compatible, class version %d," \
+                    + " serialized model version:%d" %
+                    (NaiveBayesModel.__VERSION__, model.__version__))
             else:
                 log.info("Model version %d" % model.__version__)
             return model

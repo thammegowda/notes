@@ -1,3 +1,9 @@
+# Topic      : USC CSCI 544 Applied NLP Fall 16 - HW1
+#             - Naive Bayes Classifier for Spam-Ham classification
+# Author     : Thamme Gowda Narayanaswamy
+# Student ID : 2074-6694-39
+# Email      : tnarayan@usc.edu
+# Date       : Sept 22, 2016
 import sys
 import os
 from nbmodel import NaiveBayesModel

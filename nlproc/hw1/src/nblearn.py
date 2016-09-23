@@ -1,3 +1,9 @@
+# Topic      : USC CSCI 544 Applied NLP Fall 16 - HW1
+#             - Naive Bayes Classifier for Spam-Ham classification
+# Author     : Thamme Gowda Narayanaswamy
+# Student ID : 2074-6694-39
+# Email      : tnarayan@usc.edu
+# Date       : Sept 22, 2016
 
 import sys
 import os
@@ -6,14 +12,13 @@ from nbmodel import ENCODING
 
 def read_training_data(dir):
     for root, dirs, files in os.walk(dir):
-        label = None
-        if root.endswith('spam'):
-            label = 'spam'
-        elif root.endswith('ham'):
-            label = 'ham'
         for name in files:
             if name.startswith('.'):
                 continue # skip hidden
+            if name.endswith('spam.txt'):
+                label = 'spam'
+            elif name.endswith('ham.txt'):
+                label = 'ham'
             yield label, os.path.join(root, name)
 
 def main(train_dir, labels=['spam', 'ham']):

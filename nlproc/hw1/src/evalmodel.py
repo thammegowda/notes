@@ -1,3 +1,9 @@
+# Topic      : USC CSCI 544 Applied NLP Fall 16 - HW1
+#             - Naive Bayes Classifier for Spam-Ham classification
+# Author     : Thamme Gowda Narayanaswamy
+# Student ID : 2074-6694-39
+# Email      : tnarayan@usc.edu
+# Date       : Sept 22, 2016
 import sys
 import os
 import numpy as np
@@ -33,13 +39,16 @@ def main(report):
     labels = ['spam', 'ham']
     matrix = confusion_matrix(report, labels)
     f1_score = float(np.trace(matrix)) / np.sum(matrix)
-    print("F1 Score is %f" % f1_score)
+    print("Overall Accuracy: is %f" % f1_score)
 
     actual_count = np.sum(matrix, axis=1)
     preds_count = np.sum(matrix, axis=0)
-    print("Label\tPrecision\tRecall")
+    print("Label\tPrecision\tRecall\tF1-Score")
     for idx, label in enumerate(labels):
-        print("%s\t%f\t%f" % (label, matrix[idx,idx] / preds_count[idx], matrix[idx,idx] / actual_count[idx]))
+        precision = matrix[idx,idx] / preds_count[idx]
+        recall = matrix[idx,idx] / actual_count[idx]
+        f1 = 2 * precision * recall / (precision + recall)
+        print("%s\t%.2f\t\t%.2f\t%.2f" % (label, precision, recall, f1))
 
     print("\nCounts:")
     print("*\t", end='')
