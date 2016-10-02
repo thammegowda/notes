@@ -1,0 +1,208 @@
+%%%%%%%%%%%
+%% Home work template for Graduate School
+%% Author : Thamme Gowda N.
+%% Originally from  https://github.com/thammegowda/hw-tex-templ
+%%%%%%%%%%%%%%
+
+\documentclass[letterpaper,doc,notimes]{apa6}
+%%\documentclass[tikz]{standalone}
+\usepackage{tikz}
+%Required by APA6 package
+\usepackage[normalem]{ulem}
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+
+%Oft-used, oft-abused
+\usepackage{afterpage}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{censor}
+\usepackage{color}
+\usepackage{csquotes}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{lmodern}
+%\usepackage{media9}
+\usepackage{multirow}
+\usepackage{outlines}
+\usepackage{pdfpages}
+\usepackage{placeins}
+\usepackage{soul}
+\usepackage{tabularx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{xcolor}
+\usepackage{mathtools}
+
+\usepackage{sectsty}
+\sectionfont{\fontsize{16}{15}\selectfont}
+
+
+\setenumerate[1]{label=\Roman*.}
+\setenumerate[2]{label=\Alph*.}
+\setenumerate[3]{label=\roman*.}
+\setenumerate[4]{label=\alph*.}
+
+\title{ \textbf{ USC CSCI 567 HOMEWORK 2 SOLUTIONS} }
+\shorttitle{USC CSCI567 FALL16 HW2}
+\author{\textsc{ThammeGowda Narayanaswamy}}
+\affiliation{ tnarayan@usc.edu \\ ID : 2074-6694-39 \\ Department of Computer Science \\ Viterbi School of Engineering \\ University of Southern California \\ Los Angeles, CA }
+
+%\note{September 13, 2016}
+\note{\today}
+\authornote{Produced for Fall 2016 session of CSCI 567, ``Machine Learning'', taught by Dr. Yan Liu at the University of Southern California}
+
+
+\begin{document}
+
+\maketitle
+\newpage
+
+\section{1. LOGISTIC REGRESSION}
+\subsection{a. Negative Log Likelihood of Binary Logistic Regression}
+The sigmoid-logistic function, defined by $\sigma(x) = \frac{1}{1 + e^{-x}}$ \\
+Given that the dataset has $n$ examples, namely $\{(x_1,y_1), (x_2,y_2),... (x_n,y_n)\}$ \\
+Where the class labels, $y_i = \{0, 1\}$  and $x_i$ $ \in \mathbb{R}^D$ \\
+Let $w$ $ \in \mathbb{R}^D$ parameter which has to be learned by logistic regressor for optimal classification.\\
+The probability estimation is defined by $P(Y=y_i|X=x_i) = \sigma(w^Tx_i) $. \\
+The negative log likelihood is defined by:
+\begin{align*}
+		L(w) = & -log\bigg(\prod_{i=1}^{n} P(Y=y_i|X=x_i) \bigg) \\
+		= & -\sum_{i=1}^{n}\bigg( log\big( P(Y=y_i|X=x_i) \big)\bigg) \\
+		= & -\sum_{i=1}^{n}\bigg( log\big( P(Y=1|X=x_i)P(Y=0|X=x_i) \big)\bigg) \\
+		= & -\sum_{i=1}^{n}\bigg( log\big[ \sigma(w^Tx_i)^{y_i} \times (1 - \sigma( w^Tx_i))^{1 - y_i} \big]\bigg) \\
+		= & -\sum_{i=1}^{n}\bigg( y_i log\big[ \sigma(w^Tx_i) \big] + (1 - y_i ) log\big[ 1 - \sigma(w^Tx_i) \big]\bigg) \\
+	%%	& w^Tx \text{ can also be expressed as sum of products, } \sum_{j}^{D} w_jx_j\\
+\end{align*}
+
+\section{1.b Find the update rule using gradient descent}
+From the previous section, we have 
+\begin{align*}
+	E(w) = & \mathcal{L}(w) = -\sum_{i=1}^{n}\bigg( y_i log\big[ \sigma(w^Tx_i) \big] + (1 - y_i ) log\big[ 1 - \sigma(w^Tx_i) \big]\bigg) \\
+	& \text{we know that $w$ is a multivariate function of variables } \{w_0, w_1, w_2, ....w_d\} \\
+	&  w^Tx \text{ can also be expressed as sum of products, } \sum_{j}^{d} w_jx_j\\
+	= & -\sum_{i=1}^{n}\bigg( y_i log\big[ \sigma(\sum_{j}^{d} w_jx_j) \big] + (1 - y_i ) log\big[ 1 - \sigma(\sum_{j}^{d} w_jx_j) \big]\bigg) \\
+	& \text{We find the gradient of $E(w)$ w.r.t variable $w_j$ for $j = 0, 1, ...d $} \\ 
+ \dfrac{\partial E(w)}{\partial w_j} = & -\sum_{i=1}^{n} \bigg(
+			  y_i \dfrac{\partial}{\partial w_j} log\big[ \sigma(\sum_{j}^{d} w_jx_j) \big] 
+			  + (1 - y_i ) \dfrac{\partial}{\partial w_j} log\big[ 1 - \sigma(\sum_{j}^{d} w_jx_j) 
+		\big]\bigg) \\ 
+		\\
+\end{align*}
+Let us evaluate the derivatives individually
+\begin{align*}
+\dfrac{\partial}{\partial w_j} log\big[ \sigma(\sum_{j}^{d} w_jx_j) \big]  = &
+		 \dfrac{\partial}{\partial w_j} log\big[  \frac{1}{1 + e^{-\sum_{j}^{d} w_jx_j} } \big]\\
+	= &  (1 + e^{-\sum_{j}^{d} w_jx_j}) \times \frac{-1}{(1 + e^{-\sum_{j}^{d} w_jx_j})^2} \times e^{-\sum_{j}^{d} w_jx_j} \times (-x_j) \\
+	= &  \frac{1}{1 + e^{-\sum_{j}^{d} w_jx_j}} \times e^{-\sum_{j}^{d} w_jx_j} \times (x_j) \\
+	= & x_j \times [1 - \sigma(\sum_{j}^{d} w_jx_j)] \\
+	= & x_j \times [1 - \sigma(w^Tx)] \\
+	\\
+\dfrac{\partial}{\partial w_j} log\big[ 1 - \sigma(\sum_{j}^{d} w_jx_j) = &
+	\dfrac{\partial}{\partial w_j} log\big[ 1 - \frac{1}{1 + e^{-\sum_{j}^{d} w_jx_j} } \big] \\
+	= &  \frac{1}{1 - \frac{1}{1 + e^{-\sum_{j}^{d} w_jx_j}}} \times \frac{-1 \times -1 }{(1 + e^{-\sum_{j}^{d} w_jx_j})^2} \times e^{-\sum_{j}^{d} w_jx_j} \times (-x_j) \\
+	= & -x_j \times \sigma(w^Tx) \\ 
+\end{align*}
+
+Putting the above two values in the original equation, we have:
+\begin{align*}
+\dfrac{\partial E(w)}{\partial w_j} = & -\sum_{i=1}^{n} \bigg(
+	 y_i \dfrac{\partial}{\partial w_j} log\big[ \sigma(\sum_{j}^{d} w_jx_j) \big] 
+	 + (1 - y_i ) \dfrac{\partial}{\partial w_j} log\big[ 1 - \sigma(\sum_{j}^{d} w_jx_j) 
+	 \big]\bigg) \\
+	 = & -\sum_{i=1}^{n} \bigg(	x_j y_i (1 - \sigma(w^Tx)) - (1 - y_i ) x_j \sigma(w^Tx) \bigg) \\
+\end{align*}
+
+The update rule using gradient descent is given by,
+
+\begin{equation*}
+	w_j = w_j - \alpha \dfrac{\partial E(w)}{\partial w_j}
+\end{equation*}
+{Where $\alpha$ is the learning or step rate.
+
+Provided proper learning rate $\alpha$, Gradient descent optimizer converges to global minimum for all convex functions. So, to test the convexity of the negative log likelihood function, let us compute second order derivatives.
+
+\begin{align*}
+\dfrac{\partial^2 E(w)}{\partial w_j^2} = & \dfrac{\partial}{\partial w_j} \dfrac{\partial E(w)}{\partial w_j} \\
+	= & -\sum_{i=1}^{n} \dfrac{\partial}{\partial w_j} \bigg(	x_j y_i (1 - \sigma(w^Tx)) - (1 - y_i ) x_j \sigma(w^Tx) \bigg) \\
+	= & -\sum_{i=1}^{n} \bigg( x_j y_i (- \dfrac{\partial}{\partial w_j} \sigma(w^Tx)) - (1 - y_i ) x_j \dfrac{\partial}{\partial w_j} \sigma(w^Tx) \bigg) \\
+	= & -\sum_{i=1}^{n} \bigg( x_j y_i (-x_j \sigma(w^Tx) (1 - \sigma(w^Tx))) - (1 - y_i ) x_j x_j  \sigma(w^Tx) (1 - \sigma(w^Tx)) \bigg) \\
+	= & -\sum_{i=1}^{n} \bigg( [ -y_i - (1 - y_i ) ] x_j^2 \sigma(w^Tx) (1 - \sigma(w^Tx)) \bigg)  \\
+	= & \sum_{i=1}^{n} \bigg([ y_i + 1 - y_i ) ] x_j^2 \sigma(w^Tx) (1 - \sigma(w^Tx)) \bigg)  \\
+	= & \sum_{i=1}^{n} \bigg( x_j^2 \sigma(w^Tx) (1 - \sigma(w^Tx)) \bigg) \\
+\end{align*}
+
+We know that, $\sigma(w^Tx)$ is the $(P(Y=1|X=x))$ which is  >= 0, also, $(1 - \sigma(w^Tx))$ is the $(P(Y=0|X=x))$ which is also >= 0. \\
+Thus $\dfrac{\partial^2 E(w)}{\partial w_j^2} >= 0 $. \\
+Therefore, negative log likelihood function is convex.  Hence Gradient descent finds the global minimum.
+
+\subsection{c. Multi class logistic regression model's Negative log likelihood}
+
+Given that we have `K` classes, namely k=\{1,2,3,4,...K\}.
+
+We know that the posterior probability of each class sums up to 1.
+\begin{align*}
+	\sum_{k=1}^{K} P(Y = k | X = x_i) = 1
+\end{align*}
+
+To reduce the number of required parameters, we can use the above result to precisely compute the probability of a class if we know rest all other classes.
+\begin{align*}
+	P(Y = K | X = x_i) = 1 - \sum_{k=1}^{K-1} P(Y = k | X = x_i)
+\end{align*}
+
+Let us define an Indicator function
+ $I(y_i = k)$ which hs value $1$ when $y_i = k$, and has $0$ if $y_i \ne k$ 
+
+For a dataset of $N$ examples, the likelihood of this multi class classifier (using fewer parameters ) is defined by
+\begin{align*}
+	l(w) = \prod_{n=1}^{N} \prod_{k=1}^{K-1} P(Y = y_n | X = x_n ) ^ {I(y_n=k)} (1 - \sum_{k=1}^{K-1} P(Y = y_n | X = x_n ) ^ {I(y_n=k)})
+\end{align*}
+We can simplify this equation without adding any additional parameters but setting $W_K=0$ as given in the problem description.
+
+\begin{align*}
+	\ell (w) = & \prod_{n=1}^{N} \prod_{k=1}^{K} P(Y = y_n | X = x_n )^{I(y_n = k)} & &
+\end{align*}
+The negative log likelihood is given by
+\begin{align*}
+  \mathcal{L}(w) = & - log \bigg [ \prod_{n=1}^{N} \prod_{k=1}^{K} P(Y = y_n | X = x_n )^{I(y_n = k)} \bigg]  & & \\
+	   = & - \sum_{n=1}^{N} \sum_{k=1}^{K} log P(Y = y_n | X = x_n ) ^{I(y_n = k)}  & & \\
+	   = & - \sum_{n=1}^{N} \sum_{k=1}^{K} log \bigg[ \frac{e^{w_k^Tx_n}}{1 + \sum_{t=1}^{K} e^{w_t^Tx_n}}  \bigg]^{I(y_n = k)}  & & \\
+	   = & - \sum_{n=1}^{N} \sum_{k=1}^{K} I(y_n = k) \bigg[ w_k^Tx_n - log [1 +  \sum_{t=1}^{K} e^{w_t^Tx_n} ] \bigg]  & & \\
+\end{align*}
+
+\subsection{d. Gradient descent update rule}
+Let us consider the final equation of previous section.
+The $\mathcal{L}$ is a multivariate function with variables $w_i$ for i = 1, 2,3, ... K . \\
+
+\begin{align*}
+	\mathcal{L}(w_1, w_2, ...w_K ) = & - \sum_{n=1}^{N} \sum_{k=1}^{K} I(y_n = k) \bigg[ w_k^Tx_n - log [1 +  \sum_{t=1}^{K} e^{w_t^Tx_n} ] \bigg] 
+\end{align*}
+The first order derivative of $\mathcal{L}$ w.r.t $w_i$ is:
+
+\begin{align*}
+\frac{\partial \mathcal{L}}{\partial w_i} = & - \frac{\partial }{\partial w_i } \sum_{n=1}^{N} \sum_{k=1}^{K} I(y_n = k) \bigg[ w_k^Tx_n - log [1 +  \sum_{t=1}^{K} e^{w_t^Tx_n} ] \bigg ] \\
+= & - \sum_{n=1}^{N} \sum_{k=1}^{K} I(y_n = k) \bigg[ x_{ni}  - \frac{1}{1 + \sum_{t=1}^{K} e^{w_t^Tx_n}} \times \sum_{t=1}^{K} e^{w_t^Tx_n} \times x_{ni} \bigg] \\
+& \text{$x_n$ is a vector of all atttributes of $n^{th}$ example} 
+\\ & \text{where as $x_{ni}$ is a scalar from $i^{th}$ attribute of $n^{th}$ example} \\
+\\
+= & - \sum_{n=1}^{N} \sum_{k=1}^{K} x_{ni} I(y_n = k) \bigg[ 1  - \frac{\sum_{t=1}^{K} e^{w_t^Tx_n}}{1 + \sum_{t=1}^{K} e^{w_t^Tx_n}}  \bigg] \\
+\frac{\partial \mathcal{L}}{\partial w_i} = & - \sum_{n=1}^{N} \sum_{k=1}^{K} x_{ni} I(y_n = k) \bigg[ \frac{1}{1 + \sum_{t=1}^{K} e^{w_t^Tx_n}}  \bigg] \\
+\end{align*}
+The update rule for gradient descent optimizer with step rate $\alpha$ is: 
+\begin{align*}
+	w_i = & w_i - \alpha \frac{\partial \mathcal{L}}{\partial w_i} \\
+	& \text{for all } i = \{1, 2, 3,...K\}
+\end{align*}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{2. LINEAR/GAUSSIAN DISCRIMINANT}
+
+		
+
+\end{document}
