@@ -1,10 +1,15 @@
+# Author     : ThammeGowda Narayanaswamy
+# Email      : tnarayan@usc.edu
+# Student ID : 2074669439
+# Subject    : CSCI 567 Fall 16 Homework 2
+# Date       : Oct 2, 2016
+
 from __future__ import print_function
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
 quiet = True # to disable unwanted output
-#quiet = False
 def log(*args):
     if not quiet:
         print(args)
@@ -14,6 +19,10 @@ alpha = 0.001     # learning rate
 conv_tol = 0.05
 num_iter = 50000
 print_interval = 500
+print("The following parameters will be used for gradient descent optimizer:")
+print("\t Learning rate=", alpha)
+print("\t Convergence Tolerance=", conv_tol)
+print("\t Max Iterations=", num_iter)
 ###
 
 from sklearn.datasets import load_boston
@@ -27,7 +36,7 @@ test_split_rule = np.arange(dfX.shape[0], dtype=int) % 7 == 0
 testX, testY = dfX[test_split_rule], dfY[test_split_rule]
 trainX, trainY = dfX[~test_split_rule], dfY[~test_split_rule]
 
-print("##### DATA ANALYSIS / EXPLORATION ####")
+print("##### 3.1 DATA ANALYSIS / EXPLORATION ")
 print('Feature Names:\n', pd.DataFrame(boston.feature_names))
 print('Dataset shape:', dfX.shape, dfY.shape)
 print('Test shape:', testX.shape, testY.shape)
@@ -78,9 +87,9 @@ def show_plots():
         plt.title("Histogram of '%s' with %d bins" % (boston.feature_names[i], bins))
         plt.show()
 
-# show_plots()
+show_plots()
 
-print("\n\n###### LINEAR REGRESSION ALGORITHM#########")
+print("\n\n###### 3.2 a LINEAR REGRESSION ALGORITHM")
 ## Linear Regression
 
 def predict(X, W):
@@ -119,7 +128,6 @@ def gradient_desc(X, Y, W, alpha,
             log(W.flatten())
     return W
 
-
 # compute means and stds
 class LinearRegression(object):
 
@@ -144,20 +152,15 @@ class LinearRegression(object):
             X = self.normalize(X)
         return np.matmul(X, self.W)
 
-
-
 linreg = LinearRegression(trainX, trainY, alpha, num_iter, conv_tol)
-print("Gradient Desc Optimization Finished. W=", linreg.W.flatten())
-
-print("\n\n")
+print("Gradient Desc Optimization Finished.\nW=", linreg.W.flatten())
 predY = linreg.predict(trainX)
 train_mse_cost = MSECost(predY, trainY)
 test_mse_cost = MSECost(linreg.predict(testX), testY)
 print('Train MSE::', train_mse_cost, '\tTest MSE::', test_mse_cost)
 
-
 ######################
-print("\n\n##### RIDGE REGRESSION########")
+print("\n\n##### 3.2 b RIDGE REGRESSION########")
 
 def MSECost_ridge(X, W, Y, lambd):
     # Cost      = 1/N  \SIGMA[(XW-Y)^2] + lambd W||_2^2
@@ -227,7 +230,7 @@ class RidgeRegression(LinearRegression):
 
 lambds = [0.01, 0.1, 1.0]
 results = []
-print("\n\nLambda\t\tTrain MSE\t\tTest MSE")
+print("\nLambda\t\tTrain MSE\t\tTest MSE")
 for lambd in lambds:
     ridreg = RidgeRegression(trainX, trainY, alpha, lambd, num_iter, conv_tol)
     train_mse = ridreg.find_cost(trainX, trainY, lambd=lambd)
@@ -237,7 +240,7 @@ for lambd in lambds:
 
 ###########################
 # 10 fold validation
-print("\n\n###### RIDGE REGRESSION : 10-FOLD CROSS VALIDATION########")
+print("\n\n###### 3.2 c RIDGE REGRESSION : 10-FOLD CROSS VALIDATION########")
 k = 10
 def k_fold_cv(X, Y, lambd, k):
     n = len(Y)
@@ -265,7 +268,7 @@ def k_fold_cv(X, Y, lambd, k):
     return np.array(accuracy).mean()
 
 lambds = [0.0001, 0.001, 0.01, 0.1, 1, 10]
-print("\n\nLambda\t\tTrain MSE\t\tTest MSE")
+print("\nLambda\t\tTrain MSE\t\tTest MSE")
 for lambd in lambds:
     train_mse = k_fold_cv(trainX, trainY, lambd, k)
     ridreg = RidgeRegression(trainX, trainY, alpha, lambd, num_iter, conv_tol)
@@ -274,7 +277,7 @@ for lambd in lambds:
     print("\t\t".join(map(lambda x: str(x), t)))
 
 ######################################################
-print("\n\n###### FEATURE SELECTION: TOP 4 CORRELATIONS WITH TARGET")
+print("\n\n###### 3.3 a FEATURE SELECTION: TOP 4 CORRELATIONS WITH TARGET")
 # Top 4 features
 
 top4TrainX = np.zeros(shape=(len(trainY), 0))
@@ -299,7 +302,7 @@ test_mse_cost = MSECost(linreg.predict(top4TestX), testY)
 print('Train MSE::', train_mse_cost, " Test MSE::", test_mse_cost)
 
 ##########
-print("\n\n###### FEATURE SELECTION: TOP 4 CORRELATIONS WITH RESIDUAL ERROR")
+print("\n\n###### 3.3 b FEATURE SELECTION: TOP 4 CORRELATIONS WITH RESIDUAL ERROR")
 # top 4 from residual errors
 
 X_train, Y_train = trainX, trainY
@@ -339,7 +342,7 @@ for i in range(4):
     names = np.delete(names, top1_col)
 
 ######################################
-print("\n\n###### FEATURE SELECTION: TOP 4 USING BRUTEFORCE")
+print("\n\n###### 3.3 c FEATURE SELECTION: TOP 4 USING BRUTEFORCE")
 # Brute force
 import itertools
 
@@ -376,7 +379,7 @@ except:
 
 
 ###############################
-print("\n\n###### FEATURE EXPANSION")
+print("\n\n###### 3.4 FEATURE EXPANSION")
 # Feature Expansion
 Z_train = trainX
 Z_test = testX
