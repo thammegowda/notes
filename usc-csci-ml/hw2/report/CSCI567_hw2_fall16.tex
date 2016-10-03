@@ -47,13 +47,21 @@
 \setenumerate[3]{label=\roman*.}
 \setenumerate[4]{label=\alph*.}
 
+% break page where ever is required
+\allowdisplaybreaks
+
 \title{ \textbf{ USC CSCI 567 HOMEWORK 2 SOLUTIONS} }
 \shorttitle{USC CSCI567 FALL16 HW2}
 \author{\textsc{ThammeGowda Narayanaswamy}}
-\affiliation{ tnarayan@usc.edu \\ ID : 2074-6694-39 \\ Department of Computer Science \\ Viterbi School of Engineering \\ University of Southern California \\ Los Angeles, CA }
+\affiliation{ tnarayan@usc.edu \\ ID : 2074-6694-39 \\ Department of Computer Science \\ Viterbi School of Engineering \\ University of Southern California \\ Los Angeles, CA 
+	}
+
+
 
 %\note{September 13, 2016}
 \note{\today}
+\note{ Collaborators : \\ Ishan Alok}
+
 \authornote{Produced for Fall 2016 session of CSCI 567, ``Machine Learning'', taught by Dr. Yan Liu at the University of Southern California}
 
 
@@ -201,8 +209,152 @@ The update rule for gradient descent optimizer with step rate $\alpha$ is:
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{2. LINEAR/GAUSSIAN DISCRIMINANT}
+\section{2. LINEAR/GAUSSIAN DISCRIMINANT ANALYSIS}
 
-		
+\subsection{a. Log likelihood and MLE estimates}
+Given:
+
+The dataset $\mathcal{D}$ has $N$ examples, $\{(x_1,y_1), (x_2, y_2), ...(x_N, y_N)\}$
+
+There are two classes $y_n = \{1, 2\} $
+
+$P(y_n = 1) = p_1$ and $P(y_n = 2) = p_2$
+
+$P(x_n | y_n=1) = \frac{1}{\sqrt{2\pi } \cdot \sigma_1} \exp(-\frac{(x_n-\mu_1)^2}{2\sigma_1^2})$
+
+$P(x_n | y_n=2) = \frac{1}{\sqrt{2\pi } \cdot \sigma_2} \exp(-\frac{(x_n-\mu_2)^2}{2\sigma_2^2})$ \\
+
+Let us define Indicator functions $I(y_n=1)$ and $I(y_n=2)$
+
+
+\paragraph{Log Likelihood}
+The log likelihood is defined by
+\begin{align*}
+\mathcal{L} = & ln \bigg[ \prod_{n=1}^{N} P(x_n, y_n) \bigg] \\
+	= &  \ln \bigg[ \prod_{n=1}^{N} P(x_n, y_1)^{I(y_n=1)} \times P(x_n, y_1)^{I(y_n=2)} \bigg] \\
+	= & \ln \bigg[ \prod_{n=1}^{N} P(x_n, y_1)^{I(y_n=1)} \times P(x_n, y_1)^{I(y_n=2)} \bigg] \\
+	= &  \sum_{n=1}^{N}\bigg[ ln P(x_n, y_1)^{I(y_n=1)} + ln P(x_n, y_1)^{I(y_n=2)} \bigg] \\
+	= &  \sum_{n=1}^{N}\bigg[ I(y_n=1) \ln \big[ p_1 \times \frac{1}{\sqrt{2\pi } \cdot \sigma_1} \exp(-\frac{(x_n-\mu_1)^2}{2\sigma_1^2}) \big] 
+			 + I(y_n=2) \ln \big[ p_2 \times \frac{1}{\sqrt{2\pi } \cdot \sigma_2} \exp(-\frac{(x_n-\mu_2)^2}{2\sigma_2^2}) \big] \bigg]  \\
+	= & \sum_{n=1}^{N}\bigg[
+		I(y_n=1)\big[ \ln(p_1) -\frac{1}{2}\ln(2\pi) - \ln(\sigma_1) - \frac{1}{2\sigma_1^2} (x_n-\mu_1)^2 \big] \\
+		 & \indent  + 
+		I(y_n=2)\big[ \ln(p_2) -\frac{1}{2}\ln(2\pi) - \ln(\sigma_2) - \frac{1}{2\sigma_2^2} (x_n-\mu_2)^2 \big] \bigg] \\
+\end{align*}
+
+The above likelihood expression is a multivariate function with parameters $(p1, p2, \mu_1, \mu_2, \sigma_1, \sigma_2 )$.
+From a fundamental law of probability, we know that
+\begin{align*}
+	p_1 + p_2 = & 1\\
+	 p_2 = & 1 - p_1 \\
+	 p_1 = & 1 - p_2
+\end{align*}
+Thus,
+\begin{multline}
+	\mathcal{L} (p1, \mu_1, \mu_2, \sigma_1, \sigma_2 )	=  \sum_{n=1}^{N}\bigg[
+	I(y_n=1)\big[ \ln(p_1) -\frac{1}{2}\ln(2\pi) - \ln(\sigma_1) - \frac{1}{2\sigma_1^2} (x_n-\mu_1)^2 \big] \\
+		\indent \indent \indent + 
+	I(y_n=2)\big[ \ln(1 - p_1) -\frac{1}{2}\ln(2\pi) - \ln(\sigma_2) - \frac{1}{2\sigma_2^2} (x_n-\mu_2)^2 \big] \bigg] \\
+\end{multline}
+Let us find an estimate of these parameters using maximum likelihood estimator method.\\\
+To find an estimate of $p_1$, we solve $\frac{\partial \mathcal{L} }{\partial p_1} = 0$
+\begin{align*}
+\frac{\partial \mathcal{L} }{\partial p_1} =& 0 \\
+\sum_{n=1}^{N}\big[I(y_n=1)\frac{1}{p_1}  + I(y_n=2)\frac{1}{1-p_1} \times(-1) \big]  =& 0 \\ 
+\frac{1}{p_1} \sum_{n=1}^{N} I(y_n=1)  - \frac{1}{1-p_1} \sum_{n=1}^{N} I(y_n=2) =& 0 \\ 
+(1-p_1) \sum_{n=1}^{N} I(y_n=1)  - p_1 \sum_{n=1}^{N} I(y_n=2) =& 0 \\ 
+p_1 =&  \frac{\sum_{n=1}^{N} I(y_n=1) }{\sum_{n=1}^{N} I(y_n=1) + \sum_{n=1}^{N} I(y_n=2)}\\ 
+\implies p_1^* =&  \frac{\sum_{n=1}^{N} I(y_n=1) }{N} \\ 
+\text{Similarly,} \\
+1 - p_1 =& 1 - \frac{\sum_{n=1}^{N} I(y_n=1) }{N} = \frac{N - \sum_{n=1}^{N} I(y_n=1) }{N} \\ 
+\implies p_2^* =&  \frac{\sum_{n=1}^{N} I(y_n=2) }{N} \\ 
+\end{align*}
+
+To find an estimate of $\mu_1$ when $\mathcal{L}$ is maximum, let us solve for $\frac{\partial \mathcal{L} }{\partial \mu_1} = 0$
+\begin{align*}
+\frac{\partial \mathcal{L} }{\partial \mu_1} =& 0 \\
+	\sum_{n=1}^{N} I(y_n=1) \times \frac{-1}{2\sigma_1} \times 2 \times (x_n - \mu_1) \times -1 =& 0 \\
+	\sum_{n=1}^{N} I(y_n=1) \times (x_n - \mu_1) =& 0 \\
+		\sum_{n=1}^{N} I(y_n=1) x_n =&  \sum_{n=1}^{N} I(y_n=1) \mu_1 \\
+				\sum_{n=1}^{N} I(y_n=1) x_n =& \mu_1 \sum_{n=1}^{N} I(y_n=1) \\
+				\frac{ \sum_{n=1}^{N} I(y_n=1) x_n } {\sum_{n=1}^{N} I(y_n=1)}=& \mu_1  \\
+				\implies \mu_1^* = & \frac{ \sum_{n=1}^{N} I(y_n=1) x_n } {\sum_{n=1}^{N} I(y_n=1)}  \\
+		\text{We already know that, }  p_1 \times N = \sum_{n=1}^{N} I(y_n=1) & \\
+	 \implies \mu_1^* = & \frac{ \sum_{n=1}^{N} I(y_n=1) x_n } {p_1 N} \\
+	 \\
+ \text{$\mu_2$ when $\mathcal{L}$ is maximum can be estimated by solving} & \\ \frac{\partial \mathcal{L} }{\partial \mu_2} = &0 \\
+	 \implies \mu_2^* = & \frac{ \sum_{n=1}^{N} I(y_n=2) x_n } {\sum_{n=1}^{N} I(y_n=2)}  \\
+	 	  = & \frac{ \sum_{n=1}^{N} I(y_n=2) x_n } {p_2 N} \\
+\end{align*}
+
+To find an estimate of $\sigma_1$ when $\mathcal{L}$ is maximum, let us solve
+\begin{align*}
+	\frac{\partial \mathcal{L} }{\partial \sigma_1} = &0  \\
+	\sum_{n=1}^{N} I(y_n=1) \big[ -\frac{1}{\sigma_1} -\frac{(x_n - \mu_1)^2}{2} \times \frac{-2}{\sigma^3} \big] =& 0 \\
+	\sum_{n=1}^{N} I(y_n=1) \big[ -\sigma_1^2 + (x_n - \mu_1)^2 \big] =& 0 \\
+	\sigma_1^2 \sum_{n=1}^{N} I(y_n=1) =& \sum_{n=1}^{N} I(y_n=1) (x_n - \mu_1)^2 \\
+    \sigma_1^2 =& \frac{ \sum_{n=1}^{N} I(y_n=1) (x_n - \mu_1)^2 }{\sum_{n=1}^{N} I(y_n=1)}\\
+  \implies \sigma_1^* =& \sqrt{ \frac{ \sum_{n=1}^{N} I(y_n=1) (x_n - \mu_1)^2 }{\sum_{n=1}^{N} I(y_n=1)} } = \sqrt{ \sum_{n=1}^{N} \frac{ I(y_n=1) (x_n - \mu_1)^2 }{p_1 N} } \\
+\end{align*}
+
+Similarly, to find an estimate of $\sigma_2$ when $\mathcal{L}$ is maximum, let us solve
+
+\begin{align*}
+\frac{\partial \mathcal{L} }{\partial \sigma_2} = &0  \\
+\implies \sigma_2^* =& \sqrt{ \frac{ \sum_{n=1}^{N} I(y_n=2) (x_n - \mu_2)^2 }{\sum_{n=1}^{N} I(y_n=2)} } = \sqrt{ \sum_{n=1}^{N} \frac{ I(y_n=2) (x_n - \mu_2)^2 }{p_2 N} } \\
+\end{align*}
+
+
+\subsection{b. Reduction to Logistic Sigmoid function form}
+Given :\\
+\indent  There are two classes, $y_n = \{c_1, c_2\}$ \\
+\indent  $P(x | y= c_1) = \mathcal{N}(\mu_1, \sum)$  \\
+\indent  $P(x | y=c_2) = \mathcal{N}(\mu_2, \sum) $ \\
+
+\noindent We know \\
+\indent for $D$ variables, \\
+\indent \indent $\mathcal{N}(\mu, \sum) = (2\pi)^{-D/2} \sum^{-1/2} \exp[-\frac{1}{2} (x-\mu)^T \space \sum^{-1} \space (x-\mu)]$
+
+\noindent Goal: \\
+\indent  To express $P(y=c_1|x) $ in logistic sigmoid form
+
+\noindent Solution:
+\begin{align*}
+\text{Using the Bayes rule} & \\
+	P(y =& c_1|x) = \frac{P(x | y=c1) P(y=c1)}{P(x)} \\
+\text{Using the law of otal probability} \\
+	P(y =& c_1|x) = \frac{P(x | y=c1) P(y=c1)}{P(x | y=c1) P(y=c1) + P(x | y=c2) P(y=c2)} \\
+	P(y =& c_1|x) = \frac{1}{1 + \frac{ P(x | y=c2) P(y=c2)}{P(x | y=c1) P(y=c1)} } \\
+\text{This is of form} \\
+	P(y =& c_1|x) = \frac{1}{1 + f(x)} \\
+\text{where } f(x) = & \frac{P(y=c1)}{P(y=c1)} \times \frac{P(x|y=c2) }{P(x|y=c1)} \\
+	 = & \frac{P(y=c1)}{P(y=c1)} \times \frac{\mathcal{N}(\mu_2, \sum) }{\mathcal{N}(\mu_1, \sum)}
+\end{align*}
+Now, substituting the values in $f(x)$
+\begin{align*}
+f(x) = & \frac{P(y=c1)}{P(y=c1)} \times \frac{(2\pi)^{-D/2} \sum^{-1/2} \exp[-\frac{1}{2} (x-\mu_2)^T \space \sum^{-1} \space (x-\mu_2)] }  {(2\pi)^{-D/2} \sum^{-1/2} \exp[-\frac{1}{2} (x-\mu_1)^T \space \sum^{-1} \space (x-\mu_1)]}\\ 
+  = & \frac{P(y=c1)}{P(y=c1)} \times \exp \bigg[\frac{1}{2}  \big[(x-\mu_1)^T \space \sum^{-1} \space (x-\mu_1) - (x-\mu_2)^T \space \sum^{-1} \space (x-\mu_2)  \big] \bigg] \\
+  \\ 
+&  \text{For the sake of similification, we can use the form, } x = \exp(\ln(x))\\ 
+\exp(\ln(f(x))) = &\exp(\ln\bigg( \frac{P(y=c1)}{P(y=c1)} \times \exp \bigg[\frac{1}{2}  \big[(x-\mu_1)^T \space \sum^{-1} \space (x-\mu_1) - (x-\mu_2)^T \space \sum^{-1} \space (x-\mu_2)  \big] \bigg] \bigg)) \\
+\\
+f(x) = &\exp(\ln(\frac{P(y=c1)}{P(y=c1)}) + \frac{1}{2} \big[(x-\mu_1)^T \space \sum^{-1} \space (x-\mu_1) - (x-\mu_2)^T \space \sum^{-1} \space (x-\mu_2)  \big] ) \\
+f(x) = &\exp( - \big(- \ln(\frac{P(y=c1)}{P(y=c1)}) + \frac{1}{2} \big[ (x-\mu_2)^T \space \sum^{-1} \space (x-\mu_2) - (x-\mu_1)^T \space \sum^{-1} \space (x-\mu_1)\big] \big)) \\
+\end{align*}
+This equation is of  form $\exp(-(\theta_0 + {\theta}^Tx))$
+Where, $\theta_0$ is a scalar computed by - $\ln(\frac{P(y=c1)}{P(y=c1)}) $ \\
+ and $\theta^Tx$ is another scalar computed by $\frac{1}{2} \big[(x-\mu_2)^T \space \sum^{-1} \space (x-\mu_2) - (x-\mu_1)^T \space \sum^{-1} \space (x-\mu_1)  \big]$, but $\theta$ and $x$ are vectors of $D$ dimensions.
+ 
+ Substituting the value of $f(x)$ in the original equation above, we get:
+\begin{align*}
+	P(y =& c_1|x) = \frac{1}{1 + f(x)} 
+		= \frac{1}{1 + exp(-(\theta_0 + \theta^Tx))} 
+ \end{align*}
+ The above expression is in logistic sigmoid form.
+ However, we can further simplify the above equation by packing $\theta_0$ scalar parameter inside $\theta$ vector by inserting $1$ into $x$ vector at the corresponding dimension. \\
+ \begin{equation}
+	\implies 	P(y = c_1|x) = \frac{1}{1 + exp(-\theta^Tx)}
+ \end{equation}
+ where $\theta$ and $x$ are vectors of $D+1$ dimensions
 
 \end{document}
