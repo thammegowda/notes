@@ -294,14 +294,14 @@ To find an estimate of $\sigma_1$ when $\mathcal{L}$ is maximum, let us solve
 	\sum_{n=1}^{N} I(y_n=1) \big[ -\sigma_1^2 + (x_n - \mu_1)^2 \big] =& 0 \\
 	\sigma_1^2 \sum_{n=1}^{N} I(y_n=1) =& \sum_{n=1}^{N} I(y_n=1) (x_n - \mu_1)^2 \\
     \sigma_1^2 =& \frac{ \sum_{n=1}^{N} I(y_n=1) (x_n - \mu_1)^2 }{\sum_{n=1}^{N} I(y_n=1)}\\
-  \implies \sigma_1^* =& \sqrt{ \frac{ \sum_{n=1}^{N} I(y_n=1) (x_n - \mu_1)^2 }{\sum_{n=1}^{N} I(y_n=1)} } = \sqrt{ \sum_{n=1}^{N} \frac{ I(y_n=1) (x_n - \mu_1)^2 }{p_1 N} } \\
+  \implies \sigma_1^* =& \sqrt{ \frac{ \sum_{n=1}^{N} I(y_n=1) (x_n - \mu_1)^2 }{\sum_{n=1}^{N} I(y_n=1)} } = \sqrt{ \frac{ \sum_{n=1}^{N} I(y_n=1) (x_n - \mu_1)^2 }{p_1 N} } \\
 \end{align*}
 
 Similarly, to find an estimate of $\sigma_2$ when $\mathcal{L}$ is maximum, let us solve
 
 \begin{align*}
 \frac{\partial \mathcal{L} }{\partial \sigma_2} = &0  \\
-\implies \sigma_2^* =& \sqrt{ \frac{ \sum_{n=1}^{N} I(y_n=2) (x_n - \mu_2)^2 }{\sum_{n=1}^{N} I(y_n=2)} } = \sqrt{ \sum_{n=1}^{N} \frac{ I(y_n=2) (x_n - \mu_2)^2 }{p_2 N} } \\
+\implies \sigma_2^* =& \sqrt{ \frac{ \sum_{n=1}^{N} I(y_n=2) (x_n - \mu_2)^2 }{\sum_{n=1}^{N} I(y_n=2)} } = \sqrt{ \frac{ \sum_{n=1}^{N} I(y_n=2) (x_n - \mu_2)^2 }{p_2 N} } \\
 \end{align*}
 
 
