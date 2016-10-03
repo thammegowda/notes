@@ -16,7 +16,7 @@ def log(*args):
 
 ### Global Parameters
 alpha = 0.001     # learning rate
-conv_tol = 0.05
+conv_tol = 0.005
 num_iter = 50000
 print_interval = 500
 print("The following parameters will be used for gradient descent optimizer:")
@@ -99,6 +99,14 @@ def MSECost(Y2, Y1):
     # Cost      = 1/N  SIGMA[(XW-Y)^2]
     return float(np.sum((Y2 - Y1) ** 2) / len(Y2))
 
+def analytical_optimizer(X, Y):
+    '''W = [X^T X]^{-1} X^T Y '''
+    return np.matmul(
+        np.matmul(
+            np.linalg.pinv(np.matmul(X.transpose(), X)),
+            X.transpose()),
+        Y)
+
 def gradient_desc(X, Y, W, alpha,
                   num_iter = num_iter, conv_tol=conv_tol, print_interval = print_interval):
     c = float('inf')
@@ -131,15 +139,19 @@ def gradient_desc(X, Y, W, alpha,
 # compute means and stds
 class LinearRegression(object):
 
-    def __init__(self, X, Y, learn_rate=0.001, num_iter=10000, conv_tol=0.01):
-
+    def __init__(self, X, Y, learn_rate=0.001, num_iter=10000, conv_tol=0.01, opt='analytical'):
         self.means = X.mean(axis=0)
         self.stds = X.std(axis=0)
         X = self.normalize(X)
         self.n_attrs = X.shape[1]
-        W = np.random.rand(self.n_attrs, 1)
-        self.W = gradient_desc(X, Y, W, alpha=learn_rate,
-                                num_iter=num_iter, conv_tol=conv_tol)
+        if opt == 'gradient_desc':
+            W = np.random.rand(self.n_attrs, 1)
+            self.W = gradient_desc(X, Y, W, alpha=learn_rate,
+                                    num_iter=num_iter, conv_tol=conv_tol)
+        elif opt == 'analytical':
+            self.W = analytical_optimizer(X, Y)
+        else:
+            raise Exception('Unknown Optimizer %s' % opt)
 
     def normalize(self, X):
         X = (X - self.means) / self.stds
@@ -152,12 +164,14 @@ class LinearRegression(object):
             X = self.normalize(X)
         return np.matmul(X, self.W)
 
-linreg = LinearRegression(trainX, trainY, alpha, num_iter, conv_tol)
-print("Gradient Desc Optimization Finished.\nW=", linreg.W.flatten())
-predY = linreg.predict(trainX)
-train_mse_cost = MSECost(predY, trainY)
-test_mse_cost = MSECost(linreg.predict(testX), testY)
-print('Train MSE::', train_mse_cost, '\tTest MSE::', test_mse_cost)
+for opt_val in ["analytical", "gradient_desc"]:
+    print("Using %s optimizer" % opt_val)
+    linreg = LinearRegression(trainX, trainY, alpha, num_iter, conv_tol, opt=opt_val)
+    print("W=", linreg.W.flatten())
+
+    train_mse_cost = MSECost(linreg.predict(trainX), trainY)
+    test_mse_cost = MSECost(linreg.predict(testX), testY)
+    print('Train MSE::', train_mse_cost, '\tTest MSE::', test_mse_cost)
 
 ######################
 print("\n\n##### 3.2 b RIDGE REGRESSION########")
@@ -347,8 +361,9 @@ print("\n\n###### 3.3 c FEATURE SELECTION: TOP 4 USING BRUTEFORCE")
 import itertools
 
 def brute_force_select():
-    least_cost = float('inf')
+    least_test_cost = float('inf')
     best_combination = None
+    train_cost = None
     for cols in itertools.combinations(range(trainX.shape[1]), 4):
         Z_train = np.zeros(shape=(X_train.shape[0], 0))
         Z_test = np.zeros(shape=(X_test.shape[0], 0))
@@ -363,19 +378,19 @@ def brute_force_select():
         linreg = LinearRegression(Z_train, Y_train, alpha)
         train_mse_cost = MSECost(linreg.predict(Z_train), Y_train)
         test_mse_cost = MSECost(linreg.predict(Z_test), Y_test)
-        if test_mse_cost < least_cost:
+        if test_mse_cost < least_test_cost:
             best_combination = cols
-            least_cost = test_mse_cost
+            least_test_cost = test_mse_cost
+            train_cost = train_mse_cost
         # print(cols, 'Train MSE::', train_mse_cost, " Test MSE::", test_mse_cost)
-    return best_combination, least_cost
+    return best_combination, least_test_cost, train_cost
 
 try:
     print("Performing bruteforce feature selection. Hang tight for results or press CTRL+C to skip")
-    best_combination, least_cost = brute_force_select()
-    print('Best Combination:: ', best_combination, "Least Test Cost::",  least_cost)
+    best_combination, least_test_cost, train_cost = brute_force_select()
+    print('Best Combination:: ', best_combination, ", Least Test MSE::",  least_test_cost, ", Train MSE::", train_cost)
 except:
     print("Skipping bruteforce selection...")
-
 
 
 ###############################
