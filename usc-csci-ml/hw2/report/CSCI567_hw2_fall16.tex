@@ -37,6 +37,7 @@
 \usepackage[colorinlistoftodos]{todonotes}
 \usepackage{xcolor}
 \usepackage{mathtools}
+\graphicspath{ {images/}}
 
 \usepackage{sectsty}
 \sectionfont{\fontsize{16}{15}\selectfont}
@@ -60,7 +61,7 @@
 
 %\note{September 13, 2016}
 \note{\today}
-\note{ Collaborators : \\ Ishan Alok}
+\note{ Collaborators : \\ Ishan Alok (ialok@usc.edu)}
 
 \authornote{Produced for Fall 2016 session of CSCI 567, ``Machine Learning'', taught by Dr. Yan Liu at the University of Southern California}
 
@@ -327,22 +328,22 @@ Given :\\
 	P(y =& c_1|x) = \frac{1}{1 + \frac{ P(x | y=c2) P(y=c2)}{P(x | y=c1) P(y=c1)} } \\
 \text{This is of form} \\
 	P(y =& c_1|x) = \frac{1}{1 + f(x)} \\
-\text{where } f(x) = & \frac{P(y=c1)}{P(y=c1)} \times \frac{P(x|y=c2) }{P(x|y=c1)} \\
-	 = & \frac{P(y=c1)}{P(y=c1)} \times \frac{\mathcal{N}(\mu_2, \sum) }{\mathcal{N}(\mu_1, \sum)}
+\text{where } f(x) = & \frac{P(y=c2)}{P(y=c1)} \times \frac{P(x|y=c2) }{P(x|y=c1)} \\
+	 = & \frac{P(y=c2)}{P(y=c1)} \times \frac{\mathcal{N}(\mu_2, \sum) }{\mathcal{N}(\mu_1, \sum)}
 \end{align*}
 Now, substituting the values in $f(x)$
 \begin{align*}
-f(x) = & \frac{P(y=c1)}{P(y=c1)} \times \frac{(2\pi)^{-D/2} \sum^{-1/2} \exp[-\frac{1}{2} (x-\mu_2)^T \space \sum^{-1} \space (x-\mu_2)] }  {(2\pi)^{-D/2} \sum^{-1/2} \exp[-\frac{1}{2} (x-\mu_1)^T \space \sum^{-1} \space (x-\mu_1)]}\\ 
-  = & \frac{P(y=c1)}{P(y=c1)} \times \exp \bigg[\frac{1}{2}  \big[(x-\mu_1)^T \space \sum^{-1} \space (x-\mu_1) - (x-\mu_2)^T \space \sum^{-1} \space (x-\mu_2)  \big] \bigg] \\
+f(x) = & \frac{P(y=c2)}{P(y=c1)} \times \frac{(2\pi)^{-D/2} \sum^{-1/2} \exp[-\frac{1}{2} (x-\mu_2)^T \space \sum^{-1} \space (x-\mu_2)] }  {(2\pi)^{-D/2} \sum^{-1/2} \exp[-\frac{1}{2} (x-\mu_1)^T \space \sum^{-1} \space (x-\mu_1)]}\\ 
+  = & \frac{P(y=c2)}{P(y=c1)} \times \exp \bigg[\frac{1}{2}  \big[(x-\mu_1)^T \space \sum^{-1} \space (x-\mu_1) - (x-\mu_2)^T \space \sum^{-1} \space (x-\mu_2)  \big] \bigg] \\
   \\ 
 &  \text{For the sake of similification, we can use the form, } x = \exp(\ln(x))\\ 
-\exp(\ln(f(x))) = &\exp(\ln\bigg( \frac{P(y=c1)}{P(y=c1)} \times \exp \bigg[\frac{1}{2}  \big[(x-\mu_1)^T \space \sum^{-1} \space (x-\mu_1) - (x-\mu_2)^T \space \sum^{-1} \space (x-\mu_2)  \big] \bigg] \bigg)) \\
+\exp(\ln(f(x))) = &\exp(\ln\bigg( \frac{P(y=c2)}{P(y=c1)} \times \exp \bigg[\frac{1}{2}  \big[(x-\mu_1)^T \space \sum^{-1} \space (x-\mu_1) - (x-\mu_2)^T \space \sum^{-1} \space (x-\mu_2)  \big] \bigg] \bigg)) \\
 \\
-f(x) = &\exp(\ln(\frac{P(y=c1)}{P(y=c1)}) + \frac{1}{2} \big[(x-\mu_1)^T \space \sum^{-1} \space (x-\mu_1) - (x-\mu_2)^T \space \sum^{-1} \space (x-\mu_2)  \big] ) \\
-f(x) = &\exp( - \big(- \ln(\frac{P(y=c1)}{P(y=c1)}) + \frac{1}{2} \big[ (x-\mu_2)^T \space \sum^{-1} \space (x-\mu_2) - (x-\mu_1)^T \space \sum^{-1} \space (x-\mu_1)\big] \big)) \\
+f(x) = &\exp(\ln(\frac{P(y=c2)}{P(y=c1)}) + \frac{1}{2} \big[(x-\mu_1)^T \space \sum^{-1} \space (x-\mu_1) - (x-\mu_2)^T \space \sum^{-1} \space (x-\mu_2)  \big] ) \\
+f(x) = &\exp( - \big(- \ln(\frac{P(y=c2)}{P(y=c1)}) + \frac{1}{2} \big[ (x-\mu_2)^T \space \sum^{-1} \space (x-\mu_2) - (x-\mu_1)^T \space \sum^{-1} \space (x-\mu_1)\big] \big)) \\
 \end{align*}
 This equation is of  form $\exp(-(\theta_0 + {\theta}^Tx))$
-Where, $\theta_0$ is a scalar computed by - $\ln(\frac{P(y=c1)}{P(y=c1)}) $ \\
+Where, $\theta_0$ is a scalar computed by - $\ln(\frac{P(y=c2)}{P(y=c1)}) $ \\
  and $\theta^Tx$ is another scalar computed by $\frac{1}{2} \big[(x-\mu_2)^T \space \sum^{-1} \space (x-\mu_2) - (x-\mu_1)^T \space \sum^{-1} \space (x-\mu_1)  \big]$, but $\theta$ and $x$ are vectors of $D$ dimensions.
  
  Substituting the value of $f(x)$ in the original equation above, we get:
@@ -356,5 +357,151 @@ Where, $\theta_0$ is a scalar computed by - $\ln(\frac{P(y=c1)}{P(y=c1)}) $ \\
 	\implies 	P(y = c_1|x) = \frac{1}{1 + exp(-\theta^Tx)}
  \end{equation}
  where $\theta$ and $x$ are vectors of $D+1$ dimensions
+ 
+ 
+ \section{4. Data Analysis}
+ 
+ \subsection{a. Histograms of Attributes and the Target variable}
+
+Here are the histograms of the dataset.\\
+\includegraphics[scale=0.45]{Histograms}
+
+Here are the correlations among the attributes:\\
+\includegraphics[scale=1]{correlation-heatmap}
+
+\subsection{Program output}
+\begin{verbatim}
+$ python CSCI567_hw2_fall16.py 
+ 
+The following parameters will be used for gradient descent optimizer:
+ Learning rate= 0.001
+ Convergence Tolerance= 0.005
+ Max Iterations= 50000
+ ##### 3.1 DATA ANALYSIS / EXPLORATION 
+ Feature Names:
+ 0
+ 0      CRIM
+ 1        ZN
+ 2     INDUS
+ 3      CHAS
+ 4       NOX
+ 5        RM
+ 6       AGE
+ 7       DIS
+ 8       RAD
+ 9       TAX
+ 10  PTRATIO
+ 11        B
+ 12    LSTAT
+ Dataset shape: (506, 13) (506, 1)
+ Test shape: (73, 13) (73, 1)
+ Train shape: (433, 13) (433, 1)
+ Correlations between the attributes:
+ 0         1         2         3         4         5         6   \
+ 0   1.002315  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000   
+ 1  -0.197276  1.002315  0.000000  0.000000  0.000000  0.000000  0.000000   
+ 2   0.396280 -0.537783  1.002315  0.000000  0.000000  0.000000  0.000000   
+ 3  -0.054158 -0.038522  0.050507  1.002315  0.000000  0.000000  0.000000   
+ 4   0.410524 -0.525903  0.769347  0.065319  1.002315  0.000000  0.000000   
+ 5  -0.206593  0.314229 -0.387829  0.066559 -0.308899  1.002315  0.000000   
+ 6   0.351814 -0.586247  0.654674  0.081180  0.734113 -0.239191  1.002315   
+ 7  -0.370380  0.672366 -0.713743 -0.097458 -0.771612  0.209400 -0.750088   
+ 8   0.607248 -0.317635  0.597033 -0.021546  0.611365 -0.211677  0.470596   
+ 9   0.567033 -0.318496  0.722513 -0.051311  0.668685 -0.288305  0.520563   
+ 10  0.279365 -0.383817  0.376030 -0.145421  0.183605 -0.356928  0.264867   
+ 11 -0.358765  0.180031 -0.360012  0.054895 -0.386504  0.134887 -0.284053   
+ 12  0.456168 -0.422381  0.591894 -0.057371  0.591094 -0.597977  0.608152   
+ 
+ 7         8         9         10        11        12  
+ 0   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  
+ 1   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  
+ 2   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  
+ 3   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  
+ 4   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  
+ 5   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  
+ 6   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  
+ 7   1.002315  0.000000  0.000000  0.000000  0.000000  0.000000  
+ 8  -0.498835  1.002315  0.000000  0.000000  0.000000  0.000000  
+ 9  -0.535925  0.913672  1.002315  0.000000  0.000000  0.000000  
+ 10 -0.236001  0.463870  0.457994  1.002315  0.000000  0.000000  
+ 11  0.296206 -0.452862 -0.449102 -0.177750  1.002315  0.000000  
+ 12 -0.498400  0.497685  0.545339  0.374000 -0.391823  1.002315 
+
+ Magnitude of Correlation with the target 
+ ('CRIM', 0.38859443435207547)
+ ('ZN', 0.36382754420139768)
+ ('INDUS', 0.48418563338201681)
+ ('CHAS', 0.20407144132697344)
+ ('NOX', 0.4258130776462164)
+ ('RM', 0.69252269454509585)
+ ('AGE', 0.39108230278590012)
+ ('DIS', 0.25300487309124547)
+ ('RAD', 0.38638415658601943)
+ ('TAX', 0.46993468487617812)
+ ('PTRATIO', 0.5064403651254078)
+ ('B', 0.34422912357951185)
+ ('LSTAT', 0.74168271373323336)
+ ##### Generating Histograms
+ 
+ 
+ ###### 3.2 a LINEAR REGRESSION ALGORITHM
+ Using analytical optimizer
+ W= [ 22.46351039  -0.9673241    1.04542152  -0.17351707   0.92139354
+ -1.6205974    2.72573311  -0.26723668  -3.11240878   2.48363548
+ -1.91078756  -1.88799963   0.82940209  -3.67532974]
+ Train MSE:: 20.950144508 	Test MSE:: 28.4179164975
+ Using gradient_desc optimizer
+ W= [ 22.46351039  -0.93347984   0.97861438  -0.35174534   0.94966261
+ -1.54772785   2.76534798  -0.30369741  -3.0952704    2.03099152
+ -1.41039412  -1.86141796   0.82666393  -3.65780415]
+ Train MSE:: 20.9818495194 	Test MSE:: 28.7478497502
+ 
+ 
+ ##### 3.2 b RIDGE REGRESSION########
+ 
+ Lambda		Train MSE		Test MSE
+ 0.01		21.0581242724		28.8462622276
+ 0.1		25.8139532086		33.5094712654
+ 1.0		155.792730262		165.411777892
+ 
+ 
+ ###### 3.2 c RIDGE REGRESSION : 10-FOLD CROSS VALIDATION########
+ 
+ Lambda		Train MSE		Test MSE
+ 0.0001		20.9523058443		28.7708292066
+ 0.001		20.9895200484		28.7758027829
+ 0.01		21.2170522694		28.8607963801
+ 0.1		25.7050072249		33.5041252869
+ 1		156.108135228		165.411512266
+ 10		475.657189134		500.398146416
+ 
+ 
+ ###### 3.3 a FEATURE SELECTION: TOP 4 CORRELATIONS WITH TARGET
+ Top4 attrs:: ['LSTAT', 'RM', 'PTRATIO', 'INDUS']
+ Train MSE:: 26.4066042155  Test MSE:: 31.4962025449
+ 
+ 
+ ###### 3.3 b FEATURE SELECTION: TOP 4 CORRELATIONS WITH RESIDUAL ERROR
+ Choosing:  LSTAT
+ Train MSE:: 37.5682291124  Test MSE:: 43.9181708494
+ Choosing:  RM
+ Train MSE:: 29.5454831972  Test MSE:: 36.2967947962
+ Choosing:  B
+ Train MSE:: 28.6939844449  Test MSE:: 34.3784509663
+ Choosing:  CHAS
+ Train MSE:: 26.9461754396  Test MSE:: 38.5301578153
+ 
+ 
+ ###### 3.3 c FEATURE SELECTION: TOP 4 USING BRUTEFORCE
+ Performing bruteforce feature selection. Hang tight for results or press CTRL+C to skip
+ Best Combination::  (5, 10, 11, 12) , Least Test MSE:: 30.1004061101 , Train MSE:: 25.7444167198
+ 
+ 
+ ###### 3.4 FEATURE EXPANSION
+ Train Shape: (433, 104)
+ Test Shape: (73, 104)
+ Train MSE:: 5.05978429711  Test MSE:: 14.5553049758
+\end{verbatim}
+ 
 
 \end{document}
