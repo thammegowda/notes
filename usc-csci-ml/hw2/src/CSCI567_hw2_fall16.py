@@ -69,7 +69,7 @@ def pearson_cor(X, Y, names):
         cor.append((names[i], cor_ab))
     return cor
 
-def show_plots():
+def show_plots(bins=10):
     plt.imshow(corrs, cmap='hot', interpolation='nearest')
     plt.title("Heatmap of correlation between attributes")
     plt.show()
@@ -77,15 +77,17 @@ def show_plots():
         print(cor_ab)
 
     print("##### Generating Histograms")
-    bins = 10
-    plt.hist(trainY, bins=bins)
-    plt.title("Histogram of Price with %d bins" % bins)
-    plt.show()
-
+    plt.figure(1, figsize=(16, 16))
     for i, attr in enumerate(attrs):
+        plt.subplot(5, 3, 1 + i)
         plt.hist(attr, bins=bins)
         plt.title("Histogram of '%s' with %d bins" % (boston.feature_names[i], bins))
-        plt.show()
+
+    plt.subplot(5, 3, len(attrs) + 1)
+    plt.hist(trainY, bins=bins)
+    plt.title("Histogram of Target Price with %d bins" % bins)
+    plt.savefig('Histograms.png')
+    plt.show()
 
 show_plots()
 
@@ -112,7 +114,6 @@ def gradient_desc(X, Y, W, alpha,
     c = float('inf')
     log("Learn Rate", alpha)
     for i in range(num_iter):
-        #
         # delta =  2/N SIGMA[(XW - Y)*x]
         predY = predict(X, W)
         diff = predY - Y
@@ -164,24 +165,19 @@ class LinearRegression(object):
             X = self.normalize(X)
         return np.matmul(X, self.W)
 
+    def find_cost(self, X, Y,normalize=True):
+        return MSECost(self.predict(X, normalize=normalize), Y)
+
 for opt_val in ["analytical", "gradient_desc"]:
     print("Using %s optimizer" % opt_val)
     linreg = LinearRegression(trainX, trainY, alpha, num_iter, conv_tol, opt=opt_val)
     print("W=", linreg.W.flatten())
-
-    train_mse_cost = MSECost(linreg.predict(trainX), trainY)
-    test_mse_cost = MSECost(linreg.predict(testX), testY)
+    train_mse_cost = linreg.find_cost(trainX, trainY)
+    test_mse_cost = linreg.find_cost(testX, testY)
     print('Train MSE::', train_mse_cost, '\tTest MSE::', test_mse_cost)
 
 ######################
 print("\n\n##### 3.2 b RIDGE REGRESSION########")
-
-def MSECost_ridge(X, W, Y, lambd):
-    # Cost      = 1/N  \SIGMA[(XW-Y)^2] + lambd W||_2^2
-    predY = predict(X, W)
-    cost = float(np.sum((predY - Y) ** 2)) / len(Y)
-    cost += lambd * np.sum((W) ** 2)
-    return cost
 
 def gradient_desc_ridge(X, Y, W, alpha, lambd,
                   num_iter = 1000, conv_tol=0.01, check_interval = 500):
@@ -200,8 +196,7 @@ def gradient_desc_ridge(X, Y, W, alpha, lambd,
 
         if i % check_interval == 0:
             predY = predict(X, W)
-            #print(np.concatenate((Y, predY), axis=1))
-            newcost = MSECost_ridge(X, W, Y, lambd)
+            newcost = MSECost(predY, Y)
 
             log("#%d, cost = %.8g" % (i, newcost))
             if np.isnan(newcost) or np.isinf(newcost) or np.isneginf(newcost):
@@ -229,26 +224,13 @@ class RidgeRegression(LinearRegression):
         self.W = gradient_desc_ridge(X, Y, W, alpha=learn_rate, lambd=lambd,
                                 num_iter=num_iter, conv_tol=conv_tol)
 
-    def predict(self, X, normalize=True):
-        if normalize:
-            X = self.normalize(X)
-        return np.matmul(X, self.W)
-
-    def find_cost(self, X, Y, lambd=None, normalize=True):
-        if lambd is None:
-            lambd = self.lambd
-        if normalize:
-            X = self.normalize(X)
-        predY = self.predict(X, normalize=False)
-        return MSECost_ridge(X, self.W, Y, lambd)
-
 lambds = [0.01, 0.1, 1.0]
 results = []
 print("\nLambda\t\tTrain MSE\t\tTest MSE")
 for lambd in lambds:
     ridreg = RidgeRegression(trainX, trainY, alpha, lambd, num_iter, conv_tol)
-    train_mse = ridreg.find_cost(trainX, trainY, lambd=lambd)
-    test_mse = ridreg.find_cost(testX, testY, lambd=lambd)
+    train_mse = ridreg.find_cost(trainX, trainY)
+    test_mse = ridreg.find_cost(testX, testY)
     t = (lambd, train_mse, test_mse)
     print("\t\t".join(map(lambda x: str(x), t)))
 
@@ -286,7 +268,7 @@ print("\nLambda\t\tTrain MSE\t\tTest MSE")
 for lambd in lambds:
     train_mse = k_fold_cv(trainX, trainY, lambd, k)
     ridreg = RidgeRegression(trainX, trainY, alpha, lambd, num_iter, conv_tol)
-    test_mse = ridreg.find_cost(testX, testY, lambd=lambd)
+    test_mse = ridreg.find_cost(testX, testY)
     t = (lambd, train_mse, test_mse)
     print("\t\t".join(map(lambda x: str(x), t)))
 
