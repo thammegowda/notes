@@ -12,7 +12,7 @@ import logging as log
 from random import shuffle
 log.basicConfig(level=log.DEBUG)
 from collections import defaultdict
-
+from functools import lru_cache
 ENCODING = 'latin-1'
 
 def scan_data(root):
@@ -47,6 +47,7 @@ class StdPerceptron(object):
                     self.update(vect, label)
             print("Training Epoch %d completed" % (i+1))
 
+    @lru_cache(maxsize=1<<24)
     def vectorize(self, path):
         with open(path, 'r', encoding=ENCODING) as f:
             toks = self.tokenize(f.read())
