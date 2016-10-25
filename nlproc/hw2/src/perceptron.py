@@ -17,18 +17,28 @@ ENCODING = 'latin-1'
 
 def scan_data(root):
     for root, dirs, files in os.walk(root):
-        label = None
         for name in files:
             if name.startswith('.'):
                 continue # skip hidden
-            if name.endswith('spam.txt'):
+            label = None
+            full_path = os.path.join(root, name)
+            if 'spam' in full_path:
                 label = 1
-            elif name.endswith('ham.txt'):
+            elif 'ham' in full_path:
                 label = -1
-            yield label, os.path.join(root, name)
+            yield label, full_path
+
+def load_model(model_path):
+    print('Loading the model from %s' % model_path)
+    with open(model_path, 'rb') as f:
+         model = pickle.load(f)
+         print("Loaded model ::", type(model))
+         return model
 
 class StdPerceptron(object):
-
+    '''
+    This class implements Standard Perceptron
+    '''
     def __init__(self):
         self.W = defaultdict(int)
         self.bias = 0
@@ -49,6 +59,9 @@ class StdPerceptron(object):
 
     @lru_cache(maxsize=1<<24)
     def vectorize(self, path):
+        '''
+            Converts document into vectors using bag of words approach
+        '''
         with open(path, 'r', encoding=ENCODING) as f:
             toks = self.tokenize(f.read())
             vect = defaultdict(int) # sparse vector using dict
@@ -77,20 +90,16 @@ class StdPerceptron(object):
                 tokens.append("%s %s" % (unigrams[i], unigrams[i+1]))
         return tokens
 
-    def save_to_path(self, model_path):
-        print('Storing the model at %s' % model_path)
+    def save(self, model_path):
+        print('Storing the model to %s' % model_path)
         with open(model_path, 'wb') as f:
             pickle.dump(self, f)
             print('Stored the model at %s' % model_path)
 
-    @staticmethod
-    def load_from_path(model_path):
-        print('Loading the model from %s' % model_path)
-        with open(model_path, 'rb') as f:
-            return pickle.load(f)
-
 class AvgPerceptron(StdPerceptron):
-
+    '''
+        This class implements Average Perceptron
+    '''
     def __init__(self):
         super(AvgPerceptron, self).__init__()
         self.U = defaultdict(int)

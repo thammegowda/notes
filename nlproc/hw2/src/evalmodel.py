@@ -11,9 +11,9 @@ import copy
 from collections import defaultdict
 
 def get_label_from_path(path):
-    if path.endswith('.spam.txt'):
+    if 'spam' in path:
         act_label = 'spam'
-    elif path.endswith('.ham.txt'):
+    elif 'ham' in path:
         act_label = 'ham'
     else:
         raise Exception('Cant detect the label from path %s' % path)

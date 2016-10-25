@@ -1,0 +1,98 @@
+Assignment 2 Report
+
+Name: ThammeGowda Narayanaswamy
+USCID: 2074669439
+Email: tnarayan@usc.edu
+
+Part I.
+
+1. Performance of standard perceptron on the development data with 100% of the training data
+1a. spam precision: 0.99
+1b. spam recall: 0.98
+1c. spam F1 score: 0.99
+1d. ham precision: 0.96
+1e. ham recall: 0.98
+1f. ham F1 score: 0.97
+
+2. Performance of averaged perceptron on the development data with 100% of the training data
+2a. spam precision: 0.98
+2b. spam recall: 0.99
+2c. spam F1 score: 0.99
+2d. ham precision: 0.97
+2e. ham recall: 0.96
+2f. ham F1 score: 0.96
+
+Part II.
+
+3. Performance of standard perceptron on the development data with 10% of the training data
+3a. spam precision: 0.98
+3b. spam recall: 0.94
+3c. spam F1 score: 0.96
+3d. ham precision: 0.87
+3e. ham recall: 0.95
+3f. ham F1 score: 0.91
+
+4. Performance of averaged perceptron on the development data with 10% of the training data
+4a. spam precision: 0.97
+4b. spam recall: 0.96
+4c. spam F1 score: 0.97
+4d. ham precision: 0.90
+4e. ham recall: 0.93
+4f. ham F1 score: 0.92
+
+Part III. You are welcome to reuse code you wrote for assignment 1,
+but we would like to know how you handled the following tasks.
+
+5. How did you calculate precision, recall and F1 score? If you used a
+separate script, please give the name of the script and describe how
+to run it.
+
+Constructed the Confusion matrix as per https://en.wikipedia.org/wiki/Confusion_matrix
+        spam  |  ham  |
+------|-------|-------|
+spam  |    a  |     b |
+ham   |    c  |     d |
+
+Interpretation :
+   ground truth spams in dev dataset is : a + b
+   ground truth hams in dev dataset is : c + d
+   total spams predicted by model : a + c
+   total hams predicted by model : b + d
+
+Precision:
+  Precision for spam class = a / (a + c)
+  Precision for ham class = d / (b + d)
+Recall:
+  Recall for spam class = a / (a + b)
+  Recall for ham class = d / (c + d)
+
+F1 score is harmonic mean of precision and recall as described in https://en.wikipedia.org/wiki/F1_score
+ F1 = 2 * precison * recall / (precision + recall)
+
+ To run the script:
+   python3 evalmodel.py per_out.txt
+
+ The argument "per_out.txt" is path to output file created by per_classify.py
+
+
+6. How did you separate 10% of the training data? If you used a
+separate script, please give the name of the script and describe how
+to run it. Explain how you or your code choose the files.
+
+The separating criteria:
+ The script I used to separate did the following:
+   => It walked through the directory structure of training data and added all
+   the valid training document paths to a list.
+   => It then shuffled the list based on random seed.
+   => It picked the first 10 percent of the documents in the randomly shuffled
+    list and copied to a new directory
+
+To use the splitter script:
+ python3 splitter.py <train_data_dir> <dest_dir> <percent>
+Arguments:
+  train_data_dir - The path to training data directory
+  dest_dir       - the path where the split data should be stored
+  percent        - Split percentage a float in range [0.0, 1.0]
+
+Example for 10% separation:
+ python3 splitter.py ../dataset/train/ tmp/ 0.1

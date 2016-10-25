@@ -16,4 +16,4 @@ if __name__ == '__main__':
     print("Found %d total examples" % len(data))
     model = AvgPerceptron()
     model.learn(data, 30)
-    model.save_to_path('per_model.txt')
+    model.save('per_model.txt')

@@ -6,17 +6,15 @@
 # Date       : Oct 12, 2016
 import sys
 import os
-from perceptron import StdPerceptron
-from perceptron import ENCODING
-from perceptron import scan_data
+from perceptron import *
 
 def main(data_dir, model_path, out_path):
     print("Reading data from %s\nReading model from %s\n" \
         "Storing output to %s" % (data_dir, model_path, out_path))
-    model = StdPerceptron.load_from_path(model_path)
+    model = load_model(model_path)
     data = scan_data(data_dir)
     with open(out_path, 'w', 1, encoding=ENCODING) as outf:
-        for label, path in data:
+        for _, path in data:
             vect = model.vectorize(path)
             pred = model.predict(vect)
             label = "spam" if pred > 0 else "ham"
