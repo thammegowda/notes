@@ -14,7 +14,8 @@ def read_training_data(dir):
     for root, dirs, files in os.walk(dir):
         for name in files:
             if name.startswith('.'):
-                continue # skip hidden
+                continue # skip the hidden
+            label = None
             if name.endswith('spam.txt'):
                 label = 'spam'
             elif name.endswith('ham.txt'):
