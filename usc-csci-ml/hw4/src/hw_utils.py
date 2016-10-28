@@ -13,7 +13,7 @@ import keras.regularizers as Reg
 from keras.optimizers import SGD
 from keras.callbacks import EarlyStopping
 from keras.utils.np_utils import to_categorical
-
+from time import time
 
 def genmodel(num_units, actfn='relu', reg_coeff=0.0, last_act='softmax'):
 	''' Generate a neural network model of approporiate architecture
@@ -120,10 +120,13 @@ def testmodels(X_tr, y_tr, X_te, y_te, archs, actfn='relu', last_act='softmax', 
 	best_acc = 0
 	best_config = []
 	call_ES = EarlyStopping(monitor='val_acc', patience=6, verbose=1, mode='auto')
+	counter = 0
+	times = []
 	for arch in archs:
 		for reg_coeff in reg_coeffs:
 			for sgd_decay in sgd_decays:
 				for sgd_mom in sgd_moms:
+					st = time()
 					# Generate Model
 					model = genmodel(num_units=arch, actfn=actfn, reg_coeff=reg_coeff,
 						last_act=last_act)
@@ -145,7 +148,10 @@ def testmodels(X_tr, y_tr, X_te, y_te, archs, actfn='relu', last_act='softmax', 
 					if score[1] > best_acc:
 						best_acc = score[1]
 						best_config = [arch, reg_coeff, sgd_decay, sgd_mom, actfn, best_acc]
-					print('Score for architecture = {0}, lambda = {1}, decay = {2}, momentum = {3}, actfn = {4}: {5}'.format(arch, reg_coeff, sgd_decay,
-						sgd_mom, actfn, score[1]))
-	print('Best Config: architecture = {0}, lambda = {1}, decay = {2}, momentum = {3}, actfn = {4}, best_acc = {5}'.format(best_config[0], best_config[1], best_config[2],
-		best_config[3], best_config[4], best_config[5]))
+					tt = time() - st # time taken
+					times.append(tt)
+					print('architecture={0}, lambda={1}, decay={2}, momentum={3}, actfn={4}: score={5} | time={6}'.format(arch, reg_coeff, sgd_decay, sgd_mom, actfn, score[1], tt))
+	print('Best Config: architecture = {0}, lambda = {1}, decay = {2}, momentum = {3}, actfn = {4}, best_acc = {5}'.format(best_config[0], best_config[1], best_config[2], best_config[3], best_config[4], best_config[5]))
+	times = np.array(times)
+	print("Mean Time = {0}seconds, |Models| = {1}, Total Time = {2}seconds".format(times.mean(), len(times), np.sum(times)))
+	return best_config, times
