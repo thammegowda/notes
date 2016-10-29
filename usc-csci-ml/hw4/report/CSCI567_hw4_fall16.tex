@@ -1,0 +1,199 @@
+%%%%%%%%%%%
+%% Home work template for Graduate School
+%% Author : Thamme Gowda N.
+%% Originally from  https://github.com/thammegowda/hw-tex-templ
+%%%%%%%%%%%%%%
+
+\documentclass[a4paper,doc,notimes]{article}
+\usepackage[a4paper,margin=1in,footskip=0.25in]{geometry}
+%%\documentclass[tikz]{standalone}
+\usepackage{tikz}
+%Required by APA6 package
+\usepackage[normalem]{ulem}
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+
+%Oft-used, oft-abused
+\usepackage{afterpage}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{censor}
+\usepackage{color}
+\usepackage{csquotes}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{lmodern}
+%\usepackage{media9}
+\usepackage{multirow}
+\usepackage{outlines}
+\usepackage{pdfpages}
+\usepackage{placeins}
+\usepackage{soul}
+\usepackage{tabularx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{xcolor}
+\usepackage{mathtools}
+\graphicspath{ {images/}}
+
+\usepackage{sectsty}
+\sectionfont{\fontsize{14}{12}\selectfont}
+
+\setenumerate[1]{label=\Roman*.}
+\setenumerate[2]{label=\Alph*.}
+\setenumerate[3]{label=\roman*.}
+\setenumerate[4]{label=\alph*.}
+
+% break page where ever is required
+\allowdisplaybreaks
+\renewcommand{\thesubsection}{\thesection.\alph{subsection}}
+\usepackage{titling}
+\setlength{\droptitle}{-9em}
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+\title{\noindent  \textbf{ USC CSCI 567 HOMEWORK 4 SOLUTIONS} }
+\author{\textbf{ThammeGowda Narayanaswamy} \\
+EMail: tnarayan@usc.edu  USCID: 2074-6694-39}
+
+
+\begin{document}
+\maketitle
+
+\section{ BOOSTING}
+Given : \newline
+Labels: $y \in \{+1, -1\}$  \newline
+Input features, $x_i \in \mathbb{R}^d$,  for $i = 1, 2, ... n$ \\
+Weak learners, $\mathcal{H} = \{h_j, j=1,2,... M \} $ \\
+Loss, $L(y_i, \hat{y_i}) = (y_i - \hat{y_i})^2$
+
+
+\subsection {Gradient Calculation}
+\begin{equation}\label{eqn:gradient}
+	g_i = \frac{\partial L(y_i, \hat{y_i})} {\partial \hat{y_i}} = \frac{\partial }{\partial \hat{y_i}} (y_i - \hat{y_i})^2 = -2 (y_i - \hat{y_i}) 
+\end{equation}
+\subsection {Weak Learner Selection}
+Given that the next learner is selected by, \\
+\begin{align*}
+	& h^* =  \arg \min_{h\in\mathcal{H}} \bigg(min_{\gamma\in \mathbb{R}} \sum_{i=1}^{n} (-g_i - \gamma h(x_i))^2\bigg) \numberthis \label{eqn:besth}\\
+	& \text{Let } J =  \sum_{i=1}^{n} (-g_i - \gamma h(x_i))^2 \\
+	& \text{The minimum of $J$ w.r.t to $\gamma$ is when its first order derivative is zero} \\
+	&\frac{\partial }{\partial \gamma} \sum_{i=1}^{n} (-g_i - \gamma h(x_i))^2= 0 \\
+	& 0 = \sum_{i=1}^{n} \frac{\partial }{\partial \gamma}(2 (y_i - \hat{y_i}) - \gamma h(x_i))^2  = \sum_{i=1}^{n}  2 (2 (y_i - \hat{y_i}) - \gamma h(x_i)) ( - h(x_i)) \\
+	& 0 = - 2\sum_{i=1}^{n} h(x_i)(y_i - \hat{y_i})  + \gamma  \sum_{i=1}^{n} (h(x_i))^2 \\
+	& \implies \gamma^* = \frac{2\sum_{i=1}^{n} h(x_i)(y_i - \hat{y_i}) }{\sum_{i=1}^{n} (h(x_i))^2 }
+\end{align*}
+By substituting the value of $\gamma*$ in \ref{eqn:besth}, we get
+\begin{align*}
+	h^* &=  \arg \min_{h\in\mathcal{H}} \bigg(\sum_{i=1}^{n} (-g_i - \gamma^* h(x_i))^2\bigg)  \\
+	& = \arg \min_{h\in\mathcal{H}} \bigg(\sum_{i=1}^{n} \big[-g_i - \frac{2\sum_{j=1}^{n} h(x_j)(y_j - \hat{y_j}) }{\sum_{k=1}^{n} (h(x_k))^2 } \times h(x_i)\big ]^2\bigg)  \numberthis \label{eqn:besth2}\\
+\end{align*}
+Thus equation \refeq{eqn:besth2} can be derived independent of $\gamma$
+\subsection {Step Size Selection}
+Given that \\
+\begin{align*}
+	\alpha^* = & \arg \min_{\alpha \in \mathbb{R}} \sum_{i=1}^{n} \big[y_i - (\hat{y_i} + \alpha h^*(x_i)) \big]^2 \numberthis \\ \label{eqn:bestalpha1}
+	& \text{Lets define } J = \sum_{i=1}^{n} \big[y_i - (\hat{y_i} + \alpha h^*(x_i)) \big]^2 \\
+	& \text{$J$ is minimum w.r.t $\alpha$ when its first order derivative is zero.} \\
+ 0 = & \frac{\partial J}{\partial \alpha} = \sum_{i=1}^{n}  \frac{\partial }{\partial \alpha} \big[y_i - (\hat{y_i} + \alpha h^*(x_i)) \big]^2  = \sum_{i=1}^{n}  2 \big[y_i - (\hat{y_i} + \alpha h^*(x_i)) \big] (- h^*(x_i))\\
+ 0 = &   \sum_{i=1}^{n}  h^*(x_i)((\hat{y_i} - y_i) - \alpha  \sum_{i=1}^{n} (h^*(x_i) )^2 \\
+ \implies \alpha^* =&  \frac{ \sum_{i=1}^{n}  h^*(x_i)((\hat{y_i} - y_i)}{\sum_{i=1}^{n} (h^*(x_i) )^2 } % \numberthis \label{eqn:bestalpha2}
+\end{align*}
+Thus, we can compute the step size analytically and perform the following update:
+$$
+	\hat{y_i} \leftarrow \hat{y_i} + \alpha^* h^*(x_i)
+$$
+
+\section{ NEURAL NETWORKS}
+\subsection{}
+Formulation: \\
+Let us consider a neural network with $L$ layers. \\
+The number of neurons in each layer are $\{n_1, n_2, ... n_{L_1} , 1\}$. Note that the input size is $n_1$ and output size is $1$.
+As stated in the problem, the last layer has a single neuron with logistic activation. \\
+All the neurons in the hidden layers $2, 3, ... L-1$ are having linear activation function \\
+The following notation is used in the proof: \\
+$a^{(l)}_k$ - activation of $k^{th}$  neuron in $l^{th}$ layer \\
+$b^{(l)}_k$ - bias of $k^{th}$  neuron in $l^{th}$ layer  \\
+$w^{(l)}_{ij}$ - weight for $i^{th}$  neuron in $l^{th}$ layer, has input from $j^{th}$ neuron of $(l-1)$ layer \\
+
+In the first layer, $l=1$, activation is same as input, i.e., $a^{(1)}_j = x_j, j=1, 2, ... n_1$ \\ 
+
+In the last layer, $l=L$, activation is output $y$, from a logistic function. \\
+ i.e.,
+ \begin{equation}\label{eqn:lastlayer}
+	 y = a^{(L)}_1 = \sigma(\sum_{j=1}^{N_{L-1}} w^{(L)}_{1j} a^{(L-1)}_j + b^{(L)}_1 )
+ \end{equation} 
+ 
+$\forall $ Hidden layers, we have linear activations \\
+\begin{equation}\label{eqn:hidden}
+ a^{(l)}_{j} = \sum_{k=1}^{N_{l-1}} w^{(l)}_{jk} a^{(l-1)}_k + b^{(l)}_j , \text{  s.t.  }  2 \le l \le L-1; \forall j \in \{1, ... N_l\}
+\end{equation}
+Specifically, for $l = 2$, we have much nicer activation equation:
+\begin{equation} \label{eqn:layer2}
+	a^{(2)}_{j} =  \sum_{k=1}^{N_{1}} w^{(2)}_{jk} a^{(1)}_k + b^{(2)}_j =  \sum_{k=1}^{N_{1}} w^{(2)}_{jk} x_k + b^{(2)}_j
+\end{equation}
+By using the fact \ref{eqn:hidden} recursively in \ref{eqn:lastlayer} until we reach the base case \ref{eqn:layer2}
+  \begin{align*}
+ 	 y = a^{(L)}_1 & = \sigma\bigg(\sum_{j=1}^{N_{L-1}} w^{(L)}_{1j} \big[ \sum_{k=1}^{N_{L-2}} w^{(L-1)}_{jk} a^{(L-2)}_k + b^{(L-1)}_j  \big] + b^{(L)}_1 \bigg) \\
+ 	 & =  \sigma\bigg(\sum_{j=1}^{N_{L-1}} w^{(L)}_{1j} \big[ \sum_{k=1}^{N_{L-2}} w^{(L-1)}_{jk} [ ... ( \sum_{i=1}^{N_{1}} w^{(2)}_{j'i} x_i + b^{(2)}_{j'} ) +  ... ] + b^{(L-1)}_j  \big] + b^{(L)}_1 \bigg) \\
+	 	 & \text{NOTE: $j'$ is the connecting neuron's indice in 3rd layer}
+ \end{align*}
+ With algebraic manipulations we can expand the series and group the terms such that all terms with $x_i$ are at one place and similarly biases can also be grouped together.
+ In the next step we note that all the terms common to $x_i$  can be reduced to $R_i \in \mathbb{R}$ and all the biases can be reduced to a real number $R_b \in \mathbb{R}$
+ This forms the equation:
+\begin{equation}
+	 y = a^{(L)}_1  = \sigma(\sum_{i=1}^{N_1} R_i x_i + R_b)
+\end{equation}
+Thus the whole network is equivalent to a single logistic neuron.
+
+\subsection{Back Propagation}
+Given: A network with 1 hidden layer\\
+The input layer, $x_i$ for $i=1,2,3$
+Activation of the hidden layer, $z_k = \tanh(\sum_{i=1}^{3} w_{ki}x_i)$ \\
+Activation of the output layer, $\hat{y_j} = \sum_{k=1}^{4} v_{jk}z_k$ for $j = 1, 2$ \\
+The optimization function is a squared error function, given by
+\begin{equation} \label{eqn:squaredloss}
+	L(y_i, \hat{y_i}) = \frac{1}{2} \big( \sum_{j=1}^{2}(y_j - \hat{y_j})^2 \big) 
+\end{equation}
+
+\subsubsection{Updates for the last layer}
+Lets find the gradient of equation \ref{eqn:squaredloss} w.r.t parameters of the last layer neurons.
+\begin{equation}
+ \frac{\partial L}{\partial v_{jk}} = \sum_{j=1}^{2}(y_j - \hat{y_j}) \times \frac{\partial \hat{y_j}}{\partial v_{jk}} = \sum_{j=1}^{2}(y_j - \hat{y_j}) \times \frac{\partial }{\partial v_{jk}} \sum_{k=1}^{4} v_{jk}z_k  = - \sum_{k=1}^{4} z_k \sum_{j=1}^{2}(y_j - \hat{y_j}) 
+\end{equation}
+Update to be made using step size $\alpha$: 
+\begin{align*}
+ \Delta v_{jk}  = & - \alpha \frac{\partial L}{\partial v_{jk}}  \\
+ v_{jk} \leftarrow &  v_{jk}  + \Delta v_{jk} \numberthis
+\end{align*}
+
+\subsubsection{Updates for the hidden layer}
+Lets find the gradient of equation \ref{eqn:squaredloss} w.r.t parameters of the hidden layer neurons.
+\begin{equation}\label{eqn:wki_derive}
+\frac{\partial L}{\partial w_{ki}} = \sum_{j=1}^{2}(y_j - \hat{y_j}) \times \frac{\partial \hat{y_j}}{\partial w_{ki}} = \sum_{j=1}^{2}(y_j - \hat{y_j}) \times \frac{\partial }{\partial w_{ki}} \sum_{k=1}^{4} v_{jk}z_k  = \sum_{j=1}^{2}(y_j - \hat{y_j}) \times \sum_{k=1}^{4} v_{jk}  \frac{\partial z_k}{\partial w_{ki}} 
+\end{equation}
+\begin{equation} \label{eqn:zk_deriv}
+\frac{\partial z_k}{\partial w_{ki}} = \frac{\partial }{\partial w_{ki}}  \tanh(\sum_{i=1}^{3} w_{ki}x_i) = [ 1 - \tanh^2(\sum_{i=1}^{3} w_{ki}x_i)] \times  \frac{\partial }{\partial w_{ki}} \sum_{i=1}^{3} w_{ki}x_i = [ 1 - \tanh^2(\sum_{i=1}^{3} w_{ki}x_i)] \times   \sum_{i=1}^{3} x_i  
+\end{equation}
+Substituting \ref{eqn:zk_deriv} in \ref{eqn:wki_derive}, we get: 
+\begin{equation}\label{eqn:wki_derive2}
+\frac{\partial L}{\partial w_{ki}} = \sum_{j=1}^{2}(y_j - \hat{y_j}) \bigg[ \sum_{k=1}^{4} v_{jk} \big( 1 - \tanh^2(\sum_{i=1}^{3} w_{ki}x_i) \big)\times   \sum_{i=1}^{3} x_i  \bigg]
+\end{equation}
+
+Update to be made using step size $\alpha$ : 
+\begin{align*}
+\Delta w_{ki}  = & - \alpha \frac{\partial L}{\partial w_{ki}} \\
+w_{ki} \leftarrow &  w_{ki}  + \Delta w_{ki} \numberthis
+\end{align*}
+
+
+\section{PROGRAMMING}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\subsection{}
+
+\end{document}
