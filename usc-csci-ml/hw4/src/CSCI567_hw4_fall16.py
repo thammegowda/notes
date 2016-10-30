@@ -37,13 +37,14 @@ args = {
     'verbose': False
 }
 
-
+'''
 # FIXME: BEGIN : This is for quick testing
 args['batch_size'] = 10
 X_tr, Y_tr = X_tr[:100], Y_tr[:100]
 X_te, Y_te = X_te[:100], Y_tr[:100]
 print "Train X, Y :", X_tr.shape, Y_tr.shape
 # FIXME: END
+'''
 
 print("\n\n## (d) Linear Activation ")
 archs = [[d_in, d_out],

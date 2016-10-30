@@ -143,13 +143,13 @@ def testmodels(X_tr, y_tr, X_te, y_te, archs, actfn='relu', last_act='softmax', 
 					else:
 						model.fit(X_tr, y_tr, nb_epoch=num_epoch, batch_size=batch_size,
 							verbose=verbose)
+					tt = time() - st # time taken
+					times.append(tt)
 					# Evaluate Models
 					score = model.evaluate(X_te, y_te, batch_size=batch_size, verbose=verbose)
 					if score[1] > best_acc:
 						best_acc = score[1]
 						best_config = [arch, reg_coeff, sgd_decay, sgd_mom, actfn, best_acc]
-					tt = time() - st # time taken
-					times.append(tt)
 					print('architecture={0}, lambda={1}, decay={2}, momentum={3}, actfn={4}: score={5} | time={6}'.format(arch, reg_coeff, sgd_decay, sgd_mom, actfn, score[1], tt))
 	print('Best Config: architecture = {0}, lambda = {1}, decay = {2}, momentum = {3}, actfn = {4}, best_acc = {5}'.format(best_config[0], best_config[1], best_config[2], best_config[3], best_config[4], best_config[5]))
 	times = np.array(times)
