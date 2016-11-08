@@ -4,8 +4,8 @@
 %% Originally from  https://github.com/thammegowda/hw-tex-templ
 %%%%%%%%%%%%%%
 
-\documentclass[a4paper,doc,notimes]{article}
-\usepackage[a4paper,margin=1in,footskip=0.25in]{geometry}
+\documentclass[letter,doc,notimes]{article}
+\usepackage[letter,margin=1in,footskip=0.25in]{geometry}
 %%\documentclass[tikz]{standalone}
 \usepackage{tikz}
 %Required by APA6 package
@@ -48,6 +48,12 @@
 \setenumerate[2]{label=\Alph*.}
 \setenumerate[3]{label=\roman*.}
 \setenumerate[4]{label=\alph*.}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{CSCI 567 HW\#4 MS}
+\chead{USCID: 2074-6694-39}
+
 
 % break page where ever is required
 \allowdisplaybreaks
@@ -192,35 +198,235 @@ w_{ki} \leftarrow &  w_{ki}  + \Delta w_{ki} \numberthis
 
 
 \section{PROGRAMMING}
+
+The programming assignment was performed on a Ubuntu 16.10 machine on Google Cloud. This machine had 24CPU cores and enough RAM to run smoothly.
+The unit for reported  time below is Seconds.
+
 \stepcounter{subsection}
 \stepcounter{subsection}
 \stepcounter{subsection}
+
 
 \subsection{Linear Activation}
-Report the observations and explain the pattern of test set accuracies obtained. Also report the time taken to train these new set of architectures.
+Report the observations and explain the pattern of test set accuracies obtained.
+\begin{verbatim}
+## (d) Linear Activation
+#                Architecture    Lambda     Decay     Momtm    Act_Fn     Score      Time
+1                     [50, 2]         0         0         0    linear  0.832622   6.32704
+2                 [50, 50, 2]         0         0         0    linear  0.836159   5.44851
+3             [50, 50, 50, 2]         0         0         0    linear  0.839004   7.55398
+4         [50, 50, 50, 50, 2]         0         0         0    linear  0.841618   9.63156
+
+Best Config: architecture = [50, 50, 50, 50, 2], lambda = 0.0, decay = 0.0,
+                 momentum = 0.0, actfn = linear, best_acc = 0.841617658418
+
+5                 [50, 50, 2]         0         0         0    linear  0.837581   5.44945
+6                [50, 500, 2]         0         0         0    linear  0.840042   22.7603
+7           [50, 500, 300, 2]         0         0         0    linear  0.843386   35.7083
+8      [50, 800, 500, 300, 2]         0         0         0    linear  0.845231   67.9852
+9 [50, 800, 800, 500, 300, 2]         0         0         0    linear  0.847499    105.25
+
+Best Config: architecture = [50, 800, 800, 500, 300, 2], lambda = 0.0, decay = 0.0,
+                 momentum = 0.0, actfn = linear, best_acc = 0.847499330564
+\end{verbatim}
+Observations:
+\begin{itemize}
+	\item As the number of layers increased the test set accuracy increased and the time taken to train the network also increased.
+	\item As the number of neurons increased the test set accuracy increased and the time taken to train the network also increased.
+\end{itemize}
 
 \subsection{Sigmoid Activation}
-Report your test set accuracies and comment on the trend of accuracies obtained with changing model architectures. Also explain why this trend is different from that of linear activations. Report and compare the time taken to train these architectures with those for linear architectures.
+\begin{verbatim}
+#                Architecture    Lambda     Decay     Momtm    Act_Fn     Score      Time
+1                 [50, 50, 2]         0         0         0   sigmoid  0.746588   8.94158
+2                [50, 500, 2]         0         0         0   sigmoid  0.754892   76.4045
+3           [50, 500, 300, 2]         0         0         0   sigmoid  0.717564   124.218
+4      [50, 800, 500, 300, 2]         0         0         0   sigmoid  0.717564   244.296
+5 [50, 800, 800, 500, 300, 2]         0         0         0   sigmoid  0.717564   370.078
+Best Config: architecture = [50, 500, 2], lambda = 0.0, decay = 0.0,
+               momentum = 0.0, actfn = sigmoid, best_acc = 0.754891784386
+\end{verbatim}
+Observations :
+\begin{itemize}
+	\item As the number of layers increased the test set accuracy fluctuated initially then it stopped changing.
+	\item The reason behind no change in accuracy in deeper networks is due to 'the vanishing gradient problem' with sigmoid function.
+	\item As the number of layers increased, the time taken to train the network increased.
+	\item Network with sigmoid activations took more time to train than the network with linear activations. This is because sigmoid activation has an exponent term which requires more time to compute and the gradients are smaller during the back propagation.
+\end{itemize}
 
 \subsection{ReLu Activation}
-Report your observations and explain the trend again. Also explain why this trend is different from that of linear activations. Report and compare the time taken to train these architectures with those for linear and sigmoid architectures.
+\begin{verbatim}
+#                Architecture    Lambda     Decay     Momtm    Act_Fn     Score      Time
+1                 [50, 50, 2]         0         0         0      relu  0.822089   6.61757
+2                [50, 500, 2]         0         0         0      relu  0.818283   36.0388
+3           [50, 500, 300, 2]         0         0         0      relu  0.805328   58.1833
+4      [50, 800, 500, 300, 2]         0         0         0      relu  0.805597   113.869
+5 [50, 800, 800, 500, 300, 2]         0         0         0      relu  0.791835   173.752
+Best Config: architecture = [50, 50, 2], lambda = 0.0, decay = 0.0, 
+               momentum = 0.0, actfn = relu, best_acc = 0.82208895373
+\end{verbatim}
+\begin{itemize}
+	\item As the number of layers increased the test set accuracy decreased. This decrement was very small.
+	\item Unlike sigmoid, the relu does not suffer from the 'Vanishing gradients problem' so it continued to vary with more layers.
+	\item As the number of layers increased, the time taken to train the network also increased.
+	\item The time taken by relu network is lesser than the time taken by sigmoid network. This is because ReLu activation is faster to compute and its gradients are larger during the back propagation.
+\end{itemize}
 
 \subsection{L2-Regularization}
-Report your accuracies on the test set and explain the trend of observations. Report the best value of the regularization hyperparameter.
+\begin{verbatim}
+#           Architecture    Lambda     Decay     Momtm    Act_Fn     Score      Time
+1 [50, 800, 500, 300, 2]     1e-07         0         0      relu  0.802868   125.633
+2 [50, 800, 500, 300, 2]     5e-07         0         0      relu   0.80479   125.408
+3 [50, 800, 500, 300, 2]     1e-06         0         0      relu  0.806712   126.387
+4 [50, 800, 500, 300, 2]     5e-06         0         0      relu  0.805213   125.781
+5 [50, 800, 500, 300, 2]     1e-05         0         0      relu  0.798793   124.815
+Best Config: architecture = [50, 800, 500, 300, 2], lambda = 1e-06, decay = 0.0,
+            momentum = 0.0, actfn = relu, best_acc = 0.8067120346
+Best Regularization Coefficient= 1e-06
+\end{verbatim}
+\begin{itemize}
+	\item The accuracy is a concave function with maxima at $\lambda = 10^{-6 } $. i.e. It increased until the maxima and then start to decrease.
+	\item The best $\lambda = 10^{-6 }$
+\end{itemize}
 
 \subsection{Early Stopping and L2-regularization}
-Again report your accuracies on the test set and explain the trend of observations. Report the best value of the regularization hyperparameter this time. Is it the same as with only L2-regularization? Did early stopping help?
+\begin{verbatim}
+#           Architecture    Lambda     Decay     Momtm    Act_Fn     Score      Time
+1 [50, 800, 500, 300, 2]     1e-07         0         0      relu  0.802868   116.136
+2 [50, 800, 500, 300, 2]     5e-07         0         0      relu  0.803137   116.616
+3 [50, 800, 500, 300, 2]     1e-06         0         0      relu  0.790835   116.909
+4 [50, 800, 500, 300, 2]     5e-06         0         0      relu  0.754507   40.0303
+5 [50, 800, 500, 300, 2]     1e-05         0         0      relu  0.766847   35.3188
+Epoch 00009: early stopping
+Best Config: architecture = [50, 800, 500, 300, 2], lambda = 5e-07, decay = 0.0,
+              momentum = 0.0, actfn = relu, best_acc = 0.80313689471
+Best Regularization Coefficient with early stopping= 5e-07
+\end{verbatim}
+\begin{itemize}
+	\item The accuracy has a maxima at $\lambda = 5 \times 10^{-7 } $. i.e. It increased until the maxima and then start to decrease. However, the accuracy function has some fluctuations and thus it is not a smooth function.
+	\item With early stop, the best $\lambda = 5\times10^{-7 }$. No, this is not same as the previous experiment.
+  \item With early stopping didnt really help in terms of accuracy. The training time is cut off when early stop is triggered.
+\end{itemize}
 
 \subsection{ SGD with weight decay}
-Report your test set accuracies for the decay parameters and choose the best one based on your observations.
-
+\begin{verbatim}
+#           Architecture    Lambda     Decay     Momtm    Act_Fn     Score      Time
+1 [50, 800, 500, 300, 2]     5e-07     1e-05         0      relu  0.797564   409.972
+2 [50, 800, 500, 300, 2]     5e-07     5e-05         0      relu  0.784603   410.182
+3 [50, 800, 500, 300, 2]     5e-07    0.0001         0      relu  0.717141   413.814
+4 [50, 800, 500, 300, 2]     5e-07    0.0003         0      relu  0.718141    410.25
+5 [50, 800, 500, 300, 2]     5e-07    0.0007         0      relu  0.295199   413.014
+6 [50, 800, 500, 300, 2]     5e-07     0.001         0      relu  0.778688   411.389
+Best Config: architecture = [50, 800, 500, 300, 2], lambda = 5e-07, decay = 1e-05, 
+             momentum = 0.0,  actfn = relu, best_acc = 0.0.797564
+\end{verbatim}
+Best Decay =  $1\times 10^{-5}$
 \subsection{Momentum}
-Find the best value for the momentum coefficients, which gives the maximum test set accuracy.
+\begin{verbatim}
+#           Architecture    Lambda     Decay     Momtm    Act_Fn     Score      Time
+1 [50, 800, 500, 300, 2]         0     5e-05      0.99      relu  0.848345   194.788
+2 [50, 800, 500, 300, 2]         0     5e-05      0.98      relu  0.818937   195.591
+3 [50, 800, 500, 300, 2]         0     5e-05      0.95      relu  0.785761   195.349
+4 [50, 800, 500, 300, 2]         0     5e-05       0.9      relu  0.766655   194.508
+5 [50, 800, 500, 300, 2]         0     5e-05      0.85      relu  0.724292   194.438
+Best Config: architecture = [50, 800, 500, 300, 2], lambda = 0.0, decay = 5e-05,
+            momentum = 0.99, actfn = relu, best_acc = 0.848345062112
+\end{verbatim}
+Best momentum = $0.99$
 
 \subsection{Combining the above}
-Report your test set accuracy again. Is it better or worse than the accuracies you observed in the last few parts?
+\begin{verbatim}
+#           Architecture    Lambda     Decay     Momtm    Act_Fn     Score      Time
+1 [50, 800, 500, 300, 2]     5e-07     1e-05      0.99      relu  0.870218   36.4348
+\end{verbatim}
+\begin{itemize}
+	\item Test set accuracy = $0.870218$
+	\item It is better than the previous values.
+\end{itemize}
 
 \subsection{Grid search with cross-validation}
-Report the best parameter values, architecture and the best test set accuracy obtained.
+\begin{verbatim}
+ #                Architecture    Lambda     Decay     Momtm    Act_Fn     Score      Time
+ 1                 [50, 50, 2]     1e-07     1e-05      0.99      relu  0.845154   20.4715
+ 2                 [50, 50, 2]     1e-07     5e-05      0.99      relu  0.842771   20.3143
+ 3                 [50, 50, 2]     1e-07    0.0001      0.99      relu  0.805674   3.80574
+ 4                 [50, 50, 2]     5e-07     1e-05      0.99      relu  0.845231   20.3806
+ 5                 [50, 50, 2]     5e-07     5e-05      0.99      relu  0.845001   20.5079
+ 6                 [50, 50, 2]     5e-07    0.0001      0.99      relu  0.842771    20.161
+ 7                 [50, 50, 2]     1e-06     1e-05      0.99      relu  0.850229   20.5862
+ 8                 [50, 50, 2]     1e-06     5e-05      0.99      relu  0.844424   20.2211
+ 9                 [50, 50, 2]     1e-06    0.0001      0.99      relu  0.847768   20.3865
+10                 [50, 50, 2]     5e-06     1e-05      0.99      relu  0.847269   20.7574
+11                 [50, 50, 2]     5e-06     5e-05      0.99      relu  0.841579   20.5422
+12                 [50, 50, 2]     5e-06    0.0001      0.99      relu  0.836505   20.1935
+13                 [50, 50, 2]     1e-05     1e-05      0.99      relu  0.844462   20.7328
+14                 [50, 50, 2]     1e-05     5e-05      0.99      relu  0.844501   20.9433
+15                 [50, 50, 2]     1e-05    0.0001      0.99      relu  0.842656   20.1146
+16                [50, 500, 2]     1e-07     1e-05      0.99      relu  0.851228   111.938
+17                [50, 500, 2]     1e-07     5e-05      0.99      relu  0.810402   12.2399
+18                [50, 500, 2]     1e-07    0.0001      0.99      relu  0.844693   112.215
+19                [50, 500, 2]     5e-07     1e-05      0.99      relu  0.848729   112.914
+20                [50, 500, 2]     5e-07     5e-05      0.99      relu  0.847153    112.21
+21                [50, 500, 2]     5e-07    0.0001      0.99      relu  0.847192   111.397
+22                [50, 500, 2]     1e-06     1e-05      0.99      relu  0.850575   112.272
+23                [50, 500, 2]     1e-06     5e-05      0.99      relu  0.807865   13.1088
+24                [50, 500, 2]     1e-06    0.0001      0.99      relu  0.843924   112.289
+25                [50, 500, 2]     5e-06     1e-05      0.99      relu  0.850921   112.793
+26                [50, 500, 2]     5e-06     5e-05      0.99      relu  0.845116   113.816
+27                [50, 500, 2]     5e-06    0.0001      0.99      relu  0.843501   113.023
+28                [50, 500, 2]     1e-05     1e-05      0.99      relu   0.85019   114.008
+29                [50, 500, 2]     1e-05     5e-05      0.99      relu  0.847653   112.867
+30                [50, 500, 2]     1e-05    0.0001      0.99      relu  0.844847   112.733
+31           [50, 500, 300, 2]     1e-07     1e-05      0.99      relu  0.861608   188.814
+32           [50, 500, 300, 2]     1e-07     5e-05      0.99      relu  0.855572   187.028
+33           [50, 500, 300, 2]     1e-07    0.0001      0.99      relu  0.790797   18.3032
+34           [50, 500, 300, 2]     5e-07     1e-05      0.99      relu  0.861569   188.087
+35           [50, 500, 300, 2]     5e-07     5e-05      0.99      relu  0.789951   18.1336
+36           [50, 500, 300, 2]     5e-07    0.0001      0.99      relu   0.80602   20.3596
+37           [50, 500, 300, 2]     1e-06     1e-05      0.99      relu  0.861954   188.927
+38           [50, 500, 300, 2]     1e-06     5e-05      0.99      relu  0.851305   190.002
+39           [50, 500, 300, 2]     1e-06    0.0001      0.99      relu  0.851074   189.165
+40           [50, 500, 300, 2]     5e-06     1e-05      0.99      relu  0.797447   18.0872
+41           [50, 500, 300, 2]     5e-06     5e-05      0.99      relu  0.857533   187.847
+42           [50, 500, 300, 2]     5e-06    0.0001      0.99      relu  0.856802   188.897
+43           [50, 500, 300, 2]     1e-05     1e-05      0.99      relu  0.858801   188.426
+44           [50, 500, 300, 2]     1e-05     5e-05      0.99      relu  0.856572   189.707
+45           [50, 500, 300, 2]     1e-05    0.0001      0.99      relu  0.855957   189.398
+46      [50, 800, 500, 300, 2]     1e-07     1e-05      0.99      relu  0.773113   36.0215
+47      [50, 800, 500, 300, 2]     1e-07     5e-05      0.99      relu   0.86649   384.123
+48      [50, 800, 500, 300, 2]     1e-07    0.0001      0.99      relu  0.752547    36.385
+49      [50, 800, 500, 300, 2]     5e-07     1e-05      0.99      relu  0.869411   384.686
+50      [50, 800, 500, 300, 2]     5e-07     5e-05      0.99      relu  0.862915   382.734
+51      [50, 800, 500, 300, 2]     5e-07    0.0001      0.99      relu  0.861492   387.472
+52      [50, 800, 500, 300, 2]     1e-06     1e-05      0.99      relu  0.868719   385.912
+53      [50, 800, 500, 300, 2]     1e-06     5e-05      0.99      relu   0.86526   385.432
+54      [50, 800, 500, 300, 2]     1e-06    0.0001      0.99      relu  0.859801   386.415
+55      [50, 800, 500, 300, 2]     5e-06     1e-05      0.99      relu  0.775497   40.4417
+56      [50, 800, 500, 300, 2]     5e-06     5e-05      0.99      relu  0.861492   384.428
+57      [50, 800, 500, 300, 2]     5e-06    0.0001      0.99      relu  0.863991   384.855
+58      [50, 800, 500, 300, 2]     1e-05     1e-05      0.99      relu  0.776381   36.3755
+59      [50, 800, 500, 300, 2]     1e-05     5e-05      0.99      relu  0.866682   385.443
+60      [50, 800, 500, 300, 2]     1e-05    0.0001      0.99      relu  0.860723   384.931
+61 [50, 800, 800, 500, 300, 2]     1e-07     1e-05      0.99      relu  0.754315   56.1611
+62 [50, 800, 800, 500, 300, 2]     1e-07     5e-05      0.99      relu  0.867874   602.568
+63 [50, 800, 800, 500, 300, 2]     1e-07    0.0001      0.99      relu  0.861877   600.322
+64 [50, 800, 800, 500, 300, 2]     5e-07     1e-05      0.99      relu  0.875293   595.138
+65 [50, 800, 800, 500, 300, 2]     5e-07     5e-05      0.99      relu  0.870334   600.348
+66 [50, 800, 800, 500, 300, 2]     5e-07    0.0001      0.99      relu  0.738746   56.2818
+67 [50, 800, 800, 500, 300, 2]     1e-06     1e-05      0.99      relu  0.874371   598.163
+68 [50, 800, 800, 500, 300, 2]     1e-06     5e-05      0.99      relu  0.870488    597.95
+69 [50, 800, 800, 500, 300, 2]     1e-06    0.0001      0.99      relu  0.861723   601.545
+70 [50, 800, 800, 500, 300, 2]     5e-06     1e-05      0.99      relu  0.724561   50.2382
+71 [50, 800, 800, 500, 300, 2]     5e-06     5e-05      0.99      relu   0.87487   598.255
+72 [50, 800, 800, 500, 300, 2]     5e-06    0.0001      0.99      relu  0.869219   599.841
+73 [50, 800, 800, 500, 300, 2]     1e-05     1e-05      0.99      relu  0.734364   56.2232
+74 [50, 800, 800, 500, 300, 2]     1e-05     5e-05      0.99      relu  0.734825   55.9429
+75 [50, 800, 800, 500, 300, 2]     1e-05    0.0001      0.99      relu  0.741245   55.9157
+
+Best Config: architecture = [50, 800, 800, 500, 300, 2], lambda = 5e-07, decay = 1e-05, 
+             momentum = 0.99, actfn = relu, best_acc = 0.875293123297
+\end{verbatim}
+
+The best test set accuracy  = $0.875293123297$
 
 \end{document}
