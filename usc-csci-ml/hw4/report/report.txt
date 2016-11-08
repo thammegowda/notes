@@ -1,0 +1,184 @@
+## (d) Linear Activation 
+architecture=[50, 2], lambda=0.0, decay=0.0, momentum=0.0, actfn=linear: score=0.832622152832 | time=6.32703995705
+architecture=[50, 50, 2], lambda=0.0, decay=0.0, momentum=0.0, actfn=linear: score=0.83615883257 | time=5.44851398468
+architecture=[50, 50, 50, 2], lambda=0.0, decay=0.0, momentum=0.0, actfn=linear: score=0.839003570961 | time=7.55398011208
+architecture=[50, 50, 50, 50, 2], lambda=0.0, decay=0.0, momentum=0.0, actfn=linear: score=0.841617658418 | time=9.63155913353
+Best Config: architecture = [50, 50, 50, 50, 2], lambda = 0.0, decay = 0.0, momentum = 0.0, actfn = linear, best_acc = 0.841617658418
+Mean Time = 7.24027329683seconds, |Models| = 4, Total Time = 28.9610931873seconds
+architecture=[50, 50, 2], lambda=0.0, decay=0.0, momentum=0.0, actfn=linear: score=0.837581209785 | time=5.449447155
+architecture=[50, 500, 2], lambda=0.0, decay=0.0, momentum=0.0, actfn=linear: score=0.840041518495 | time=22.7602698803
+architecture=[50, 500, 300, 2], lambda=0.0, decay=0.0, momentum=0.0, actfn=linear: score=0.843386000577 | time=35.7082819939
+architecture=[50, 800, 500, 300, 2], lambda=0.0, decay=0.0, momentum=0.0, actfn=linear: score=0.845231228673 | time=67.9851920605
+architecture=[50, 800, 800, 500, 300, 2], lambda=0.0, decay=0.0, momentum=0.0, actfn=linear: score=0.847499330564 | time=105.249520063
+Best Config: architecture = [50, 800, 800, 500, 300, 2], lambda = 0.0, decay = 0.0, momentum = 0.0, actfn = linear, best_acc = 0.847499330564
+Mean Time = 47.4305422306seconds, |Models| = 5, Total Time = 237.152711153seconds
+
+
+## (e) Sigmoid Activation
+architecture=[50, 50, 2], lambda=0.0, decay=0.0, momentum=0.0, actfn=sigmoid: score=0.746588240769 | time=8.94158315659
+architecture=[50, 500, 2], lambda=0.0, decay=0.0, momentum=0.0, actfn=sigmoid: score=0.754891784386 | time=76.4045071602
+architecture=[50, 500, 300, 2], lambda=0.0, decay=0.0, momentum=0.0, actfn=sigmoid: score=0.717564290896 | time=124.217772961
+architecture=[50, 800, 500, 300, 2], lambda=0.0, decay=0.0, momentum=0.0, actfn=sigmoid: score=0.717564290896 | time=244.296013117
+architecture=[50, 800, 800, 500, 300, 2], lambda=0.0, decay=0.0, momentum=0.0, actfn=sigmoid: score=0.717564290896 | time=370.077687979
+Best Config: architecture = [50, 500, 2], lambda = 0.0, decay = 0.0, momentum = 0.0, actfn = sigmoid, best_acc = 0.754891784386
+Mean Time = 164.787512875seconds, |Models| = 5, Total Time = 823.937564373seconds
+
+
+## (f) ReLu Activation
+architecture=[50, 50, 2], lambda=0.0, decay=0.0, momentum=0.0, actfn=relu: score=0.82208895373 | time=6.61756706238
+architecture=[50, 500, 2], lambda=0.0, decay=0.0, momentum=0.0, actfn=relu: score=0.818283156032 | time=36.0388388634
+architecture=[50, 500, 300, 2], lambda=0.0, decay=0.0, momentum=0.0, actfn=relu: score=0.805328108372 | time=58.1833190918
+architecture=[50, 800, 500, 300, 2], lambda=0.0, decay=0.0, momentum=0.0, actfn=relu: score=0.80559720342 | time=113.868880987
+architecture=[50, 800, 800, 500, 300, 2], lambda=0.0, decay=0.0, momentum=0.0, actfn=relu: score=0.791834843121 | time=173.752125025
+Best Config: architecture = [50, 50, 2], lambda = 0.0, decay = 0.0, momentum = 0.0, actfn = relu, best_acc = 0.82208895373
+Mean Time = 77.6921462059seconds, |Models| = 5, Total Time = 388.46073103seconds
+
+
+## (g) Regularization Coefficients
+architecture=[50, 800, 500, 300, 2], lambda=1e-07, decay=0.0, momentum=0.0, actfn=relu: score=0.802867799662 | time=125.633001089
+architecture=[50, 800, 500, 300, 2], lambda=5e-07, decay=0.0, momentum=0.0, actfn=relu: score=0.804789913694 | time=125.408442974
+architecture=[50, 800, 500, 300, 2], lambda=1e-06, decay=0.0, momentum=0.0, actfn=relu: score=0.8067120346 | time=126.386689186
+architecture=[50, 800, 500, 300, 2], lambda=5e-06, decay=0.0, momentum=0.0, actfn=relu: score=0.805212771448 | time=125.780803919
+architecture=[50, 800, 500, 300, 2], lambda=1e-05, decay=0.0, momentum=0.0, actfn=relu: score=0.798792909207 | time=124.814758062
+Best Config: architecture = [50, 800, 500, 300, 2], lambda = 1e-06, decay = 0.0, momentum = 0.0, actfn = relu, best_acc = 0.8067120346
+Mean Time = 125.604739046seconds, |Models| = 5, Total Time = 628.02369523seconds
+('Best Regularization Coefficient=', 1e-06)
+
+
+## (h) Regularization Coefficients -- Early stop
+architecture=[50, 800, 500, 300, 2], lambda=1e-07, decay=0.0, momentum=0.0, actfn=relu: score=0.802867795079 | time=116.136054993
+architecture=[50, 800, 500, 300, 2], lambda=5e-07, decay=0.0, momentum=0.0, actfn=relu: score=0.80313689471 | time=116.616314888
+architecture=[50, 800, 500, 300, 2], lambda=1e-06, decay=0.0, momentum=0.0, actfn=relu: score=0.790835355739 | time=116.909392118
+Epoch 00009: early stopping
+architecture=[50, 800, 500, 300, 2], lambda=5e-06, decay=0.0, momentum=0.0, actfn=relu: score=0.754507356997 | time=40.0303061008
+architecture=[50, 800, 500, 300, 2], lambda=1e-05, decay=0.0, momentum=0.0, actfn=relu: score=0.797947179949 | time=117.299457073
+Best Config: architecture = [50, 800, 500, 300, 2], lambda = 5e-07, decay = 0.0, momentum = 0.0, actfn = relu, best_acc = 0.80313689471
+Mean Time = 101.398305035seconds, |Models| = 5, Total Time = 506.991525173seconds
+('Best Regularization Coefficient with early stopping=', 5e-07)
+
+
+## (i) SGD Decay
+architecture=[50, 800, 500, 300, 2], lambda=5e-07, decay=1e-05, momentum=0.0, actfn=relu: score=0.717564290896 | time=409.972181082
+architecture=[50, 800, 500, 300, 2], lambda=5e-07, decay=5e-05, momentum=0.0, actfn=relu: score=0.794602700158 | time=410.181951046
+architecture=[50, 800, 500, 300, 2], lambda=5e-07, decay=0.0001, momentum=0.0, actfn=relu: score=0.71714143085 | time=413.813656092
+architecture=[50, 800, 500, 300, 2], lambda=5e-07, decay=0.0003, momentum=0.0, actfn=relu: score=0.71814093198 | time=410.250261068
+architecture=[50, 800, 500, 300, 2], lambda=5e-07, decay=0.0007, momentum=0.0, actfn=relu: score=0.295198555033 | time=413.014158964
+architecture=[50, 800, 500, 300, 2], lambda=5e-07, decay=0.001, momentum=0.0, actfn=relu: score=0.778687577184 | time=411.388778925
+Best Config: architecture = [50, 800, 500, 300, 2], lambda = 5e-07, decay = 5e-05, momentum = 0.0, actfn = relu, best_acc = 0.794602700158
+Mean Time = 411.436831196seconds, |Models| = 6, Total Time = 2468.62098718seconds
+('Best Decay', 5e-05)
+
+
+## (j) SGD Momentum
+architecture=[50, 800, 500, 300, 2], lambda=0.0, decay=5e-05, momentum=0.99, actfn=relu: score=0.848345062112 | time=194.788496017
+architecture=[50, 800, 500, 300, 2], lambda=0.0, decay=5e-05, momentum=0.98, actfn=relu: score=0.818936678469 | time=195.591380835
+architecture=[50, 800, 500, 300, 2], lambda=0.0, decay=5e-05, momentum=0.95, actfn=relu: score=0.785760971028 | time=195.34907198
+architecture=[50, 800, 500, 300, 2], lambda=0.0, decay=5e-05, momentum=0.9, actfn=relu: score=0.76665513097 | time=194.508260012
+architecture=[50, 800, 500, 300, 2], lambda=0.0, decay=5e-05, momentum=0.85, actfn=relu: score=0.724291701465 | time=194.437794924
+Best Config: architecture = [50, 800, 500, 300, 2], lambda = 0.0, decay = 5e-05, momentum = 0.99, actfn = relu, best_acc = 0.848345062112
+Mean Time = 194.935000753seconds, |Models| = 5, Total Time = 974.675003767seconds
+('Best moemntum', 0.99)
+
+
+## (k) Combining all
+Epoch 00008: early stopping
+architecture=[50, 800, 500, 300, 2], lambda=5e-07, decay=5e-05, momentum=0.99, actfn=relu: score=0.768846344633 | time=36.4348239899
+Best Config: architecture = [50, 800, 500, 300, 2], lambda = 5e-07, decay = 5e-05, momentum = 0.99, actfn = relu, best_acc = 0.768846344633
+Mean Time = 36.4348239899seconds, |Models| = 1, Total Time = 36.4348239899seconds
+
+
+## (j) Grid Search 
+architecture=[50, 50, 2], lambda=1e-07, decay=1e-05, momentum=0.99, actfn=relu: score=0.845154340446 | time=20.4715249538
+architecture=[50, 50, 2], lambda=1e-07, decay=5e-05, momentum=0.99, actfn=relu: score=0.842770926837 | time=20.3142528534
+Epoch 00014: early stopping
+architecture=[50, 50, 2], lambda=1e-07, decay=0.0001, momentum=0.99, actfn=relu: score=0.805674084774 | time=3.80574011803
+architecture=[50, 50, 2], lambda=5e-07, decay=1e-05, momentum=0.99, actfn=relu: score=0.845231228673 | time=20.380589962
+architecture=[50, 50, 2], lambda=5e-07, decay=5e-05, momentum=0.99, actfn=relu: score=0.845000575448 | time=20.5079381466
+architecture=[50, 50, 2], lambda=5e-07, decay=0.0001, momentum=0.99, actfn=relu: score=0.842770917671 | time=20.1610400677
+architecture=[50, 50, 2], lambda=1e-06, decay=1e-05, momentum=0.99, actfn=relu: score=0.850228734322 | time=20.5862138271
+architecture=[50, 50, 2], lambda=1e-06, decay=5e-05, momentum=0.99, actfn=relu: score=0.84442394353 | time=20.2210819721
+architecture=[50, 50, 2], lambda=1e-06, decay=0.0001, momentum=0.99, actfn=relu: score=0.847768418737 | time=20.3865270615
+architecture=[50, 50, 2], lambda=5e-06, decay=1e-05, momentum=0.99, actfn=relu: score=0.847268672755 | time=20.7573778629
+architecture=[50, 50, 2], lambda=5e-06, decay=5e-05, momentum=0.99, actfn=relu: score=0.841579209721 | time=20.5421948433
+architecture=[50, 50, 2], lambda=5e-06, decay=0.0001, momentum=0.99, actfn=relu: score=0.836504820428 | time=20.1934950352
+architecture=[50, 50, 2], lambda=1e-05, decay=1e-05, momentum=0.99, actfn=relu: score=0.844462387643 | time=20.7328159809
+architecture=[50, 50, 2], lambda=1e-05, decay=5e-05, momentum=0.99, actfn=relu: score=0.844500827174 | time=20.9433128834
+architecture=[50, 50, 2], lambda=1e-05, decay=0.0001, momentum=0.99, actfn=relu: score=0.842655592204 | time=20.1146469116
+architecture=[50, 500, 2], lambda=1e-07, decay=1e-05, momentum=0.99, actfn=relu: score=0.851228228578 | time=111.938428879
+Epoch 00009: early stopping
+architecture=[50, 500, 2], lambda=1e-07, decay=5e-05, momentum=0.99, actfn=relu: score=0.810402493083 | time=12.2398979664
+architecture=[50, 500, 2], lambda=1e-07, decay=0.0001, momentum=0.99, actfn=relu: score=0.844693036286 | time=112.21469593
+architecture=[50, 500, 2], lambda=5e-07, decay=1e-05, momentum=0.99, actfn=relu: score=0.848729480336 | time=112.913839817
+architecture=[50, 500, 2], lambda=5e-07, decay=5e-05, momentum=0.99, actfn=relu: score=0.847153344997 | time=112.209935188
+architecture=[50, 500, 2], lambda=5e-07, decay=0.0001, momentum=0.99, actfn=relu: score=0.847191795985 | time=111.396697998
+architecture=[50, 500, 2], lambda=1e-06, decay=1e-05, momentum=0.99, actfn=relu: score=0.850574715306 | time=112.272001028
+Epoch 00010: early stopping
+architecture=[50, 500, 2], lambda=1e-06, decay=5e-05, momentum=0.99, actfn=relu: score=0.807865296145 | time=13.1088218689
+architecture=[50, 500, 2], lambda=1e-06, decay=0.0001, momentum=0.99, actfn=relu: score=0.843924192965 | time=112.289063931
+architecture=[50, 500, 2], lambda=5e-06, decay=1e-05, momentum=0.99, actfn=relu: score=0.850920689416 | time=112.79341197
+architecture=[50, 500, 2], lambda=5e-06, decay=5e-05, momentum=0.99, actfn=relu: score=0.845115898624 | time=113.815616131
+architecture=[50, 500, 2], lambda=5e-06, decay=0.0001, momentum=0.99, actfn=relu: score=0.843501326045 | time=113.023013115
+architecture=[50, 500, 2], lambda=1e-05, decay=1e-05, momentum=0.99, actfn=relu: score=0.850190287917 | time=114.008074999
+architecture=[50, 500, 2], lambda=1e-05, decay=5e-05, momentum=0.99, actfn=relu: score=0.847653102436 | time=112.867395163
+architecture=[50, 500, 2], lambda=1e-05, decay=0.0001, momentum=0.99, actfn=relu: score=0.844846808158 | time=112.73259306
+architecture=[50, 500, 300, 2], lambda=1e-07, decay=1e-05, momentum=0.99, actfn=relu: score=0.861607658099 | time=188.814130068
+architecture=[50, 500, 300, 2], lambda=1e-07, decay=5e-05, momentum=0.99, actfn=relu: score=0.855572209498 | time=187.028088093
+Epoch 00008: early stopping
+architecture=[50, 500, 300, 2], lambda=1e-07, decay=0.0001, momentum=0.99, actfn=relu: score=0.790796907043 | time=18.3031980991
+architecture=[50, 500, 300, 2], lambda=5e-07, decay=1e-05, momentum=0.99, actfn=relu: score=0.861569211694 | time=188.086848974
+Epoch 00008: early stopping
+architecture=[50, 500, 300, 2], lambda=5e-07, decay=5e-05, momentum=0.99, actfn=relu: score=0.789951180076 | time=18.1335589886
+Epoch 00009: early stopping
+architecture=[50, 500, 300, 2], lambda=5e-07, decay=0.0001, momentum=0.99, actfn=relu: score=0.80602007034 | time=20.3595719337
+architecture=[50, 500, 300, 2], lambda=1e-06, decay=1e-05, momentum=0.99, actfn=relu: score=0.861953632209 | time=188.926528931
+architecture=[50, 500, 300, 2], lambda=1e-06, decay=5e-05, momentum=0.99, actfn=relu: score=0.851305119097 | time=190.00158596
+architecture=[50, 500, 300, 2], lambda=1e-06, decay=0.0001, momentum=0.99, actfn=relu: score=0.851074468162 | time=189.164509058
+Epoch 00008: early stopping
+architecture=[50, 500, 300, 2], lambda=5e-06, decay=1e-05, momentum=0.99, actfn=relu: score=0.797447427093 | time=18.0871818066
+architecture=[50, 500, 300, 2], lambda=5e-06, decay=5e-05, momentum=0.99, actfn=relu: score=0.857532774518 | time=187.846927166
+architecture=[50, 500, 300, 2], lambda=5e-06, decay=0.0001, momentum=0.99, actfn=relu: score=0.856802370728 | time=188.896565914
+architecture=[50, 500, 300, 2], lambda=1e-05, decay=1e-05, momentum=0.99, actfn=relu: score=0.858801368404 | time=188.426100016
+architecture=[50, 500, 300, 2], lambda=1e-05, decay=5e-05, momentum=0.99, actfn=relu: score=0.856571719793 | time=189.707252026
+architecture=[50, 500, 300, 2], lambda=1e-05, decay=0.0001, momentum=0.99, actfn=relu: score=0.855956634596 | time=189.398440123
+Epoch 00008: early stopping
+architecture=[50, 800, 500, 300, 2], lambda=1e-07, decay=1e-05, momentum=0.99, actfn=relu: score=0.773113439617 | time=36.0214829445
+architecture=[50, 800, 500, 300, 2], lambda=1e-07, decay=5e-05, momentum=0.99, actfn=relu: score=0.866489831407 | time=384.123412848
+Epoch 00008: early stopping
+architecture=[50, 800, 500, 300, 2], lambda=1e-07, decay=0.0001, momentum=0.99, actfn=relu: score=0.752546801143 | time=36.3849511147
+architecture=[50, 800, 500, 300, 2], lambda=5e-07, decay=1e-05, momentum=0.99, actfn=relu: score=0.869411451151 | time=384.686182022
+architecture=[50, 800, 500, 300, 2], lambda=5e-07, decay=5e-05, momentum=0.99, actfn=relu: score=0.862914691517 | time=382.734313965
+architecture=[50, 800, 500, 300, 2], lambda=5e-07, decay=0.0001, momentum=0.99, actfn=relu: score=0.861492328049 | time=387.472079992
+architecture=[50, 800, 500, 300, 2], lambda=1e-06, decay=1e-05, momentum=0.99, actfn=relu: score=0.868719486892 | time=385.911893129
+architecture=[50, 800, 500, 300, 2], lambda=1e-06, decay=5e-05, momentum=0.99, actfn=relu: score=0.86525967476 | time=385.432461023
+architecture=[50, 800, 500, 300, 2], lambda=1e-06, decay=0.0001, momentum=0.99, actfn=relu: score=0.859800864952 | time=386.415338993
+Epoch 00009: early stopping
+architecture=[50, 800, 500, 300, 2], lambda=5e-06, decay=1e-05, momentum=0.99, actfn=relu: score=0.775496866974 | time=40.4417178631
+architecture=[50, 800, 500, 300, 2], lambda=5e-06, decay=5e-05, momentum=0.99, actfn=relu: score=0.861492325758 | time=384.428138971
+architecture=[50, 800, 500, 300, 2], lambda=5e-06, decay=0.0001, momentum=0.99, actfn=relu: score=0.863991087748 | time=384.85535121
+Epoch 00008: early stopping
+architecture=[50, 800, 500, 300, 2], lambda=1e-05, decay=1e-05, momentum=0.99, actfn=relu: score=0.776381040345 | time=36.3754570484
+architecture=[50, 800, 500, 300, 2], lambda=1e-05, decay=5e-05, momentum=0.99, actfn=relu: score=0.866682038227 | time=385.443000078
+architecture=[50, 800, 500, 300, 2], lambda=1e-05, decay=0.0001, momentum=0.99, actfn=relu: score=0.860723489311 | time=384.931126833
+Epoch 00008: early stopping
+architecture=[50, 800, 800, 500, 300, 2], lambda=1e-07, decay=1e-05, momentum=0.99, actfn=relu: score=0.754315152468 | time=56.1611058712
+architecture=[50, 800, 800, 500, 300, 2], lambda=1e-07, decay=5e-05, momentum=0.99, actfn=relu: score=0.86787375076 | time=602.56756711
+architecture=[50, 800, 800, 500, 300, 2], lambda=1e-07, decay=0.0001, momentum=0.99, actfn=relu: score=0.861876748564 | time=600.321825027
+architecture=[50, 800, 800, 500, 300, 2], lambda=5e-07, decay=1e-05, momentum=0.99, actfn=relu: score=0.875293123297 | time=595.137736797
+architecture=[50, 800, 800, 500, 300, 2], lambda=5e-07, decay=5e-05, momentum=0.99, actfn=relu: score=0.870334066345 | time=600.347626925
+Epoch 00008: early stopping
+architecture=[50, 800, 800, 500, 300, 2], lambda=5e-07, decay=0.0001, momentum=0.99, actfn=relu: score=0.738746012769 | time=56.281774044
+architecture=[50, 800, 800, 500, 300, 2], lambda=1e-06, decay=1e-05, momentum=0.99, actfn=relu: score=0.874370505812 | time=598.163454056
+architecture=[50, 800, 800, 500, 300, 2], lambda=1e-06, decay=5e-05, momentum=0.99, actfn=relu: score=0.870487833634 | time=597.949550867
+architecture=[50, 800, 800, 500, 300, 2], lambda=1e-06, decay=0.0001, momentum=0.99, actfn=relu: score=0.861722985858 | time=601.544951916
+Epoch 00007: early stopping
+architecture=[50, 800, 800, 500, 300, 2], lambda=5e-06, decay=1e-05, momentum=0.99, actfn=relu: score=0.724560794715 | time=50.2382409573
+architecture=[50, 800, 800, 500, 300, 2], lambda=5e-06, decay=5e-05, momentum=0.99, actfn=relu: score=0.874870263251 | time=598.25482583
+architecture=[50, 800, 800, 500, 300, 2], lambda=5e-06, decay=0.0001, momentum=0.99, actfn=relu: score=0.869219235165 | time=599.840630054
+Epoch 00008: early stopping
+architecture=[50, 800, 800, 500, 300, 2], lambda=1e-05, decay=1e-05, momentum=0.99, actfn=relu: score=0.734363583152 | time=56.2232279778
+Epoch 00008: early stopping
+architecture=[50, 800, 800, 500, 300, 2], lambda=1e-05, decay=5e-05, momentum=0.99, actfn=relu: score=0.734824894186 | time=55.9428639412
+Epoch 00008: early stopping
+architecture=[50, 800, 800, 500, 300, 2], lambda=1e-05, decay=0.0001, momentum=0.99, actfn=relu: score=0.741244754137 | time=55.9157130718
+Best Config: architecture = [50, 800, 800, 500, 300, 2], lambda = 5e-07, decay = 1e-05, momentum = 0.99, actfn = relu, best_acc = 0.875293123297
+Mean Time = 187.222276389seconds, |Models| = 75, Total Time = 14041.6707292seconds

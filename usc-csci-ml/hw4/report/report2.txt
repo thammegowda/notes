@@ -1,0 +1,58 @@
+## (c) Loading and Normalizing the dataset
+Train X, Y : (104051, 50) (104051, 2)
+Test  X, Y : (26013, 50) (26013, 2)
+
+
+## (d) Linear Activation 
+
+
+## (e) Sigmoid Activation
+
+
+## (f) ReLu Activation
+
+
+## (g) Regularization Coefficients
+architecture=[50, 800, 500, 300, 2], lambda=1e-07, decay=0.0, momentum=0.0, actfn=relu: score=0.793641637574 | time=124.044340849
+architecture=[50, 800, 500, 300, 2], lambda=5e-07, decay=0.0, momentum=0.0, actfn=relu: score=0.804405492193 | time=124.257582903
+architecture=[50, 800, 500, 300, 2], lambda=1e-06, decay=0.0, momentum=0.0, actfn=relu: score=0.795948178996 | time=123.954447985
+architecture=[50, 800, 500, 300, 2], lambda=5e-06, decay=0.0, momentum=0.0, actfn=relu: score=0.795871293059 | time=124.826323032
+architecture=[50, 800, 500, 300, 2], lambda=1e-05, decay=0.0, momentum=0.0, actfn=relu: score=0.787644639961 | time=123.509083033
+Best Config: architecture = [50, 800, 500, 300, 2], lambda = 5e-07, decay = 0.0, momentum = 0.0, actfn = relu, best_acc = 0.804405492193
+Mean Time = 124.11835556seconds, |Models| = 5, Total Time = 620.591777802seconds
+('Best Regularization Coefficient=', 5e-07)
+
+
+## (h) Regularization Coefficients -- Early stop
+architecture=[50, 800, 500, 300, 2], lambda=1e-07, decay=0.0, momentum=0.0, actfn=relu: score=0.795563751606 | time=114.71744895
+architecture=[50, 800, 500, 300, 2], lambda=5e-07, decay=0.0, momentum=0.0, actfn=relu: score=0.798639140932 | time=114.633672953
+architecture=[50, 800, 500, 300, 2], lambda=1e-06, decay=0.0, momentum=0.0, actfn=relu: score=0.803021568257 | time=114.894371986
+Epoch 00009: early stopping
+architecture=[50, 800, 500, 300, 2], lambda=5e-06, decay=0.0, momentum=0.0, actfn=relu: score=0.739437975551 | time=39.3744108677
+Epoch 00008: early stopping
+architecture=[50, 800, 500, 300, 2], lambda=1e-05, decay=0.0, momentum=0.0, actfn=relu: score=0.766808899073 | time=35.3188290596
+Best Config: architecture = [50, 800, 500, 300, 2], lambda = 1e-06, decay = 0.0, momentum = 0.0, actfn = relu, best_acc = 0.803021568257
+Mean Time = 83.7877467632seconds, |Models| = 5, Total Time = 418.938733816seconds
+('Best Regularization Coefficient with early stopping=', 1e-06)
+
+
+## (i) SGD Decay
+architecture=[50, 800, 500, 300, 2], lambda=5e-07, decay=1e-05, momentum=0.0, actfn=relu: score=0.752239260503 | time=404.516969204
+architecture=[50, 800, 500, 300, 2], lambda=5e-07, decay=5e-05, momentum=0.0, actfn=relu: score=0.719640180398 | time=408.236419916
+architecture=[50, 800, 500, 300, 2], lambda=5e-07, decay=0.0001, momentum=0.0, actfn=relu: score=0.712720560717 | time=410.560559988
+architecture=[50, 800, 500, 300, 2], lambda=5e-07, decay=0.0003, momentum=0.0, actfn=relu: score=0.680006157436 | time=410.664469957
+architecture=[50, 800, 500, 300, 2], lambda=5e-07, decay=0.0007, momentum=0.0, actfn=relu: score=0.32030138583 | time=408.513715029
+architecture=[50, 800, 500, 300, 2], lambda=5e-07, decay=0.001, momentum=0.0, actfn=relu: score=0.598700648607 | time=410.679774046
+Best Config: architecture = [50, 800, 500, 300, 2], lambda = 5e-07, decay = 1e-05, momentum = 0.0, actfn = relu, best_acc = 0.752239260503
+Mean Time = 408.86198469seconds, |Models| = 6, Total Time = 2453.17190814seconds
+('Best Decay', 1e-05)
+
+
+## (j) SGD Momentum
+('Best moemntum', 0.99)
+
+
+## (k) Combining all
+architecture=[50, 800, 500, 300, 2], lambda=1e-06, decay=1e-05, momentum=0.99, actfn=relu: score=0.870218740878 | time=383.717817068
+Best Config: architecture = [50, 800, 500, 300, 2], lambda = 1e-06, decay = 1e-05, momentum = 0.99, actfn = relu, best_acc = 0.870218740878
+Mean Time = 383.717817068seconds, |Models| = 1, Total Time = 383.717817068seconds
