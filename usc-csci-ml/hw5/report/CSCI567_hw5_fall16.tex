@@ -1,0 +1,191 @@
+%%%%%%%%%%%
+%% Home work template for Graduate School
+%% Author : Thamme Gowda N.
+%% Originally from  https://github.com/thammegowda/hw-tex-templ
+%%%%%%%%%%%%%%
+
+\documentclass[a4paper,doc,notimes]{article}
+\usepackage[a4paper,margin=1in,footskip=0.25in]{geometry}
+%%\documentclass[tikz]{standalone}
+\usepackage{tikz}
+%Required by APA6 package
+\usepackage[normalem]{ulem}
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+
+%Oft-used, oft-abused
+\usepackage{afterpage}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{censor}
+\usepackage{color}
+\usepackage{csquotes}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{lmodern}
+%\usepackage{media9}
+\usepackage{multirow}
+\usepackage{outlines}
+\usepackage{pdfpages}
+\usepackage{placeins}
+\usepackage{soul}
+\usepackage{tabularx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{xcolor}
+\usepackage{mathtools}
+\graphicspath{ {images/}}
+
+\usepackage{sectsty}
+\sectionfont{\fontsize{14}{12}\selectfont}
+
+\setenumerate[1]{label=\Roman*.}
+\setenumerate[2]{label=\Alph*.}
+\setenumerate[3]{label=\roman*.}
+\setenumerate[4]{label=\alph*.}
+
+% break page where ever is required
+\allowdisplaybreaks
+\renewcommand{\thesubsection}{\thesection.\alph{subsection}}
+\usepackage{titling}
+\setlength{\droptitle}{-9em}
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+\usepackage{listings}
+
+\title{\noindent  \textbf{ USC CSCI 567 HOMEWORK 5 SOLUTIONS} }
+\author{\textbf{ThammeGowda Narayanaswamy} \\
+EMail: tnarayan@usc.edu  USCID: 2074-6694-39}
+
+
+\begin{document}
+\maketitle
+
+\section{Clustering}
+\subsection{}
+Given that 
+\begin{equation}\label{e:sse}
+	D = \sum_{n=1}^{N} \sum_{k=1}^{K} r_{nk} \parallel x_n - \mu_k \parallel^2_2 = \sum_{n=1}^{N} \sum_{k=1}^{K} r_{nk} (x_n - \mu_k)^2
+\end{equation}
+By using the fact: the $argmin_{\mu_k}$ for \ref{e:sse} is when its first order partial derivative is zero.
+
+\begin{align*}
+  \frac{\partial}{\partial \mu_k} \sum_{n=1}^{N} \sum_{k'=1}^{K} r_{nk'} (x_n - \mu_{k'})^2 =& 0 & \\
+   \sum_{n=1}^{N} r_{nk} x_n - \mu_k \sum_{n=1}^{N} r_{nk}  =& 0 & \\ 
+   \implies \mu_k^* =& \frac{1}{\sum_{n=1}^{N} r_{nk}} \sum_{n=1}^{N} r_{nk} x_n \numberthis \label{e:mean}
+\end{align*}
+The equation \ref{e:mean} implies that the $\mu_k^*$ is the mean of the data points in the cluster $k$.
+
+\subsection{}
+
+\subsection{}
+
+Given
+\begin{equation}
+	\tilde{D} = \sum_{n=1}^{N} \sum_{k=1}^{K} r_{nk} \parallel\phi(x_n) - \tilde{\mu_k} \parallel_2^2 \\
+\end{equation}
+\subsubsection{}
+\begin{align*}
+\implies \tilde{D} = & \sum_{n=1}^{N} \sum_{k=1}^{K} r_{nk} [\phi(x_n) - \tilde{\mu_k}]^T [\phi(x_n) - \tilde{\mu_k}] \\
+ =& \sum_{n=1}^{N} \sum_{k=1}^{K} r_{nk} [\phi(x_n)^T\phi(x_n) + \tilde{\mu_k}^2 - 2 \phi(x_n) \tilde{\mu_k} ] \\
+  & \text{By subsituting } k(x_1, x_2) = \phi(x_1)^T\phi(x_2) \\
+ =& \sum_{n=1}^{N} \sum_{k=1}^{K} r_{nk} [k(x_n, x_n) + \tilde{\mu_k}^2 - 2 \phi(x_n) \tilde{\mu_k} ] \numberthis \label{e:D1} \\
+\end{align*}
+Using \ref{e:mean} to simplify the middle term of \ref{e:D1}, we have 
+\begin{align*}
+	\tilde{\mu_k} =& \frac{1}{\sum_{i=1}^{N} r_{ik}} \sum_{i=1}^{N} r_{ik} \phi(x_i) 
+				 = \frac{1}{N_k} \sum_{i=1}^{N} r_{ik} \phi(x_i) \numberthis \label{e:mean2}& \space  \because N_k = \sum_{i=1}^{N} r_{ik} \\	
+ =& \frac{1}{N_k^2} \sum_{i=1}^{N} r_{ik} \sum_{j=1}^{N} r_{jk} \phi(x_i)^T\phi(x_j) \\ 
+ & \text{By subsituting } k(x_1, x_2) = \phi(x_1)^T\phi(x_2) \\
+ \tilde{\mu_k}^2 =& \frac{1}{N_k^2} \sum_{i=1}^{N} r_{ik} \sum_{j=1}^{N} r_{jk} k(x_i, x_j) \numberthis \label{e:D2}
+\end{align*}
+Simplifying the last term of \ref{e:D1},
+\begin{align*}
+ \phi(x_n) \tilde{\mu_k} & = \phi(x_n) \frac{1}{N_k} \sum_{i=1}^{N} r_{ik} \phi(x_i) = \frac{1}{N_k} \sum_{i=1}^{N} r_{ik} \phi(x_n)^T \phi(x_i) \\
+ & \text{By subsituting } k(x_1, x_2) = \phi(x_1)^T\phi(x_2) \\
+\phi(x_n) \tilde{\mu_k} &= \frac{1}{N_k} \sum_{i=1}^{N} r_{ik} \times k(x_n, x_i) \numberthis \label{e:D3}
+\end{align*}
+Substituting \ref{e:D2} and \ref{e:D3} in \ref{e:D1}, we have:
+\begin{align*}
+\tilde{D} =& \sum_{n=1}^{N} \sum_{k=1}^{K} r_{nk} \bigg[k(x_n, x_n) +  \frac{1}{N_k^2} \sum_{i=1}^{N} r_{ik} \sum_{j=1}^{N} r_{jk} \times k(x_i, x_j) - 2 \frac{1}{N_k} \sum_{i=1}^{N} r_{ik} \times k(x_n, x_i) \bigg] \numberthis \label{e:D4} \\
+& \text{where } N_k = \sum_{i=1}^{N} r_{ik}
+\end{align*}
+We note that, the $L_2$ norm difference between mean of cluster to $x_n$ is given by (used later)
+\begin{equation} \label{e:D5}
+ \parallel\phi(x_n) - \tilde{\mu_k} \parallel_2^2 = k(x_n, x_n) +  \frac{1}{N_k^2} \sum_{i=1}^{N} r_{ik} \sum_{j=1}^{N} r_{jk} \times k(x_i, x_j) - 2 \frac{1}{N_k} \sum_{i=1}^{N} r_{ik} \times k(x_n, x_i)
+\end{equation}
+
+%%%%%%%%%%%%%%%%
+\subsubsection{}
+To assign a data point $x_n$ to a cluster, we first compute the value of \ref{e:D5} for all the clusters $k \in 1, 2, K$. Then assign it to a the cluster with minimum distance. i.e
+\begin{equation}\label{e:asgn}
+	A(x_n) = argmin_k \parallel x_n - \mu_k \parallel^2_2 
+\end{equation}
+where $A(x_n)$ stores the cluster assignment of $x_n$
+
+\subsubsection{Pseudo code}
+\begin{lstlisting}[mathescape=true]
+function kernel_k_means(k, X, K):
+  Parameters:
+    k : Number of clusters
+    X : Array of data points
+    K : Kernel Function
+  Returns:
+    $A(x_n)$: cluster assignments for all the points in X
+
+  Step 1: Initialize centroids of k clusters to
+         some random points in the dataset
+      for i in range(k):
+        $\mu_k \leftarrow random$
+
+  Step 2: Compute the assignment of points
+      for n in range(N):
+        $A(x_n) \leftarrow argmin_k \parallel x_n - \mu_k \parallel^2_2 $ # Use equation $\ref{e:D5}$ to compute
+
+  Step 3: Recompute the mean/centroid of cluster
+      for i in range(k):
+        $\mu_k \leftarrow$ Use equation $\ref{e:mean2}$ to compute the mean
+  
+  Step 4: Check for termination
+      if the values of $\mu_k$ does not change:
+        return $A(x_n)$ for all $x_n$
+      else:
+        go to Step 2
+\end{lstlisting}
+\section{Gaussian Mixture Model}
+\subsection{}
+
+\begin{align*}
+L = & P(x_1|\alpha) = \alpha f(x_1|\theta_1) + (1 - \alpha) f(x_1|\theta_2) = \alpha N(0, 1) + (1 - \alpha) N(0, 0.5)  & \\
+L = & \frac{\alpha}{\sqrt{2 \pi}} e^{-\frac{x_1^2}{2}} + \frac{1 - \alpha}{\sqrt{\pi}} e^{-x_1^2} & \\
+= & \big[\frac{1}{\sqrt{2 \pi}} e^{-\frac{x_1^2}{2}} - \frac{1}{\sqrt{\pi}} e^{-x_1^2} \big] \times \alpha + \frac{1}{\sqrt{\pi}} e^{-x_1^2} \numberthis \label{e:2a1} &  \\
+\end{align*}
+
+Note that the above equation is of form $m \alpha + c$ which is a linear in $\alpha$ \\ where $m = \frac{1}{\sqrt{2 \pi}} e^{-\frac{x_1^2}{2}} - \frac{1}{\sqrt{\pi}} e^{-x_1^2}$ and $c = \frac{1}{\sqrt{\pi}} e^{-x_1^2}$ \\
+The maximum likelihood estimation of $\alpha$ as follows.
+\begin{enumerate}
+	\item When $m$ is positive, that is when $\frac{1}{\sqrt{2 \pi}} e^{-\frac{x_1^2}{2}} > \frac{1}{\sqrt{\pi}} e^{-x_1^2}$, we chose maximum value i.e. $\alpha=1$
+	\item When $m$ is negative, that is when $\frac{1}{\sqrt{2 \pi}} e^{-\frac{x_1^2}{2}} < \frac{1}{\sqrt{\pi}} e^{-x_1^2}$, we chose minimum value i.e $\alpha=0$
+\end{enumerate}
+
+\section{EM algorithm}
+\subsection{}
+
+\section{Programming}
+\stepcounter{subsection}
+\subsection{K means}
+\subsubsection \\
+\includegraphics*[scale=0.45]{k_means.png}
+
+\subsubsection{}
+\begin{enumerate}
+	\item The circles dataset is not linearly separable
+	\item K means works best with the spherical clusters, the given dataset consists of concentric circles.
+\end{enumerate}
+
+
+\end{document}
