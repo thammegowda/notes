@@ -81,6 +81,23 @@ By using the fact: the $argmin_{\mu_k}$ for \ref{e:sse} is when its first order 
 The equation \ref{e:mean} implies that the $\mu_k^*$ is the mean of the data points in the cluster $k$.
 
 \subsection{}
+Given that 
+\begin{equation}\label{e:l1norm}
+	D = \sum_{n=1}^{N} \sum_{k=1}^{K} r_{nk} | x_n - \mu_k |_1 = \sum_{n=1}^{N} \sum_{k=1}^{K} r_{nk} sign(x_n - \mu_k) (x_n - \mu_k)
+\end{equation}
+By using the fact: the $argmin_{\mu_k}$ for \ref{e:l1norm} is when its first order partial derivative is zero.
+\begin{align*}
+ \frac{\partial}{\partial \mu_k}\sum_{n=1}^{N} \sum_{k=1}^{K} r_{nk} sign(x_n - \mu_k) (x_n - \mu_k) =& 0 & \\
+ \sum_{n=1}^{N} \sum_{k=1}^{K} - r_{nk} sign(x_n - \mu_k) =& 0 & \numberthis \label{e:median}
+\end{align*}
+Now if we interpret the meaning of \ref{e:median}, we get the following:
+\begin{itemize}
+	
+	\item $sign(x_n - \mu_k)$ is $+1$ when $x_n > \mu_k$ and $-1$ when $x_n < \mu_k$
+	\item Equation \ref{e:median} is lower when there are equal number of $x_n > \mu_k$ and $x_n < \mu_k$
+	\item $\implies$ that $\mu_k$ is the median of $x$
+\end{itemize}
+
 
 \subsection{}
 
@@ -173,7 +190,67 @@ The maximum likelihood estimation of $\alpha$ as follows.
 \end{enumerate}
 
 \section{EM algorithm}
+
+Given Zero-inflated Poisson Distribution:
+
+\begin{equation}\label{e:observed}
+p(x_i) = \begin{cases}
+\pi + (1-\pi) e^{-\lambda} & \text{if } x_i = 0\\
+(1-\pi) \frac{\lambda^{x_i} e^{-\lambda}}{x_i!} &  \text{if } x_i > 0
+\end{cases}
+\end{equation}
 \subsection{}
+
+For every observation $x_i=0$, let us introduce an hidden indicator variable $z_i$ to indicate whether or not the observation from Zero inflation or Poisson process. i.e. 
+
+\begin{equation}\label{e:hidden}
+z_i = \begin{cases}
+1,& \text{if } x_i \text{from zero inflation}\\
+0,&  \text{if } x_i \text{from poisson process} 
+\end{cases}
+\end{equation}
+Using \ref{e:observed} and \ref{e:hidden}, we can rewrite PDF $\forall x_i \ge 0 $ as the following:
+
+\begin{equation}\label{e:combines}
+p(x_i) = \begin{cases}
+\pi^{z_i} \times ((1-\pi) e^{-\lambda})^{1-z_i} & \text{if } x_i = 0, z_i \in{0,1}\\
+(1-\pi) \frac{\lambda^{x_i} e^{-\lambda}}{x_i!} &  \text{if } x_i > 0
+\end{cases}
+\end{equation}
+
+
+The likelihood of parameters $\lambda$ and $\pi$ in \ref{e:combined} based on $N$ observations in dataset $D$ is given by
+\begin{align*}
+L = & \prod_{i=1}^{N} p(x_i) = \prod_{i:x_i=0}^{N} p(x_i) \times \prod_{i:x_i \ge 0}^{N} p(x_i) \\
+L = &  \prod_{i:x_i=0}^{N} \pi^{z_i} \times ((1-\pi) e^{-\lambda})^{1-z_i} \times \prod_{i:x_i \ge 0}^{N} (1-\pi) \frac{\lambda^{x_i} e^{-\lambda}}{x_i!} \numberthis \\
+& \text{The log likelihood is} \\
+log L = & log \bigg[ \prod_{i:x_i=0}^{N} \pi^{z_i} \times ((1-\pi) e^{-\lambda})^{1-z_i} \times \prod_{i:x_i \ge 0}^{N} (1-\pi) \frac{\lambda^{x_i} e^{-\lambda}}{x_i!} \bigg] \\
+= & \sum_{i:x_i=0}^{N} \big[z_i \log \pi +  (1 - z_i)[\log (1- \pi) -\lambda]\big] 
+  + \sum_{i:x_i \ge 0}^{N} \big[\log(1- \pi) + x_i \log \lambda -\lambda - \log x_i! \big] \numberthis \label{e:loglike}
+\end{align*}
+\subsection{}
+For the E-step, we need to find probability of hidden variables. This is done by following
+\begin{align*}
+	P(z_i=1|x_i, \lambda, \pi) & = \frac{P(x_i=0|z_i=1, \lambda, \pi) \times P(z_i=1)}{P(x_i=0)} = \frac{\pi}{\pi + (1-\pi)e^{-\lambda}} = \gamma_{i1} \\
+	P(z_i=0|x_i=0, \lambda, \pi) & = \frac{P(x_i=0|z_i=0, \lambda, \pi) \times P(z_i=0)}{P(x_i=0)} = \frac{(1-\lambda)e^{-\lambda}}{\pi + (1-\pi)e^{-\lambda}} = \gamma_{i0}
+\end{align*}
+
+For the M-step we need to find the better estimate of parameters $\pi$ and $\lambda$.
+
+We define a function $Q(\theta^t, \theta^{t-1})$ 
+\begin{align*}
+Q(\theta^t, \theta^{t-1}) &= E_{P(Z|X, \lambda^{t-1}, \pi^{t-1})}[log(P(X,Z|\lambda,\pi))] \\
+  &= \sum_{i:x_i=0}^{N} \big[E[z_i] \log \pi +  E[1 - z_i][\log (1- \pi) -\lambda]\big] 
+  + \sum_{i:x_i \ge 0}^{N} \big[\log(1- \pi) + x_i \log \lambda -\lambda - \log x_i! \big] \\
+  &= \sum_{i:x_i=0}^{N} \big[\gamma_{i1} \log \pi +  \gamma_{i0}[\log (1- \pi) -\lambda]\big] 
+  + \sum_{i:x_i \ge 0}^{N} \big[\log(1- \pi) + x_i \log \lambda -\lambda - \log x_i! \big] \numberthis \label{e:Q}
+\end{align*}
+The update rule can be obtained by finding the derivative of \ref{e:loglike} w.r.t $\lambda$ and $\pi$.
+\begin{align*}
+	\frac{\partial logL}{\partial \lambda} & = \sum_{i:x_i=0}^{N} (z_i-1) + \sum_{i:x_i \ge 0}^{N} [\frac{x_i}{\lambda} -1 ] \numberthis \\
+	\frac{\partial logL}{\partial \pi} &= \sum_{i:x_i=0}^{N} (\frac{z_i}{\pi} - \frac{(1-z_i)}{(1-\pi)}) + \sum_{i:x_i \ge 0}^{N} \frac{-1}{1-\pi}
+	
+\end{align*}
 
 \section{Programming}
 \stepcounter{subsection}
@@ -183,7 +260,7 @@ The maximum likelihood estimation of $\alpha$ as follows.
 
 \subsubsection{}
 \begin{enumerate}
-	\item The circles dataset is not linearly separable
+	\item The circles dataset is not linearly separable. K means doesnt have right objective function to optimize. 
 	\item K means works best with the spherical clusters, the given dataset consists of concentric circles.
 \end{enumerate}
 
