@@ -61,9 +61,11 @@
 \author{\textbf{ThammeGowda Narayanaswamy} \\
 EMail: tnarayan@usc.edu  USCID: 2074-6694-39}
 
+\date{} %% NO date
 
 \begin{document}
 \maketitle
+
 
 \section{Clustering}
 \subsection{}
@@ -95,9 +97,8 @@ Now if we interpret the meaning of \ref{e:median}, we get the following:
 	
 	\item $sign(x_n - \mu_k)$ is $+1$ when $x_n > \mu_k$ and $-1$ when $x_n < \mu_k$
 	\item Equation \ref{e:median} is lower when there are equal number of $x_n > \mu_k$ and $x_n < \mu_k$
-	\item $\implies$ that $\mu_k$ is the median of $x$
+	\item $\implies$ that $\mu_k$ is the median of $x$ . This argument holds for both the cases of even and odd number of points in the dataset.
 \end{itemize}
-
 
 \subsection{}
 
@@ -189,6 +190,8 @@ The maximum likelihood estimation of $\alpha$ as follows.
 	\item When $m$ is negative, that is when $\frac{1}{\sqrt{2 \pi}} e^{-\frac{x_1^2}{2}} < \frac{1}{\sqrt{\pi}} e^{-x_1^2}$, we chose minimum value i.e $\alpha=0$
 \end{enumerate}
 
+Alternatively we can also use an iterative algorithm such as Expectation Maximization algorithm to compute the above.
+
 \section{EM algorithm}
 
 Given Zero-inflated Poisson Distribution:
@@ -245,24 +248,70 @@ Q(\theta^t, \theta^{t-1}) &= E_{P(Z|X, \lambda^{t-1}, \pi^{t-1})}[log(P(X,Z|\lam
   &= \sum_{i:x_i=0}^{N} \big[\gamma_{i1} \log \pi +  \gamma_{i0}[\log (1- \pi) -\lambda]\big] 
   + \sum_{i:x_i \ge 0}^{N} \big[\log(1- \pi) + x_i \log \lambda -\lambda - \log x_i! \big] \numberthis \label{e:Q}
 \end{align*}
-The update rule can be obtained by finding the derivative of \ref{e:loglike} w.r.t $\lambda$ and $\pi$.
+The update rule can be obtained by finding the derivative of \ref{e:Q} w.r.t $\lambda$ and $\pi$.
 \begin{align*}
-	\frac{\partial logL}{\partial \lambda} & = \sum_{i:x_i=0}^{N} (z_i-1) + \sum_{i:x_i \ge 0}^{N} [\frac{x_i}{\lambda} -1 ] \numberthis \\
-	\frac{\partial logL}{\partial \pi} &= \sum_{i:x_i=0}^{N} (\frac{z_i}{\pi} - \frac{(1-z_i)}{(1-\pi)}) + \sum_{i:x_i \ge 0}^{N} \frac{-1}{1-\pi}
-	
+	\frac{\partial Q}{\partial \lambda} & = \sum_{i:x_i=0}^{N} \gamma_{i0} + \sum_{i:x_i \ge 0}^{N} [\frac{x_i}{\lambda} -1 ] \numberthis \\
+	\frac{\partial Q}{\partial \pi} &= \sum_{i:x_i=0}^{N} (\frac{\gamma_{i1}}{\pi} - \frac{\gamma_{i0}}{(1-\pi)}) + \sum_{i:x_i \ge 0}^{N} \frac{-1}{1-\pi}	 \\
+	\implies & \lambda^{t+1} = \frac{\sum_{i=1}^{N}}{\sum_{i:x_i>0}^{N} 1 + \sum_{i:x_i=0}^{N} \gamma_{i0} }  \text { and }  \pi^{t+1} = \sum_{i:x_i=0}^{N} \frac{\gamma_{i1}}{N}  \\
 \end{align*}
-
 \section{Programming}
 \stepcounter{subsection}
 \subsection{K means}
 \subsubsection \\
-\includegraphics*[scale=0.45]{k_means.png}
+\includegraphics*[scale=0.5]{k_means.png}
 
 \subsubsection{}
 \begin{enumerate}
-	\item The circles dataset is not linearly separable. K means doesnt have right objective function to optimize. 
-	\item K means works best with the spherical clusters, the given dataset consists of concentric circles.
+	\item The circles dataset is not linearly separable. K means doesn't have right objective function to optimize. 
 \end{enumerate}
 
+\subsection{Kernel K means}
+\subsubsection{Kernel}
+
+\begin{align*}
+    & k(x_1, x_2) \leftarrow 1.0 - \frac{min(r1, r2)}{ max(r1, r2)} \\
+    \text{where  } &  r_1 \leftarrow || x_1 - 0 ||_2  \\
+    \text{ and } & r_2 \leftarrow || x_2 - 0 ||_2 \\
+    & \text{ and $0$ is the center of the cicles, in this data set it is origin of coordinate system}
+\end{align*}
+
+\subsubsection{}
+\includegraphics[scale=0.75]{images/kernel_kmeans.png}
+
+\subsection{EM Algorithm}
+
+\subsubsection{Log likelihood of EM}
+\includegraphics[scale=0.55]{loglikelihood.png}
+\subsubsection{Best Cluster Assignment}
+
+\textbf{Plot} \\
+ \includegraphics[scale=0.7]{em_clusters.png} \\
+
+\textbf{Best Parameters}
+\begin{verbatim}
+Mean:
+# 1
+	[-0.3258436 ,  0.97128906]
+
+# 2
+	 [-0.63945162,  1.47450927]
+
+# 3
+	 [ 0.75896021,  0.67976991]
+
+Covariance:
+#1
+		 [ 0.03603698,  0.01465574],
+		 [ 0.01465574,  0.01628796]
+
+#2
+		  [ 0.03595904,  0.01548498],
+		  [ 0.01548498,  0.01937919]
+
+# 3
+		 [ 0.02717059, -0.00840047],
+		 [-0.00840047,  0.04044201]
+
+\end{verbatim}
 
 \end{document}
