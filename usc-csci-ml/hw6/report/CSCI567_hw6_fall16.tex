@@ -1,0 +1,282 @@
+%%%%%%%%%%%
+%% Home work template for Graduate School
+%% Author : Thamme Gowda N.
+%% Originally from  https://github.com/thammegowda/hw-tex-templ
+%%%%%%%%%%%%%%
+
+\documentclass[a4paper,doc,notimes]{article}
+\usepackage[a4paper,margin=1in,footskip=0.25in]{geometry}
+%%\documentclass[tikz]{standalone}
+\usepackage{tikz}
+%Required by APA6 package
+\usepackage[normalem]{ulem}
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+
+%Oft-used, oft-abused
+\usepackage{afterpage}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{censor}
+\usepackage{color}
+\usepackage{csquotes}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{lmodern}
+%\usepackage{media9}
+\usepackage{multirow}
+\usepackage{outlines}
+\usepackage{pdfpages}
+\usepackage{placeins}
+\usepackage{soul}
+\usepackage{tabularx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{xcolor}
+\usepackage{mathtools}
+\usepackage{tabularx}
+\graphicspath{ {images/}}
+
+\usepackage{sectsty}
+\sectionfont{\fontsize{14}{12}\selectfont}
+
+\setenumerate[1]{label=\Roman*.}
+\setenumerate[2]{label=\Alph*.}
+\setenumerate[3]{label=\roman*.}
+\setenumerate[4]{label=\alph*.}
+
+% break page where ever is required
+\allowdisplaybreaks
+%\renewcommand{\thesubsection}{\thesection.\alph{subsection}}
+\renewcommand{\thesubsubsection}{\thesubsection.\alph{subsubsection}}
+\usepackage{titling}
+\setlength{\droptitle}{-9em}
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+\usepackage{listings}
+
+\title{\noindent  \textbf{ USC CSCI 567 HOMEWORK 6 SOLUTIONS} }
+\author{\textbf{ThammeGowda Narayanaswamy} \\
+EMail: tnarayan@usc.edu  USCID: 2074-6694-39}
+
+%% \date{} %% NO date
+
+\begin{document}
+\maketitle
+
+
+\section{Principal Component Analysis}
+\subsection{ Derivation of Second Principal Component}
+\subsubsection{}
+Given : 
+The cost function
+\begin{align*}
+ J = & \frac{1}{N} \sum_{i=1}^{N}(x_i - p_{i1}e_{1} - p_{i2}e_{2})^T (x_i - p_{i1}e_{1} - p_{i2}e_{2})  & \\  
+   = &  \frac{1}{N} \sum_{i=1}^{N} x_i^Tx_i - 2p_{i1}e_1^Tx_i - 2p_{i2}e_2^Tx_i + p_{i1}^2e_1^Te_1 + 2 p_{i1}p_{i2}e_1^Te_2 + p_{i2}^2e_2^Te_2 & \\
+   =&  \frac{1}{N} \sum_{i=1}^{N} x_i^Tx_i - 2p_{i1}e_1^Tx_i - 2p_{i2}e_2^Tx_i + p_{i1}^2 + p_{i2}^2  &   \because  e_1^Te_1 = 1, e_2^Te_2=1, e_1^Te_2 = 0   \numberthis \label{e:reducedcost}
+\end{align*}
+By differentiation \ref{e:reducedcost} with respect to $p_{i2}$, we get
+\begin{align*}
+ \frac{\partial J}{\partial p_{i2}} =  & 0 & \\
+ \implies \frac{\partial}{\partial p_{i2}}  \frac{1}{N} \sum_{i=1}^{N} x_i^Tx_i - 2p_{i1}e_1^Tx_i - 2p_{i2}e_2^Tx_i + p_{i1}^2 + p_{i2}^2 = & 0 & \\
+ \frac{1}{N}  \frac{\partial}{\partial p_{i2}}  [ x_i^Tx_i - 2p_{i1}e_1^Tx_i - 2p_{i2}e_2^Tx_i + p_{i1}^2 + p_{i2}^2 ] = & 0 & \because \text{other terms in sum are constant w.r.t a } p_{i2} \\
+ - 2e_2^Tx_i + 2 p_{i2} = & 0 \\
+\implies  p_{i2} = & e_2^Tx_i \\
+\end{align*}
+
+\subsubsection{}
+\begin{align*}
+ \tilde{J}  = -e_2^TSe_2 + \lambda_2(e_2^Te_2-1)+\lambda_{12}(e_2^Te_1-0) & \\
+\implies  \text{First order derivative w.r.t } e_2 & \\
+ \frac{\partial \tilde{J}}{\partial e_2}  = -2Se_2 + 2 \lambda_2 e_2 + \lambda_{12}e_1 = & 0 \\
+(S -  \lambda_2 I) e_2 = & \frac{1}{2} \lambda_{12}e_1 \\
+e_2 = & \frac{1}{2} (S -  \lambda_2 I)^{-1}  \lambda_{12}e_1 \\
+\end{align*}
+
+\subsection{A Real Example}
+Given : \\
+$ m = 3 $ \\
+$ n = 100 $ \\
+$ S =  \begin{bmatrix}
+91.43    & 171.92 & 297.99 \\
+171.92   & 373.92 & 545.21 \\
+297.99   & 545.21 & 1297.26
+\end{bmatrix} $
+
+\subsubsection{}
+By factorizing the matrix $S$ using singular value decomposition (SVD) method, we get \\
+$
+S = U \Sigma V^T = 
+ \begin{bmatrix}
+	-0.218 & -0.247 & -0.944 \\
+	-0.414 & -0.853 & 0.318 \\
+	-0.884 & 0.461 & 0.084
+\end{bmatrix} 
+\times 
+ \begin{bmatrix}
+	1626.526  & 0          &  0 \\
+	0.            & 128.986 &   0 \\
+	0.            &  0           &  7.097 \\
+\end{bmatrix} 
+\times 
+\begin{bmatrix}
+	-0.218 & -0.414 & -0.884 \\
+	-0.247 & -0.853 & 0.461 \\
+	-0.944 & 0.318  & 0.084 \\
+\end{bmatrix} $ \\
+Where $U$ is an orthonormal matrix formed by eigen vectors, $\Sigma$ is a diagonal matrix having eigen values, and $V^T = U^T = U^{-1}$ for a symmetric matrix $S$.
+
+Thus, the eigen values are: $\lambda_1=1626.526, \lambda_2=128.986, \lambda_3=7.097 $ \\
+Eigen vectors (corresponding to eigen values in the same order) are \\
+$
+	\begin{bmatrix} -0.218 \\	-0.414 \\ 	-0.884 \\ \end{bmatrix} , 
+	\begin{bmatrix} -0.247  \\	-0.853 \\ 	0.461 \\ \end{bmatrix} , 
+	\begin{bmatrix} -0.944  \\	0.318  \\ 	0.084 \\ \end{bmatrix} 
+$
+
+\begin{itemize}
+	\item Note: The calculations of SVD method has been practiced as per the lecture from MIT 18.06SC Linear Algebra, Fall 2011 https://www.youtube.com/watch?v=cOUTpqlX-Xs .
+	\item A computer program was used to perform the above calculations http://www.bluebit.gr/matrix-calculator/
+\end{itemize}
+
+\subsubsection{}
+Yes, the eigen vector corresponding to eigen value $ \lambda_3=7.097$,  i.e. $\begin{bmatrix} -0.944  \\	0.318  \\ 	0.084 \\ \end{bmatrix} $ \textit{may be} omitted.
+Reason: The eigenvalue $\lambda_3 $ is much smaller compared to the other eigen values. Since the eign value represents the variation along the component (the associated eigen vector), smaller eign value $\implies$ the less variance $\implies$ less information captured by that component.
+\subsubsection{}
+My interpretation for the eigenvectors that captures most information are as follows:
+\begin{itemize}
+	\item Eigen vectors forms the core of principal component analysis. All the eign vectors are sorted based on the descending order of eigen values. Then the top $k$ eigenvectors are used for projecting the data into newer space which has lesser number of dimensions
+	\item Eigen values indicates the variance of data point when they are projected along the associated eigen vector. Higher variance is always preferred.
+	\item The higher variance in the data set helps in easier statistical analysis, since (1) we can distinguish data points clearly when they are spread across, eg: classification. (2) we can reconstruct the original dimensions without loosing much information 
+\end{itemize}
+
+\section{Hidden Markov Model}
+\renewcommand{\thesubsection}{\thesection.\alph{subsection}}
+
+Given: \\
+The initial state probabilities: \indent $\pi_1 = P(X_1=s_1) = 0.6$   \indent $\pi_2 = P(X_1=s_2) = 0.4$ \\
+Transition probabilities : \indent  
+\begin{tabular}{|c|c|c|} \hline
+	          & $s_1$ & $s_2$ \\ \hline
+	$s_1$ & 0.7 & 0.3 \\
+	$s_1$ & 0.4 & 0.6 \\ \hline
+\end{tabular} \\
+Observation probabilities: 
+\begin{tabular}{|c|c|c|c|c|} \hline
+	         &   A   & C   & G & T \\ \hline
+	$s_1$ & 0.4 & 0.2 & 0.3 & 0.1 \\
+	$s_1$ & 0.2 & 0.4 & 0.1 & 0.3 \\ \hline
+\end{tabular} \\
+
+\subsection{Probability of Observed sequence}
+\begin{tabularx}{\textwidth} {|l | l | X | X |} \hline
+  t  & $O_t$  & $\alpha_t(s_1)$    & $\alpha_t(s_2)$ \\ \hline
+  1  &  A  
+  & $\alpha_1(1) = P(A|X_1=s_1) \times P(X_1=s_1)  \newline = 0.6 \times 0.4 \newline = 0.24$  
+  & $\alpha_1(2) = P(A|X_1=s_2) \times P(X_1=s_2)  \newline  = 0.4 \times 0.2 \newline =  0.08$  \\ \hline
+  2  &  C  
+   &  $\alpha_2(1) = P(C | X_2=s_1) [a_{11}\alpha_1(1) + a_{21}\alpha_1(2)] \newline = 0.2 [0.7 \times 0.24 + 0.4 \times 0.08] \newline = 0.04 $
+   &  $\alpha_2(2) = P(C | X_2=s_1) [a_{12}\alpha_1(1) + a_{22}\alpha_1(2)] \newline = 0.4 [0.3 \times 0.24 + 0.6 \times 0.08] \newline = 0.048$  \\ \hline
+  3  &  C 
+	   & $\alpha_3(1) = 0.2[0.7 \times 0.04 + 0.4 \times 0.048]  \newline = 0.00944 $ 
+	  & $\alpha_3(2) = 0.4[0.3 \times 0.04 + 0.6 \times 0.048]  \newline 0.01632 $ \\ \hline
+  4  &  G  
+  &  $\alpha_4(1) = 0.3[0.7 \times 0.00944 + 0.4 \times 0.01632]  \newline = 0.0039408 $
+  &  $\alpha_4(2) = 0.1[0.3 \times 0.00944 + 0.6 \times 0.01632]  \newline = 0.0012624 $ \\ \hline
+  5  &  T 
+    &  $\alpha_5(1) = 0.1[0.7 \times 0.0039408 + 0.4 \times 0.0012624 ]  \newline = 0.000326352 $
+  &  $\alpha_5(2) = 0.3[0.3 \times 0.0039408 + 0.6 \times 0.0012624]  \newline = 0.000581904 $ \\ \hline
+  6  &  A  
+  & $\alpha_6(1)= \newline 0.4[0.7\times0.00032635 + 0.4\times0.0005819]  \newline = 0.000184482$
+  & $\alpha_6(2)= \newline 0.2[0.3\times0.00032635+0.6\times0.0005819]  \newline = 0.000089409 $ \\ \hline
+\end{tabularx} \\
+\begin{align*}
+& P(O=ACCGTA | \Theta) = \alpha_6(1) + \alpha_6(2) = 0.000184482 +  0.000089409 = 0.000273891
+\end{align*}
+\subsection{Filtering}
+\begin{align*}
+& P(X6=S_1 | O=ACCGTA; \Theta) = \frac{\alpha_6(1) \beta_6(1)}{ \alpha_6(1) \beta_6(1) + \alpha_6(2) \beta_6(2) } \\
+& \text{We know that, for the final time stamp $t=6$, } \beta_6(1) = \beta_6(2) = 1 \\
+& P(X6=S_1 | O=ACCGTA; \Theta) = \frac{ 0.000184482 }{ 0.000184482  + 0.000089409 }  = 0.6735599 \\
+& P(X6=S_2 | O=ACCGTA; \Theta) = \frac{ 0.000089409 }{ 0.000184482  + 0.000089409 }  = 0.32644 \\
+\end{align*}
+\subsection{Smoothing}
+\begin{tabularx}{\textwidth} {|l | l | X | X |} \hline
+	t  & $O_t$  & $\beta_t(s_1)$    & $\beta_t(s_2)$ \\ \hline
+	6  &  A  & $\beta_6(1) = 1$  & $\beta_6(2) = 1$\\ \hline
+	5  &  T  
+	& \small $\beta_5(1) = \newline a_{11} P(A|X_6=s_1) \beta_6(1) + a_{12} P(A|X_6=s_2) \beta_6(2) 
+	\newline = 0.7 \times 0.4  \times 1 + 0.3 \times 0.2 \times 1 \newline = 0.34$
+	& \small $\beta_5(2) = \newline a_{21} P(A|X_6=s_1) \beta_6(1) + a_{22} P(A|X_6=s_2) \beta_6(2) 
+	\newline =  0.4 \times 0.4 \times 1 + 0.6 \times 0.2 \times 1 \newline = 0.28$  \\ \hline
+	4  &  G  
+	& \small $\beta_4(1) = \newline a_{11} P(T|X_5=s_1) \beta_5(1) + a_{12} P(T|X_5=s_2) \beta_(2) 
+	\newline = 0.7 \times 0.1 \times 0.34 + 0.3 \times 0.3 \times 0.28 \newline = 0.049$
+	& \small $\beta_4(2) = \newline a_{21} P(T|X_6=s_1) \beta_6(1) + a_{22} P(T|X_6=s_2) \beta_6(2) 
+\newline = 0.4 \times 0.1 \times 0.34 + 0.6 \times 0.3 \times 0.28  \newline = 0.064$  \\ \hline
+\end{tabularx} \\
+\begin{align*}
+ P(X4=s_1 | O=ACCGTA; \Theta) = & \frac{\alpha_4(1) \beta_4(1)}{ \alpha_4(1) \beta_4(1) + \alpha_4(2) \beta_4(2) } \\
+   = & \frac{0.0039408 \times 0.049 }{0.0039408 \times 0.049  + 0.0012624 \times 0.064 } \\
+   = & 0.1928995 \\
+  P(X4=s_2 | O=ACCGTA; \Theta) = & \frac{ \alpha_4(2) \beta_4(2)}{ \alpha_4(1) \beta_4(1) + \alpha_4(2) \beta_4(2) } \\
+   = & \frac{ 0.0012624 \times 0.064 }{0.0039408 \times 0.049  + 0.0012624 \times 0.064 } \\
+   = & 0.8071
+\end{align*}
+
+\subsection{Most likely explanation}
+We know that the recursive definition of Viterbi algorithm for maximum likehood path in HMM is given by: \\
+
+\begin{equation}
+	\delta_t(j) = \max_i \delta_{t-1} (i) a_{ij} P(o_t|X_t=s_j) 
+\end{equation}
+\begin{align*}
+\delta_1(1) & = 0.6 \times 0.4 = 0.24  \\
+\delta_1(2) &  =  0.4 \times 0.2  = 0.08   \\
+\delta_2(1) & =  \max \{ \delta_1(1) a_{11},  \delta_1(2) a_{21}  \} \times P(C|X_t=s_1) \\
+               & =\max \{0.24 \times 0.7 , 0.08 \times 0.4 \} \times 0.2 = 0.0336 \\
+\delta_2(2) & = \max \{ \delta_1(1) a_{12},  \delta_1(2) a_{22}  \} \times P(C|X_t=s_2) \\
+			& =\max \{0.24 \times 0.3 , 0.08 \times 0.6 \} \times 0.4 = 0.0288 \\
+\delta_3(1) & =  \max \{ \delta_2(1) a_{11},  \delta_2(2) a_{21}  \} \times P(C|X_t=s_1) \\
+& =\max \{0.0336 \times 0.7 , 0.0288  \times 0.4 \} \times 0.2 = 0.004704 \\
+\delta_3(2) & =  \max \{ \delta_2(1) a_{12},  \delta_2(2) a_{22}  \} \times P(C|X_t=s_2) \\
+& =\max \{0.0336 \times 0.3 , 0.0288  \times 0.6 \} \times 0.4 = 0.003456 \\
+\delta_4(1) & =  \max \{ \delta_3(1) a_{11},  \delta_3(2) a_{21}  \} \times P(G|X_t=s_1) \\
+& =\max \{0.004704 \times 0.7 , 0.003456  \times 0.4 \} \times 0.2 = 0.00065856 \\
+\delta_4(2) & =  \max \{ \delta_3(1) a_{12},  \delta_3(2) a_{22}  \} \times P(G|X_t=s_2) \\
+& =\max \{0.004704 \times 0.3 , 0.003456  \times 0.6 \} \times 0.4 =0.00082944 \\
+\delta_5(1) & =  \max \{ \delta_4(1) a_{11},  \delta_4(2) a_{21}  \} \times P(T|X_t=s_1) \\
+& =\max \{0.00065856 \times 0.7 , 0.00082944  \times 0.4 \} \times 0.1 = 0.0000460992 \\
+\delta_5(2) & =  \max \{ \delta_4(1) a_{12},  \delta_4(2) a_{22}  \} \times P(T|X_t=s_2) \\
+& =\max \{0.00065856 \times 0.3 ,0.00082944  \times 0.6 \} \times 0.3 =0.0001492992 \\
+\delta_6(1) & =  \max \{ \delta_5(1) a_{11},  \delta_5(2) a_{21}  \} \times P(A|X_t=s_1) \\
+& =\max \{0.0000460992 \times 0.7 , 0.0001492992 \times 0.4 \} \times 0.4 =0.000023887872 \\
+\delta_6(2) & =  \max \{ \delta_5(1) a_{12},  \delta_5(2) a_{22}  \} \times P(A|X_t=s_2) \\
+& =\max \{0.0000460992 \times 0.3, 0.0001492992 \times 0.6 \} \times 0.2 =0.000017915904 \\
+\end{align*}
+So, the most likely explanation for the states that produced the observations \textbf{ACCGTA = $s_1s_1s_1s_2s_2s_1$}  
+
+\subsection{Prediction}
+\begin{align*}
+P(O_7|O) & = \sum_{j\in1,2} P(O_7, X_7=s_j) \\
+& =  \sum_{j\in1,2} P(O_7| X_7=s_j) P(X_7=s_j, O) \\
+& =  \sum_{j\in1,2} P(O_7| X_7=s_j) \times \sum_{k\in 1,2} P(X_7=s_j | X_6=s_k)  P(X_6=s_k, O) \\
+& =  P(O_7| X_7=s_1) \times \sum_{k\in 1,2} P(X_7=s_1 | X_6=s_k)  P(X_6=s_k, O)  \\
+& \indent + P(O_7| X_7=s_2) \times \sum_{k\in 1,2} P(X_7=s_2 | X_6=s_k)  P(X_6=s_k, O) \\
+& = P(O_7| X_7=s_1) [ P(X_7=s_1 | X_6=s_1)  P(X_6=s_1, O) + P(X_7=s_1 | X_6=s_2)  P(X_6=s_2, O) ] \\
+& \indent + P(O_7| X_7=s_2) [P(X_7=s_2 | X_6=s_1)  P(X_6=s_1, O) +  P(X_7=s_2 | X_6=s_2)  P(X_6=s_2, O)] \\
+& = P(O_7| X_7=s_1) [ 0.7  \times 0.6735599 + 0.4 \times  0.32644]  + P(O_7| X_7=s_2) [0.3 \times 0.6735599  +  0.6  \times  0.32644)] \\
+P(O_7|O)  & = 0.60206793 \times P(O_7| X_7=s_1)  + 0.39793197 \times P(O_7| X_7=s_2) \numberthis 
+\end{align*}
+\begin{align*}
+ P(O_7=A | O) &=  0.60206793 \times 0.4 + 0.39793197 \times 0.2 = 0.320413566  \\
+ P(O_7=C | O) &=  0.60206793 \times 0.2 + 0.39793197 \times 0.4 = 0.279586374  \\
+ P(O_7=G | O) &=  0.60206793 \times 0.3 + 0.39793197 \times 0.1 = 0.220413576  \\
+ P(O_7=T | O) &=  0.60206793 \times 0.1 + 0.39793197 \times 0.3 = 0.179586384 
+\end{align*}
+So, our prediction for $O_7$, the next observation, is \textbf{'A'}.
+\end{document}

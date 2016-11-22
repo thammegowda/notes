@@ -1,0 +1,3 @@
+[submodule "usc-csci-ml/miniproj-recsys"]
+	path = usc-csci-ml/miniproj-recsys
+	url = git@github.com:thammegowda/miniproj-recsys.git
