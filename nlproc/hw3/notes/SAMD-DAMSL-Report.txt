@@ -1,0 +1,37 @@
+Assignment 3 Report
+
+Name: ThammeGowda Narayanaswamy (2074-6694-39)
+
+1. If you included files other than baseline_crf.py, advanced_crf.py, evaluate_model.py, and hw3_corpus_tool.py, or modified hw3_corpus_tool.py please describe what the files do and/or your modifications to hw3_corpus_tool.py.
+
+I included a file named `crfcore.py` which includes code from TAs.
+I modified get_data() method to return file name as well alongside utterances.
+
+2. Describe how you evaluated your baseline and advanced features
+
+I shuffled the files and splitted the dataset into 75% for training and 25% for development.
+The splitting was done as below:
+  ls data/**.csv | gshuf > paths.txt
+
+Then the first 75% of files in the paths.txt were copied to "train" directory and the rest 25% were copied to the "dev".
+For both the baseline and advanced versions, i trained on the "train" directory and evaluated on the "dev" directory.
+The evaluation is performed as follows:
+ Built a confusing matrix, where row headers are ground truth labels and column headers are predicted labels.
+ The trace of this matrix is calculated (i.e. sum of all the values in diagonal)
+ The total is calculated by summing the values in all the cells of matrix.
+The performance measure is the fraction of trace / total
+ 
+
+3. Describe your advanced feature set.
+    a) added EOD feature for the last utterance in dialgue.
+    b) Added bigrams of tokens
+    c) Added bigrams of Part of speech
+  
+
+4. If you tried alternate advanced feature sets, please describe them.
+    d) Added positional tokens TOK[<i>]=<token>, where <i> is the position of <token> in the utterance.
+    e) Added PREV_* and NEXT_* as features from previous and next utterance when available.
+5. Accuracy of baseline features was:
+   72.7%
+6. Accuracy of advanced features was:
+   73.78%
