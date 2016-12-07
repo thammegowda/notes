@@ -1,0 +1,252 @@
+\documentclass[letterpaper]{article}
+\usepackage[margin=0.75in]{geometry}
+
+\title{ \textbf{ USC CSCI-544 REPORT ON GROUP PROJECTS}  \footnote{Produced for Fall 2016 session of CSCI 544, `Applied NLP'} }
+\author{\textsc{ThammeGowda Narayanaswamy} \\  tnarayan@usc.edu \\ ID : 2074-6694-39}
+\date{\today}
+
+\begin{document}
+
+ \maketitle
+
+\section{Text Summarization }
+	\subsection{What is the group's number?}
+	47
+	\subsection{What was the goal of the group's project?}
+	To produce a coherent summary of text.
+
+	\subsection{How did the group attempt to accomplish the goal?}
+	The group used DUC 2001 dataset. 
+	The preprocessing steps followed are:
+	\begin{itemize}
+		\item Tokenization
+		\item Case folding
+		\item Stopwords removal
+		\item stemming
+	\end{itemize}
+	There were 2 approaches for summarization:
+	\begin{enumerate}
+		\item Naive : The similarity score between the sentences was computed using Cosine Similarity measure and the overlap was determined.
+		\item Advanced: Graph based algorithm using page rank.
+\end{enumerate}
+
+	\subsection{How did the group evaluate their work and what was the result?}
+	The evaluation was done based on the precision, recall and F-scores.
+	The results showed that the graph based approach has better performance than the naive approach.
+
+
+\section{Speaker detection in Sitcom (the big bang theory) corpus}
+\subsection{What is the group's number?}
+15
+\subsection{What was the goal of the group's project?}
+To detect the speaker in dialog
+\subsection{How did the group attempt to accomplish the goal?}
+They have used a dataset containing transcripts for `The Big Bang Theory' Tv series.
+The features they experimented are :
+\begin{itemize}
+	\item Bag of words 
+	\item Part of speech tags
+	\item Receipts
+	\item Topics
+	\item Speaker Turns
+\end{itemize}
+They have use the following machine learning algorithms :
+\begin{itemize}
+	\item CRF classifier from CRF++ suite
+	\item Support vector machine Classifier
+	\item Multi layer perceptron Classifier
+	\item Maximum Entropy Classifier
+\end{itemize}
+\subsection{How did the group evaluate their work and what was the result?}
+They have used the standard metrics such as precision, recall and F-score on an held out dataset.
+The top two performing algorithms were Max-entropy and Nave bayes with 33\% and 31\% respectively.
+
+\section{Comparison of Machine Learning classifiers in classification of Yelp reviews}
+\subsection{What is the group's number?}
+3
+\subsection{What was the goal of the group's project?}
+To compare various machine learning classifiers for the task of classifying the yelp reviews. The classification they performed is a binary classification of sentiment analysis.
+\subsection{How did the group attempt to accomplish the goal?}
+They used the following features :
+\begin{itemize}
+	\item Part of speech tokens
+	\item Lemmatization
+	\item Stemming
+\end{itemize}
+They have tried the following algorithms:
+\begin{itemize}
+	\item Support Vector Machines
+	\item Naive Bayes
+	\item Decision Trees
+	\item Perceptron
+	\item RNN
+\end{itemize}
+
+\subsection{How did the group evaluate their work and what was the result?}
+They have used the standard metrics such as precision, recall and F-score on an held out dataset.
+The top three performing algorithms were Perceptron, RNN and Nave bayes with precision and recall over 80\%.
+
+\section{Book Genre Classification}
+\subsection{What is the group's number?}
+8
+\subsection{What was the goal of the group's project?}
+To classify genre of the books.
+\subsection{How did the group attempt to accomplish the goal?}
+They have modeled this task as multi class classification task. They have tried the following algorithms:
+\begin{itemize}
+	\item Maximum Entropy classifier
+	\item Random forest classifier
+	\item Support vector machines classifier
+\end{itemize}
+
+They have used TF-IDF for vector representation of the books.
+
+\subsection{How did the group evaluate their work and what was the result?}
+They have used standard metrics such as Precision, Recall and F-score for evaluating classifiers.
+Max Entropy and SVM Classifiers scored over 81\% F-score.
+
+
+\section{Sentimental Analysis on Movie reviews.}
+\subsection{What is the group's number?}
+36
+\subsection{What was the goal of the group's project?}
+To analyze sentiment of movie reviews.
+\subsection{How did the group attempt to accomplish the goal?}
+Sentiment analysis is a classification task. They tried to predict the target sentiment in a range between 0 and 4 where 0 being very negative and 4 being very positive. They have tried the following algorithms:
+\begin{itemize}
+	\item Naive Bayes
+	\item Random forest
+	\item  SVM
+\end{itemize}
+
+\subsection{How did the group evaluate their work and what was the result?}
+They submitted their predictions to Kaggle. Kaggle had a standard way to evaluate the performance in terms of precision, recall and F-score. Their score was over 60\%.
+
+
+
+\section{Restaurant Finder }
+\subsection{What is the group's number?}
+28
+\subsection{What was the goal of the group's project?}
+To build restaurant finder bot with natural language interface.
+\subsection{How did the group attempt to accomplish the goal?}
+The group built an end to end system with the following components/modules:
+\begin{itemize}
+	\item Speech Recogniser
+	\item Natural Language Understanding
+	\item Dialogue management
+	\item Natural Language Generation
+	\item Speech synthesis
+\end{itemize}
+
+\subsection{How did the group evaluate their work and what was the result?}
+They evaluated the generated statements using two approaches:
+\begin{itemize}
+	\item Key word matching
+	\item Classification using Precision, recall and F-Score
+\end{itemize}
+The group had to perform manual evaluation for some parts of the system, the results were reasonably good.
+
+
+\section{Automated Essay Scoring System}
+\subsection{What is the group's number?}
+57
+\subsection{What was the goal of the group's project?}
+To automatically assess and grade essay responses.
+\subsection{How did the group attempt to accomplish the goal?}
+Some of the preprocessing and feature transformations they have done are:
+\begin{itemize}
+	\item Sentence parsing and word tokenization
+	\item Add features for number of words and number of sentences.
+	\item Added a feature for the ratio of word to sentence counts
+	\item Added a feature for Spelling errors count
+	\item Added part of speech tags.
+\end{itemize} 
+
+This group have used simple bag of words and word2vec representation for mapping the text to vector space.
+The following machine learning algorithms were tried:
+\begin{itemize}
+	\item Linear Regression
+		\item Random Forest
+	\item Support vector machines
+\end{itemize} 
+
+\subsection{How did the group evaluate their work and what was the result?}
+This group has compared their predictions with evaluation dataset on Kaggle. The cost function was mean squared error. The errors were:
+
+\begin{tabular}{| l | r | r |} \hline
+	Algorithm & Without Word2Vec & With Word2Vec \\ \hline
+	Linear Regression & 41.97 & 13.39 \\
+	SVM with RBF Kernel & 77.71 & 45.66 \\
+	Random Forest & 47.86 & 23.13  \\ \hline
+\end{tabular} \\
+
+Linear Regression with Word2Vec embedding performed best
+
+
+\section{Sarcasm Detection in Tweets}
+\subsection{What is the group's number?}
+22
+\subsection{What was the goal of the group's project?}
+To detect sarcasm in tweets.
+
+\subsection{How did the group attempt to accomplish the goal?}
+The group used a twitter API client and collected data related to tags Sarcasm using related hashtags.
+They annotated tweets as YES/NO for the binary classification task. This group performed the following cleaning:
+\begin{itemize}
+	\item Remove Hashtags
+	\item Remove usernames and mentions
+	\item Skip tweets with very little text
+	\item Remove URLs in tweet
+\end{itemize}
+This group has tried the following algorithms:
+\begin{itemize}
+	\item Perceptron
+	\item Support Vector machines
+	\item K Nearest Neighbors
+	\item Max Entropy 
+	\item Naive Bayes
+\end{itemize}
+
+\subsection{How did the group evaluate their work and what was the result?}
+They have used standard metrics such as Precision, Recall and F-score for evaluating the classifiers. 
+The top two classifiers are MaxEntropy (accuracy:63\%) and K Nearest Neighbors(accuracy: 61\%).
+
+\section{Clause based Open Information Extraction.}
+\subsection{What is the group's number?}
+7
+\subsection{What was the goal of the group's project?}
+To do open information extraction and the relationship between the clauses.
+\subsection{How did the group attempt to accomplish the goal?}
+They have used three different datasets for this project.
+Given a text sentence, first step is to compute the dependency graph for the sentence, then the second step is to determine set of clauses from the dependency graph, then finally to produce the set of coherent clauses from this set.
+
+\subsection{How did the group evaluate their work and what was the result?}
+This group did not have evaluation results at the time of group presentation, but they were working on it. 
+
+\section{Headline Generation}
+\subsection{What is the group's number?}
+25
+\subsection{What was the goal of the group's project?}
+To produce an headline or title for a passage of text.
+
+\subsection{How did the group attempt to accomplish the goal?}
+At the high level, their method had two steps, for each of those steps they had tried two techniques:
+
+\begin{itemize}
+	\item Summarization
+	\begin{itemize}
+		\item Using Text Rank
+		\item Using Lex Rank
+	\end{itemize}
+	\item Summary to Headline
+		\begin{itemize}
+		\item Hedge Trimmer
+		\item Keyword Extraction
+	\end{itemize}
+\end{itemize}
+
+\subsection{How did the group evaluate their work and what was the result?}
+They have built a nice interface to collect the feedback from humans to evaluate the performance. The results were not great, however, considering the difficulty of this problem their system was doing the reasonable thing.
+
+\end{document}
