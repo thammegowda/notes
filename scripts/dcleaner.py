@@ -25,7 +25,7 @@ unicode_puncts = {ch for ch in map(chr, range(sys.maxunicode)) if unicodedata.ca
 # exclude apostrophe - it has special meaning
 
 unicode_puncts -= set("',-፣")    # do not mark these as bad characters from OCR
-OCR_gibber = unicode_puncts | set(range(9))
+OCR_gibber = unicode_puncts | set(range(10))
 
 unicode_puncts |= set(",")  # remove any left over comma at the end
 unicode_punct_tab = {i: None for i in map(ord, unicode_puncts)}
@@ -55,7 +55,6 @@ def small_parenthesis(f, e):
     if f_ != f or e_ != e:
         print(">Remove POS: %s -> %s \t %s -> %s" % (f, f_, e, e_))
     return [(f_, e_)] if f_ and e_ else []
-
 
 
 def normalize_puncts(f, e, t_table=normalize_punct_tab):
@@ -152,6 +151,7 @@ def remove_puncts(f, e, t_table=unicode_punct_tab):
     Removes all punctuations
     :param f:
     :param e:
+    :param t_table:
     :return:
     """
     f, e = f.translate(t_table), e.translate(t_table)
@@ -166,6 +166,11 @@ rules_cache = {}
 
 
 def get_rules(tag):
+    """
+    gets rules applicable to record
+    :param tag: tag or group name of record
+    :return: sequence of mappers  or rules for cleaning the record
+    """
     if tag in rules_cache:
         return rules_cache[tag]
 
@@ -191,6 +196,15 @@ def get_rules(tag):
 
 # transformation pipeline, where mappers can produce zero or more records
 def transform(tag, fgn_word, eng_word, mappers, i=0):
+    """
+    Transformer pipeline (uses recursion on mapper stages)
+    :param tag:
+    :param fgn_word:
+    :param eng_word:
+    :param mappers: List of mappers, analogous to stages in pipeline
+    :param i: Index of stage in pipeline
+    :return:
+    """
     if i >= len(mappers):
         yield (tag, fgn_word, eng_word)
     else:
@@ -199,6 +213,11 @@ def transform(tag, fgn_word, eng_word, mappers, i=0):
 
 
 def cleanup(src_file):
+    """
+    cleans a dictionary
+    :param src_file: path to source file having <TAG>\t<FOREIGN_PHRASE>\t<ENGLISH_PHRASE>
+    :return: generator of records
+    """
     with copen(src_file, 'r', encoding='utf-8') as inp:
         for line in inp:
             tag, fgn_word, eng_word = line.split('\t')
@@ -207,6 +226,12 @@ def cleanup(src_file):
 
 
 def dump_stream(recs, out=None):
+    """
+    Writes records to output stream
+    :param recs: stream of records
+    :param out: None, string or a file stream
+    :return: None
+    """
     opened = False
     if out is None:
         out = sys.stdout
