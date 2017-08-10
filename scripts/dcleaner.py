@@ -14,22 +14,37 @@ from codecs import open as copen
 import sys
 import re
 import string
-import unicodedata
+from unicodedata import category as chtype
+
+from autocorrect import spell  # pip install autocorrect
 
 
 # Ascii punctuations
 ascii_puncts = set(string.punctuation) - set('\'.,')
+
 # Unicode Punctuations
-unicode_puncts = {ch for ch in map(chr, range(sys.maxunicode)) if unicodedata.category(ch).startswith('P')}
+unicode_puncts = set(filter(lambda x: chtype(x).startswith('P')
+                            or chtype(x).startswith('S'),
+                            map(chr, range(sys.maxunicode))))
 
 # exclude apostrophe - it has special meaning
-
-unicode_puncts -= set("',-፣")    # do not mark these as bad characters from OCR
+unicode_puncts -= set(".',-፣")   # exclude these chars / preserve them as they are
 OCR_gibber = unicode_puncts | set(range(10))
 
 unicode_puncts |= set(",")  # remove any left over comma at the end
-unicode_punct_tab = {i: None for i in map(ord, unicode_puncts)}
-normalize_punct_tab = {ord('`'): '\'', ord('’'): '\''}
+
+punct_trans_tab = {i: ' ' for i in map(ord, unicode_puncts)}    # translate all of 'em to white space
+punct_trans_tab.update({ord('`'): '\'', ord('’'): '\''})    # quotes
+
+unicode_puncts = set(filter(lambda x: chtype(x).startswith('P')
+                            or chtype(x).startswith('S'),
+                            map(chr, range(sys.maxunicode))))
+
+print('Total Punctuations:', len(punct_trans_tab))
+
+def norm_puncts(text):
+    text = text.translate(punct_trans_tab)
+    return re.sub(r'\s+', ' ', text).strip()
 
 stop_words = {'be', 'get'}
 
@@ -55,18 +70,6 @@ def small_parenthesis(f, e):
     if f_ != f or e_ != e:
         print(">Remove POS: %s -> %s \t %s -> %s" % (f, f_, e, e_))
     return [(f_, e_)] if f_ and e_ else []
-
-
-def normalize_puncts(f, e, t_table=normalize_punct_tab):
-    """
-    Translates advanced punctuations with simple punctuations.
-    For example: back quote --> apostrophe : ` --> '
-    :param f:
-    :param e:
-    :param t_table:
-    :return:
-    """
-    return [(f.translate(t_table), e.translate(t_table))]
 
 
 def ocr_gibberish_clean(f, e, bad_chars=OCR_gibber):
@@ -146,22 +149,42 @@ def parenthesis_inner_drop(f, e):
     return [(f, e)]
 
 
-def remove_puncts(f, e, t_table=unicode_punct_tab):
+def remove_puncts(f, e):
     """
     Removes all punctuations
     :param f:
     :param e:
-    :param t_table:
     :return:
     """
-    f, e = f.translate(t_table), e.translate(t_table)
+    f, e = norm_puncts(f), norm_puncts(e)
     return [(f, e)] if f and e else []
+
+
+def remove_ending_punct(f, e):
+    f = re.sub(r"[,\\.]$", '', f)
+    e = re.sub(r"[,\\.]$", '', e)
+    return [(f, e)]
+
+
+def spellcheck(f, e):
+    """
+    corrects spelling of english text. Powered by autocorrect
+     https://github.com/phatpiglet/autocorrect
+     http://norvig.com/spell-correct.html
+    :param f:
+    :param e:
+    :return:
+    """
+    e_ = " ".join(map(spell, e.split()))
+    if e != e_:
+        print(">Spell Correct: %s | %s -> %s" % (f, e, e_))
+    return [(f, e_)]
 
 # Cleaning Functions END
 
 pre_mappers = [lambda k, v: [(k.strip(), v.strip())],    # white space remover
-               small_parenthesis, normalize_puncts]
-post_mappers = [remove_puncts]
+               small_parenthesis]
+post_mappers = [remove_puncts, remove_ending_punct]
 rules_cache = {}
 
 
@@ -184,6 +207,8 @@ def get_rules(tag):
 
     if 'tg-glosbe-eng_il5' == tag:
         rules.append(comma_synonyms)
+    if 'glosbe' in tag:
+        rules.append(spellcheck)
     if 'rpi-ne-il6_eng' == tag:
         rules.append(parenthesis_inner_drop)
     if 'il6' in tag:
@@ -242,7 +267,6 @@ def dump_stream(recs, out=None):
         out.write("%s\t%s\t%s\n" % rec)
     if opened:
         out.close()
-
 
 if __name__ == '__main__':
     parser = ArgumentParser(description='Dictionary Cleaner')
