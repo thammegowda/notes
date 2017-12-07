@@ -34,7 +34,10 @@ Constraints:
 Objective:
   Maximize : \sum{i \in 1...10} p_i * x_i
 
-In standard Form: (1) all constraints are equalities (2) only binary variables (because my quantum variables are binary!)
+In standard Form:
+(1) all constraints are equalities => good for expressing it as a matrix multiplication
+(2) only binary variables => because my quantum variables are binary!
+(3) Minimization objective => because the quantum annealer minimizes the objetive function
 
 Constraints:
    \sum{i \in 1,...10} x_i * c_i   + s1 + 2 s2 + 4 s3 + 8 s4 + 16 s5 + 32 s6 + 64 s7<= 120
@@ -42,7 +45,7 @@ Constraints:
    x5 + x6 + s9 = 1
     -x3 - x4 + x5 + s10 + s11 = 0      because  -x3 - x4 + x5 <= 0
     -x3 - x4 + x6 + s12 + s13 = 0
-    x1 + x2 + x7 + x8 + x9 + x10 - s14 - s15 - s16 - s17 = -2
+    x1 + x2 + x7 + x8 + x9 + x10 - s14 - s15 - s16 - s17 = 2
     x1 + x2 + x7 + x8 + x9 + x10 + s18 + s19 + s20 + s21 = 4
 
 """
