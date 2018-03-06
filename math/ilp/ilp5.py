@@ -55,9 +55,9 @@ from gurobipy import *
 try:
     # Create a new model
     m = Model("01-ilp-std")
-    Q =  5
+    Q =  120
     P = [1,  1,  1, 1, 1, 1, 1, 1, 1, 1]
-    C = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    C = [1, 1, 1, 1, 1, 1, 1, 1, 1, 3]
     X = [m.addVar(vtype=GRB.BINARY, name="x%d" % (i+1)) for i in range(len(P))]
     S = [m.addVar(vtype=GRB.BINARY, name="s%d" % (i+1)) for i in range(21)] # 21 slack variables are needed
 
