@@ -1,0 +1,15 @@
+= Unix/Linux Commands 
+
+
+[#gnu-parallel]
+== GNU Parallel
+
+Split input into parts having no more than 5 lines each, but run j=2 jobs in parallel, and keep input order
+
+  seq 100 | parallel --keep-order --pipe -N 5 -j 2  'wc -lw && sleep 2 '
+    
+    
+    
+Show progress
+
+  seq 100 | parallel --progress --keep-order --pipe -N 5 -j 2  'wc -lw && sleep 2 '
