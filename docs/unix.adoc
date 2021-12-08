@@ -24,3 +24,16 @@ We all use `clear` or `CTRL+L` but it's not really a "clear" termianl
     reset            # another way
     
 Info https://stackoverflow.com/q/5367068/1506477 
+
+
+[#inverse-select]
+== Invert / Exclude files
+Info : https://www.tecmint.com/delete-all-files-in-directory-except-one-few-file-extensions/ 
+
+[source,bash]
+----
+shopt -s extglob  # enable
+ls !(conf.yml)    # list all except conf.yml
+rm -r !(conf.yml)   # rm all  except conf.yml
+rm -v !("filename1"|"filename2")  # multiple exclusions
+----
