@@ -28,6 +28,7 @@ Info https://stackoverflow.com/q/5367068/1506477
 
 [#inverse-select]
 == Invert / Exclude files
+
 Info : https://www.tecmint.com/delete-all-files-in-directory-except-one-few-file-extensions/ 
 
 [source,bash]
@@ -37,3 +38,17 @@ ls !(conf.yml)    # list all except conf.yml
 rm -r !(conf.yml)   # rm all  except conf.yml
 rm -v !("filename1"|"filename2")  # multiple exclusions
 ----
+
+[#bashexit]
+== Bash Exit On Error
+
+[source,bash]
+----
+set -euxo pipefail
+----
+
+`-e` exits on error, `-u` errors on undefined variables, and `-o pipefail` exits on command pipe failures.
+
+1. https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+1. https://stackoverflow.com/a/2871034/1506477 
+
