@@ -47,7 +47,7 @@ rm -v !("filename1"|"filename2")  # multiple exclusions
 set -euxo pipefail
 ----
 
-`-e` exits on error, `-u` errors on undefined variables, and `-o pipefail` exits on command pipe failures.
+`-e` exits on error, `-u` errors on undefined variables, `-x` for echoing each statement, and `-o pipefail` exits on command pipe failures.
 
 1. https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
 1. https://stackoverflow.com/a/2871034/1506477 
