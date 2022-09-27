@@ -1,0 +1,72 @@
+= Python Language New Features
+:author: Thamme Gowda <tgowdan@gmail.com>
+1.0, September 27, 2022: Python New Features
+:toc:
+:icons: font
+
+
+For a long time I have been stuck at v3.7. This document is for educating myself about new features of Python language. 
+
+Focusing on new syntax features and helpful utilities.
+
+== 3.10 
+
+:link:https://docs.python.org/3.10/whatsnew/3.10.html
+
+=== Structural pattern matching 
+=== Union of types as `X|Y`
+=== Context manager with paranthesis
+```
+with (
+    CtxManager1() as example1,
+    CtxManager2() as example2,
+    CtxManager3() as example3,
+):
+```
+=== `zip` has `strict` argument to enfore same lenghts
+
+
+== 3.9 
+
+:link:https://docs.python.org/3.9/whatsnew/3.9.html
+
+=== Dictionary merge and update `a|b` or `a|=b`
+=== Type hinting generics in standard collections: `list[str]`, `dict[str, int]` 
+
+=== 3.8 
+
+:link:https://docs.python.org/3.8/whatsnew/3.8.html 
+
+=== Assignment expression aka walrus operator `:=`
+```
+# re search
+discount = 0.0
+if (mo := re.search(r'(\d+)% discount', advertisement)):
+    discount = float(mo.group(1)) / 100.0
+
+# loop 
+while (block := f.read(256)) != '':
+    process(block)
+```
+=== Position only parameters seperated by `/`
+```
+# a, b must be specified as position only
+def f(a, b, /, c, d, *, e, f):
+    print(a, b, c, d, e, f)
+```
+=== f-strings support `=` for self-documenting expressions
+```
+>>>user = 'eric_idle'
+>>>member_since = date(1975, 7, 31)
+>>>f'{user=} {member_since=}'
+"user='eric_idle' member_since=datetime.date(1975, 7, 31)"
+
+# format specifiers
+>>> delta = date.today() - member_since
+>>> f'{user=!s}  {delta.days=:,d}'
+'user=eric_idle  delta.days=16,075'
+```
+=== `asyncio.run()` is now a stable API
+
+
+
