@@ -14,7 +14,24 @@ Focusing on new syntax features and helpful utilities.
 :link:https://docs.python.org/3.10/whatsnew/3.10.html
 
 === Structural pattern matching 
-=== Union of types as `X|Y`
+```
+>>> x = {"key1": "value1 from x", "key2": "value2 from x"}
+>>> y = {"key2": "value2 from y", "key3": "value3 from y"}
+>>> x | y
+{'key1': 'value1 from x', 'key2': 'value2 from y', 'key3': 'value3 from y'}
+>>> y | x
+{'key2': 'value2 from x', 'key3': 'value3 from y', 'key1': 'value1 from x'}
+```
+
+=== Union of types as `X|Y` (previously, typing.Union[X, Y])
+```
+def greet_all(names: list[str]) -> None:
+    for name in names:
+        print("Hello", name)
+
+```
+
+
 === Context manager with paranthesis
 ```
 with (
@@ -33,7 +50,7 @@ with (
 === Dictionary merge and update `a|b` or `a|=b`
 === Type hinting generics in standard collections: `list[str]`, `dict[str, int]` 
 
-=== 3.8 
+== 3.8 
 
 :link:https://docs.python.org/3.8/whatsnew/3.8.html 
 
