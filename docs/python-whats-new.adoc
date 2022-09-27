@@ -3,6 +3,7 @@
 1.0, September 27, 2022: Python New Features
 :toc:
 :icons: font
+:source-highlighter: highlight.js
 
 
 For a long time I have been stuck at v3.7. This document is for educating myself about new features of Python language. 
@@ -14,17 +15,21 @@ Focusing on new syntax features and helpful utilities.
 :link:https://docs.python.org/3.10/whatsnew/3.10.html
 
 === Structural pattern matching 
-```
->>> x = {"key1": "value1 from x", "key2": "value2 from x"}
->>> y = {"key2": "value2 from y", "key3": "value3 from y"}
->>> x | y
-{'key1': 'value1 from x', 'key2': 'value2 from y', 'key3': 'value3 from y'}
->>> y | x
-{'key2': 'value2 from x', 'key3': 'value3 from y', 'key1': 'value1 from x'}
+```python
+def http_error(status):
+    match status:
+        case 400:
+            return "Bad request"
+        case 404:
+            return "Not found"
+        case 418:
+            return "I'm a teapot"
+        case _:
+            return "Something's wrong with the internet"
 ```
 
 === Union of types as `X|Y` (previously, typing.Union[X, Y])
-```
+```python
 def greet_all(names: list[str]) -> None:
     for name in names:
         print("Hello", name)
@@ -33,7 +38,7 @@ def greet_all(names: list[str]) -> None:
 
 
 === Context manager with paranthesis
-```
+```python
 with (
     CtxManager1() as example1,
     CtxManager2() as example2,
@@ -48,6 +53,16 @@ with (
 :link:https://docs.python.org/3.9/whatsnew/3.9.html
 
 === Dictionary merge and update `a|b` or `a|=b`
+
+```python
+>>> x = {"key1": "value1 from x", "key2": "value2 from x"}
+>>> y = {"key2": "value2 from y", "key3": "value3 from y"}
+>>> x | y
+{'key1': 'value1 from x', 'key2': 'value2 from y', 'key3': 'value3 from y'}
+>>> y | x
+{'key2': 'value2 from x', 'key3': 'value3 from y', 'key1': 'value1 from x'}
+```
+
 === Type hinting generics in standard collections: `list[str]`, `dict[str, int]` 
 
 == 3.8 
@@ -55,7 +70,7 @@ with (
 :link:https://docs.python.org/3.8/whatsnew/3.8.html 
 
 === Assignment expression aka walrus operator `:=`
-```
+```python
 # re search
 discount = 0.0
 if (mo := re.search(r'(\d+)% discount', advertisement)):
@@ -65,14 +80,15 @@ if (mo := re.search(r'(\d+)% discount', advertisement)):
 while (block := f.read(256)) != '':
     process(block)
 ```
+
 === Position only parameters seperated by `/`
-```
+```python
 # a, b must be specified as position only
 def f(a, b, /, c, d, *, e, f):
     print(a, b, c, d, e, f)
 ```
 === f-strings support `=` for self-documenting expressions
-```
+```python
 >>>user = 'eric_idle'
 >>>member_since = date(1975, 7, 31)
 >>>f'{user=} {member_since=}'
@@ -85,5 +101,8 @@ def f(a, b, /, c, d, *, e, f):
 ```
 === `asyncio.run()` is now a stable API
 
+~~~
+
+TODO: for 3.5 and lower 
 
 
