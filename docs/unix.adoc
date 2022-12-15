@@ -1,4 +1,5 @@
 = Unix/Linux Commands 
+:toc:
 
 
 [#gnu-parallel]
@@ -52,3 +53,17 @@ set -euxo pipefail
 1. https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
 1. https://stackoverflow.com/a/2871034/1506477 
 
+[#split-assign]
+== Split and multiple assignments
+
+Split and assign into varibales
+```bash
+ IFS="-" read -r a b <<< "xx-yy"
+ echo $a $b
+```
+
+Split and assign into array 
+```bash
+IFS="-" read -r -a a <<< "xx-yy"
+echo ${a[@]}
+```
