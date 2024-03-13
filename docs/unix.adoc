@@ -84,7 +84,7 @@ Merge and distribute one or more .gz files into more evenly sized .gz parts with
 ```bash
 zcat *.gz | split -C 1G -a 5 -d --additional-suffix .tsv.gz --filter='gzip > $FILE.gz' - output-parts/part-
 ```
-* `-C 1G` approximatley ~1GB splits by preserving line breaks (i.e., lines are atomic)
+* `-C 1G` approximatley ~1GB splits by preserving line breaks (i.e., lines are atomic). Note 1GB is intermediate decompressed size. The final part/split files will have lower size after compression.
 * `-a 5`  part number has 5 letters/digits i.e., aaaaa-zzzzz or 00000-99999
 * `-d` numeric suffixes i.e. 00000-99999 (not aaaaa-zzzzz)
 * `--additional-suffix .tsv.gz`  add extra suffix (file extension) to part names
