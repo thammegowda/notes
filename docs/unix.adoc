@@ -23,7 +23,13 @@ Distribute commands to GPUs, one per device
   for i in *.inp; do echo rtg-decode -if $i -o $i.out; done | \
        parallel --progress -j8 CUDA_VISIBLE_DEVICES='$(({%} - 1))' bash -c "{}"
 
-    
+
+== Parallel Copy
+
+```bash
+parallel -j10 --progress cp {} destdir/ ::: srcdir/*
+```
+Learn more: https://superuser.com/a/536643/266871
 
 == Clear Terminal
 
