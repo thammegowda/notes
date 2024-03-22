@@ -10,6 +10,72 @@ For a long time I have been stuck at v3.7. This document is for educating myself
 
 Focusing on new syntax features and helpful utilities.
 
+== 3.11
+
+IMPORTANT: Python 3.11 is between 10-60% faster than Python 3.10. If you dont have a preference for older Python (3.10-), just upgrade.
+
+Full list: https://docs.python.org/3.11/whatsnew/3.11.html
+
+===  TypedDict
+```python
+class Movie(TypedDict):
+   title: str
+   year: NotRequired[int]
+
+m1: Movie = {"title": "Black Panther", "year": 2018}  # OK
+m2: Movie = {"title": "Star Wars"}  # OK (year is not required)
+m3: Movie = {"year": 2022}  # ERROR (missing required field title)
+
+## also this
+
+class Movie(TypedDict, total=False):
+   title: Required[str]
+   year: int
+
+```
+=== Self type
+
+```python
+class MyLock:
+    def __enter__(self) -> Self:
+        self.lock()
+        return self
+
+    ...
+
+class MyInt:
+    @classmethod
+    def fromhex(cls, s: str) -> Self:
+        return cls(int(s, 16))
+```
+
+=== Dataclass Transforms
+```python
+# The create_model decorator is defined by a library.
+@typing.dataclass_transform()
+def create_model(cls: Type[T]) -> Type[T]:
+    cls.__init__ = ...
+    cls.__eq__ = ...
+    cls.__ne__ = ...
+    return cls
+
+# The create_model decorator can now be used to create new model classes:
+@create_model
+class CustomerModel:
+    id: int
+    name: str
+
+c = CustomerModel(id=327, name="Eric Idle")
+```
+=== `tomllib` is in Standard Lib 
+
+Now you can parse and produce TOML without a 3rd party dependency
+
+https://docs.python.org/3.11/library/tomllib.html#module-tomllib
+
+
+
+
 == 3.10 
 
 :link:https://docs.python.org/3.10/whatsnew/3.10.html
