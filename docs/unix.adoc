@@ -108,3 +108,12 @@ pigz -dc *.gz | split -C 1G -a 5 -d --filter='pigz > $FILE.tsv.gz' - output-part
 * `-` (last but one arg) input is from stdin
 * `output-parts/part-` output prefix name
 
+[#reverse-order]
+# Reverse Line Order
+```
+# normal: forward order
+cat file.txt 
+
+# reversed: backward order
+tac file.txt
+```
