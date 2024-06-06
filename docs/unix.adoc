@@ -6,9 +6,11 @@
 == GNU Parallel
 
 Split input into parts having no more than 5 lines each, but run j=2 jobs in parallel, and keep input order
-
+```bash
   seq 100 | parallel --keep-order --pipe -N 5 -j 2  'wc -lw && sleep 2 '
-    
+  # transform lines in parallel
+  seq 100 | parallel --keep-order --pipe -N 5 -j 2  "awk '{print 2 * \$1}' && sleep 2"
+```
     
     
 Show progress
