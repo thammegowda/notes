@@ -135,3 +135,5 @@ pigz -dc data.tsv.gz \
     | pigz > mapped_data.tsv.gz
 ```
 Here, `map1` and `map2` can be any transfomation scripts.
+
+NOTE: Not all file systems support creating FIFO files. Example: `sshfs` and azure `blobfuse` mounts did not permit placing FIFO files on them.
