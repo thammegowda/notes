@@ -117,3 +117,21 @@ cat file.txt
 # reversed: backward order
 tac file.txt
 ```
+
+[tee-untee]
+= Tee and Untee
+
+`tee` is a useful tool to fork the STDIN/pipe and apply different transformations on each fork. 
+However, to `untee` (there is no such tool), i.e., to combine the forked and transformed pipes back into a single stream, is not a straight forward operation.
+A solution to this problem is to write to FIFO files and `paste` the FIFos. For exmaple,
+```bash
+rm -f fifo1 fifo2     # remove old
+mkfifo fifo1 fifo2    # make new
+
+pigz -dc data.tsv.gz \
+    | tee >(cut -f1 | map1 > fifo1) \
+    | tee >(cut -f2 | map2 > fifo2) \
+    | cut -f3- | paste fifo1 fifo2 - \
+    | pigz > mapped_data.tsv.gz
+```
+Here, `map1` and `map2` can be any transfomation scripts.
